@@ -7,4 +7,3 @@ opencv-python
 Pillow
 deep-translator
 easyocr
-torch
