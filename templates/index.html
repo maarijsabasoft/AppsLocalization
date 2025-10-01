@@ -1,1 +1,351 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Apps Localization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="PicLingo – Translate & resize text in your images seamlessly. Perfect for multi-language content creation." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 15px;
+    transition: background 0.5s ease, color 0.3s ease;
+  }
+
+  body.light {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: #333;
+  }
+
+  body.dark {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #e6e6e6;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 720px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(6px);
+    border-radius: 20px;
+    padding: 2.8rem;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    animation: fadein 0.6s ease;
+    transition: background 0.4s ease, color 0.4s ease, box-shadow 0.3s ease;
+  }
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  body.dark .card {
+    background: rgba(30, 32, 44, 0.95);
+    color: #e6e6e6;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.6);
+  }
+  body.dark .card h1,
+  body.dark .card .subtitle,
+  body.dark .card label {
+    color: #f0f0f0;
+  }
+
+  h1 {
+    text-align: center;
+    margin: 0;
+    font-weight: 700;
+    font-size: 2.4rem;
+    color: #111;
+  }
+  .subtitle {
+    text-align: center;
+    color: #555;
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    margin-bottom: 2.2rem;
+  }
+
+  label {
+    display: block;
+    margin-top: 1.4rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+    font-size: 1.05rem;
+  }
+
+  select, input[type="file"] {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+  select:focus, input[type="file"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0,123,255,0.35);
+  }
+  body.dark select,
+  body.dark input[type="file"] {
+    background: #2a2d3a;
+    color: #e0e0e0;
+    border: 1px solid #555;
+  }
+  body.dark select:focus,
+  body.dark input[type="file"]:focus {
+    border-color: #00c6ff;
+    box-shadow: 0 0 6px rgba(0,198,255,0.35);
+  }
+
+  button[type="submit"], 
+  .download-btn {
+    display: inline-block;
+    margin-top: 2rem;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+
+    color: #fff;
+    padding: 0.7rem 1.6rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
+  }
+  button[type="submit"]:hover, 
+  .download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+  }
+
+  body.dark button[type="submit"], 
+  body.dark .download-btn {
+    background: linear-gradient(135deg, #1a2a3d, #2c5364);
+    color: #f2f2f2;
+    border: 1px solid #444;
+  }
+  body.dark button[type="submit"]:hover, 
+  body.dark .download-btn:hover {
+    box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+  }
+
+  .result {
+    margin-top: 2.5rem;
+    text-align: center;
+    background: rgba(250, 250, 250, 0.95);
+    border-radius: 14px;
+    padding: 1.5rem;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    color: #222;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+  .result img {
+    max-width: 100%;
+    border-radius: 14px;
+    margin-top: 1rem;
+    box-shadow: 0 12px 26px rgba(0,0,0,0.25);
+  }
+  body.dark .result {
+    background: rgba(36, 38, 54, 0.95);
+    color: #f0f0f0;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  }
+
+  #processing-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(255,255,255,0.95);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 1.2rem;
+    color: #333;
+    animation: fadeInOverlay 0.3s ease forwards;
+  }
+  .spinner {
+    border: 6px solid #eaeaea;
+    border-top: 6px solid #007bff;
+    border-right: 6px solid #00c6ff;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg);} }
+  @keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  body.dark #processing-overlay {
+    background: rgba(20,22,30,0.92);
+    color: #e6e6e6;
+  }
+  body.dark .spinner {
+    border: 6px solid #2a2d3a;
+    border-top: 6px solid #00c6ff;
+    border-right: 6px solid #007bff;
+  }
+
+  #theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 46px;
+    height: 46px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  #theme-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.4);
+  }
+.success-msg {
+  font-weight: 600;
+  color: #007bff; 
+}
+
+.error-msg {
+  font-weight: 600;
+  color: red;
+}
+
+body.dark .success-msg {
+  color: #fff; 
+}
+
+body.dark .error-msg {
+  color: #ff6b6b; 
+}
+
+</style>
+
+</head>
+<body class="light">
+  <button id="theme-toggle">🌙</button>
+
+  <main class="card">
+    <h1>Apps Localization</h1>
+    <p class="subtitle">Translate &amp; resize text in your images seamlessly</p>
+
+    <form id="translate-form" method="POST" enctype="multipart/form-data">
+      <label for="language">Target language</label>
+      <select name="language" id="language" required aria-label="Select target language">
+        <option value="en">English</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="es">Spanish</option>
+        <option value="it">Italian</option>
+        <option value="nl">Dutch</option>
+      </select>
+
+      <label for="resolution">Output resolution</label>
+      <select name="resolution" id="resolution" required aria-label="Select output resolution">
+        <optgroup label="Original">
+          <option value="original">Use Original Size</option>
+        </optgroup>
+        <optgroup label="Phones – Portrait">
+          <option value="iphone-15">iPhone 15 (1290×2796)</option>
+          <option value="iphone-14">iPhone 14 Pro (1179×2556)</option>
+          <option value="iphone-13">iPhone 13 (1170×2532)</option>
+          <option value="android-fhd">Android FHD+ (1080×2400)</option>
+          <option value="android-qhd">Android QHD+ (1440×3200)</option>
+        </optgroup>
+        <optgroup label="Tablets">
+          <option value="ipad-pro">iPad Pro (2048×2732)</option>
+          <option value="ipad-mini">iPad Mini (1536×2048)</option>
+          <option value="android-tab">Android Tablet (1600×2560)</option>
+        </optgroup>
+        <optgroup label="Laptops / Desktops">
+          <option value="hd">Desktop HD (1920×1080)</option>
+          <option value="qhd">Desktop QHD (2560×1440)</option>
+          <option value="4k">Desktop 4K (3840×2160)</option>
+        </optgroup>
+        <optgroup label="Generic Shapes">
+          <option value="square-1to1">Square 1:1 (1080×1080)</option>
+          <option value="portrait-3to4">Portrait 3:4 (1350×1800)</option>
+          <option value="landscape-16to9">Landscape 16:9 (1920×1080)</option>
+        </optgroup>
+      </select>
+
+      <label for="image">Upload image</label>
+      <input type="file" name="image" id="image" accept="image/*" required aria-label="Upload image" />
+
+      <button type="submit">Translate &amp; Convert</button>
+    </form>
+
+    {% if success %}
+  <div class="result">
+    <p class="success-msg">{{ success }}</p>
+    <img src="data:image/png;base64,{{ translated_image }}" alt="Translated image" />
+    <p><a class="download-btn" href="{{ url_for('download_file') }}">Download Image</a></p>
+  </div>
+    {% endif %}
+    {% if error %}
+      <p style="color:red;font-weight:600;">{{ error }}</p>
+    {% endif %}
+  </main>
+
+  <div id="processing-overlay">
+    <div class="spinner"></div>
+    <p>Processing your image… please wait!</p>
+  </div>
+
+<script>
+  const body = document.body;
+  const themeToggle = document.getElementById('theme-toggle');
+
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    body.classList.remove("light");
+    body.classList.add("dark");
+    themeToggle.textContent = "☀️";
+  } else {
+    body.classList.remove("dark");
+    body.classList.add("light");
+    themeToggle.textContent = "🌙";
+  }
+
+  themeToggle.addEventListener("click", () => {
+    if (body.classList.contains("light")) {
+      body.classList.replace("light", "dark");
+      localStorage.setItem("theme", "dark");
+      themeToggle.textContent = "☀️";
+    } else {
+      body.classList.replace("dark", "light");
+      localStorage.setItem("theme", "light");
+      themeToggle.textContent = "🌙";
+    }
+  });
+
+  document.getElementById('translate-form').addEventListener('submit', () => {
+    document.getElementById('processing-overlay').style.display = 'flex';
+  });
+</script>
+
+</body>
+</html>
