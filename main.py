@@ -15,7 +15,7 @@ import logging
 import re
 import time
 from authlib.integrations.flask_client import OAuth
-
+from flask_session import Session
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -27,6 +27,12 @@ os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
 db = SQLAlchemy(app)
+from flask_session import Session
+
+app.config["SESSION_TYPE"] = "filesystem"  # or "sqlalchemy"
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_FILE_DIR"] = os.path.join(os.getcwd(), "flask_session")
+Session(app)
 
 login_manager = LoginManager()
 login_manager.login_view = "login"
@@ -34,13 +40,13 @@ login_manager.init_app(app)
 
 # OAuth setup
 oauth = OAuth(app)
-REDIRECT_URI = "http://127.0.0.1:5000/callback"  # must match Google Console
+REDIRECT_URI = "http://127.0.0.1:5000/auth/google/callback"  # must match Google Console
 
 # Google OAuth configuration
 google = oauth.register(
     name='google',
     client_id='836571438073-g4foa0u929gskfrqhbi7q7omrl7pif2t.apps.googleusercontent.com',  # Replace with your Google Client ID
-    client_secret='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',  # Replace with your Google Client Secret
+    client_secret='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',  # Replace with your Google Client Secret
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     authorize_params=None,
     access_token_url='https://accounts.google.com/o/oauth2/token',
@@ -50,7 +56,6 @@ google = oauth.register(
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
 )
 
-# GitHub OAuth configuration
 github = oauth.register(
     name='github',
     client_id='Ov23liJ6E1lObYC6fPOB',  # Replace with your GitHub Client ID
@@ -171,7 +176,6 @@ def measure_text(draw, text, font):
         l, t, r, b = draw.textbbox((0, 0), text, font=font)
         return r - l, b - t
     return draw.textsize(text, font=font)
-
 def translate_and_replace(path, target_lang):
     start_time = time.time()
     logger.debug(f"Processing image at path: {path}")
@@ -342,26 +346,58 @@ def login():
 
         flash("Invalid credentials", "error")
     return render_template("login.html")
+
+
 @app.route("/google-login")
 def google_login():
     redirect_uri = url_for('google_auth_callback', _external=True)
     return google.authorize_redirect(redirect_uri)
-
 @app.route("/auth/google/callback")
 def google_auth_callback():
-    token = google.authorize_access_token()
-    user_info = google.parse_id_token(token)
-    email = user_info.get('email')
-    username = user_info.get('name', email.split('@')[0])
+    try:
+        print("\n🟢 Step 1: Callback received.")
+        token = google.authorize_access_token()
+        print("🟢 Step 2: Token obtained successfully.")
+        print(json.dumps(token, indent=2))
 
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        user = User(username=username, email=email, auth_provider='google')
-        db.session.add(user)
-        db.session.commit()
+        try:
+            user_info = google.parse_id_token(token)
+            print("🟢 Step 3: User info (ID token):", user_info)
+        except Exception as parse_err:
+            print("⚠️ Step 3 failed - ID token parse error:", parse_err)
+            user_info = None
 
-    login_user(user)
-    return redirect(url_for("index"))
+        if not user_info:
+            print("🟡 Falling back to userinfo endpoint...")
+            resp = google.get("userinfo")
+            print("🟢 Step 4: Response from userinfo:", resp.status_code)
+            print(resp.text)
+            user_info = resp.json()
+
+        if not user_info or not user_info.get("email"):
+            print("🔴 Missing email or user info:", user_info)
+            flash("Google login failed. Missing email info.", "error")
+            return redirect(url_for("login"))
+
+        email = user_info.get("email")
+        username = user_info.get("name", email.split("@")[0])
+
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            user = User(username=username, email=email, auth_provider="google")
+            db.session.add(user)
+            db.session.commit()
+
+        login_user(user)
+        flash("Logged in successfully via Google!", "success")
+        return redirect(url_for("index"))
+
+    except Exception as e:
+        print("🔴 GOOGLE LOGIN FAILED:", e)
+        import traceback
+        print(traceback.format_exc())
+        flash("Google login failed. Please try again.", "error")
+        return redirect(url_for("login"))
 
 @app.route("/github-login")
 def github_login():
