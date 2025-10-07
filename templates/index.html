@@ -314,7 +314,20 @@
     background: linear-gradient(135deg, #1a2a3d, #2c5364);
     border: 1px solid #444;
   }
+/* Make result image (canvas) responsive */
+.result canvas {
+  width: 100%;      /* Fill container width */
+  height: auto;     /* Maintain aspect ratio */
+  max-width: 100%;  /* Prevent overflow */
+  display: block;
+  margin: 1rem auto 0 auto;
+}
 
+/* Optional: small screens adjustments */
+@media (max-width: 480px) {
+  .result canvas {
+    width: 100%;
+  
   #controls button:hover {
     transform: translateY(-1px);
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -905,3 +918,4 @@
 </script>
 </body>
 </html>
+
