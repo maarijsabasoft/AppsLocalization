@@ -521,7 +521,7 @@ def index():
         session['last_image_width'] = clean_img.width
         session['last_image_height'] = clean_img.height
 
-        fonts_dir = os.path.join(app.static_folder, 'fonts') if app.static_folder else 'static/font'
+        fonts_dir = os.path.join(app.static_folder, 'font') if app.static_folder else 'static/font'
         os.makedirs(fonts_dir, exist_ok=True)
         fonts_files = [f for f in os.listdir(fonts_dir) if f.lower().endswith('.ttf')]
         fonts = [os.path.splitext(f)[0] for f in fonts_files]
