@@ -582,7 +582,7 @@
 
         texts = JSON.parse('{{ texts_json | safe }}');
         texts.forEach(text => {
-          const textObj = new fabric.IText(text.text, {
+          const textObj = new fabric.Textbox(text.text, {
             left: text.left * scale,
             top: text.top * scale,
             fontFamily: text.fontFamily || 'Arial',
@@ -590,7 +590,7 @@
             fill: text.fill,
             textAlign: text.textAlign || 'left',
             lineHeight: text.lineHeight || 1.2,
-            width: (text.width || img.width * scale), // Set width to prevent cutting
+            width: (text.width || img.width) * scale, // Scale width to ensure consistent wrapping
             selectable: true,
             editable: true
           });
@@ -614,7 +614,7 @@
 
     function updateControls() {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         document.getElementById('fontFamily').value = activeObject.fontFamily || 'Arial';
         document.getElementById('fontSize').value = Math.round(activeObject.fontSize / scale) || 20;
         document.getElementById('fill').value = rgbToHex(activeObject.fill) || '#000000';
@@ -699,7 +699,7 @@
 
     document.getElementById('fontFamily').addEventListener('change', (e) => {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         const font = e.target.value;
         console.log(`Applying font: ${font} to text: ${activeObject.text}`);
         activeObject.set('fontFamily', font);
@@ -713,7 +713,7 @@
 
     document.getElementById('fontSize').addEventListener('input', (e) => {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         activeObject.set('fontSize', parseInt(e.target.value) * scale);
         activeObject.set('dirty', true);
         canvas.requestRenderAll();
@@ -722,7 +722,7 @@
 
     document.getElementById('fill').addEventListener('input', (e) => {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         activeObject.set('fill', e.target.value);
         activeObject.set('dirty', true);
         canvas.requestRenderAll();
@@ -731,7 +731,7 @@
 
     document.getElementById('stroke').addEventListener('input', (e) => {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         activeObject.set('stroke', e.target.value);
         activeObject.set('dirty', true);
         canvas.requestRenderAll();
@@ -740,7 +740,7 @@
 
     document.getElementById('strokeWidth').addEventListener('input', (e) => {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         activeObject.set('strokeWidth', parseFloat(e.target.value));
         activeObject.set('dirty', true);
         canvas.requestRenderAll();
@@ -749,7 +749,7 @@
 
     document.getElementById('lineHeight').addEventListener('input', (e) => {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         activeObject.set('lineHeight', parseFloat(e.target.value));
         activeObject.set('dirty', true);
         canvas.requestRenderAll();
@@ -758,7 +758,7 @@
 
     document.getElementById('textBackgroundColor').addEventListener('input', (e) => {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         activeObject.set('textBackgroundColor', e.target.value);
         activeObject.set('dirty', true);
         canvas.requestRenderAll();
@@ -767,7 +767,7 @@
 
     document.getElementById('textAlign').addEventListener('change', (e) => {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         activeObject.set('textAlign', e.target.value);
         activeObject.set('dirty', true);
         canvas.requestRenderAll();
@@ -776,14 +776,14 @@
 
     document.getElementById('animation').addEventListener('change', (e) => {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         applyAnimation(activeObject, e.target.value);
       }
     });
 
     document.getElementById('opacity').addEventListener('input', (e) => {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         activeObject.set('opacity', parseFloat(e.target.value));
         activeObject.set('dirty', true);
         canvas.requestRenderAll();
@@ -792,7 +792,7 @@
 
     document.getElementById('fontWeight').addEventListener('change', (e) => {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         activeObject.set('fontWeight', e.target.value);
         activeObject.set('dirty', true);
         canvas.requestRenderAll();
@@ -801,7 +801,7 @@
 
     document.getElementById('italic').addEventListener('click', () => {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         const newStyle = activeObject.fontStyle === 'italic' ? 'normal' : 'italic';
         activeObject.set('fontStyle', newStyle);
         activeObject.set('dirty', true);
@@ -811,7 +811,7 @@
     });
 
     document.getElementById('addText').addEventListener('click', () => {
-      const newText = new fabric.IText('New Text', {
+      const newText = new fabric.Textbox('New Text', {
         left: 50 * scale,
         top: 50 * scale,
         fontFamily: 'Arial',
@@ -819,6 +819,7 @@
         fill: '#000000',
         textAlign: 'left',
         lineHeight: 1.2,
+        width: 200 * scale, // Default scaled width for new text to allow wrapping
         stroke: null,
         strokeWidth: 0,
         textBackgroundColor: '',
@@ -838,6 +839,7 @@
         fill: '#000000',
         textAlign: 'left',
         lineHeight: 1.2,
+        width: 200,
         stroke: null,
         strokeWidth: 0,
         textBackgroundColor: '',
@@ -852,7 +854,7 @@
 
     document.getElementById('removeText').addEventListener('click', () => {
       const activeObject = canvas.getActiveObject();
-      if (activeObject && activeObject.type === 'i-text') {
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         canvas.remove(activeObject);
         const index = texts.findIndex(t => t.text === activeObject.text && Math.round(t.left * scale) === Math.round(activeObject.left) && Math.round(t.top * scale) === Math.round(activeObject.top));
         if (index > -1) texts.splice(index, 1);
@@ -864,64 +866,27 @@
     function saveCanvas() {
       if (!canvas) return;
       document.getElementById('processing-overlay').style.display = 'flex';
-      const originalWidth = {{ image_width }};
-      const originalHeight = {{ image_height }};
-      const currentWidth = canvas.width;
-      const currentHeight = canvas.height;
-      const multiplier = originalWidth / currentWidth;
 
-      // Adjust to original size before saving
-      canvas.setDimensions({ width: originalWidth, height: originalHeight });
-      canvas.getObjects().forEach(obj => {
-        if (obj.type === 'i-text') {
-          obj.set({
-            left: obj.left * multiplier,
-            top: obj.top * multiplier,
-            fontSize: obj.fontSize * multiplier,
-            strokeWidth: (obj.strokeWidth || 0) * multiplier,
-            scaleX: 1,
-            scaleY: 1
-          });
-          obj.setCoords();
-        } else if (obj.type === 'image') {
-          obj.set({
-            scaleX: 1,
-            scaleY: 1,
-            left: 0,
-            top: 0
-          });
-          obj.setCoords();
-        }
-      });
-
-      const dataURL = canvas.toDataURL({ format: 'png', multiplier: 1 });
-
-      // Restore
-      canvas.setDimensions({ width: currentWidth, height: currentHeight });
-      canvas.getObjects().forEach(obj => {
-        if (obj.type === 'i-text') {
-          obj.set({
-            left: obj.left / multiplier,
-            top: obj.top / multiplier,
-            fontSize: obj.fontSize / multiplier,
-            strokeWidth: (obj.strokeWidth || 0) / multiplier,
-            scaleX: 1,
-            scaleY: 1
-          });
-          obj.setCoords();
-        } else if (obj.type === 'image') {
-          obj.set({
-            scaleX: scale,
-            scaleY: scale,
-            left: 0,
-            top: 0
-          });
-          obj.setCoords();
-        }
+      // Temporarily pause animations to capture rest state
+      const animatedObjects = canvas.getObjects().filter(obj => obj.animation && obj.animation !== 'none');
+      const savedStates = animatedObjects.map(obj => {
+        const anim = obj.animation;
+        const state = { top: obj.top, scaleX: obj.scaleX, scaleY: obj.scaleY };
+        obj.set({ animation: 'none' });
+        return { obj, state, anim };
       });
       canvas.renderAll();
 
-      // Client-side download for smoothness
+      const multiplier = {{ image_width }} / canvas.width;
+      const dataURL = canvas.toDataURL({ format: 'png', multiplier: multiplier });
+
+      // Resume animations
+      savedStates.forEach(({ obj, state, anim }) => {
+        obj.set(state);
+        applyAnimation(obj, anim);
+      });
+      canvas.renderAll();
+
       const link = document.createElement('a');
       link.download = 'translated_image.png';
       link.href = dataURL;
