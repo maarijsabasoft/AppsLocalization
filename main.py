@@ -19,11 +19,6 @@ from flask_session import Session
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-from werkzeug.middleware.proxy_fix import ProxyFix
-
-# ✅ Ensure Flask knows it is behind an HTTPS proxy
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
-app.config['PREFERRED_URL_SCHEME'] = 'https'
 
 app = Flask(__name__)
 app.secret_key = "supersecret"
