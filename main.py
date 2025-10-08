@@ -40,7 +40,7 @@ login_manager.init_app(app)
 
 # OAuth setup
 oauth = OAuth(app)
-REDIRECT_URI = "http://127.0.0.1:5000/auth/google/callback"  # must match Google Console
+REDIRECT_URI = "https://appslocalization.com/auth/google/callback"  # must match Google Console
 
 # Google OAuth configuration
 google = oauth.register(
