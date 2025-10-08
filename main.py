@@ -1,5 +1,49 @@
 
-import os, io, base64
+# import os, io, base64
+# import numpy as np
+# import cv2
+# from flask import Flask, render_template, request, send_file, redirect, url_for, flash, session
+# from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+# from werkzeug.security import generate_password_hash, check_password_hash
+# from flask_sqlalchemy import SQLAlchemy
+# from deep_translator import GoogleTranslator
+# from PIL import Image, ImageDraw, ImageFont
+# import easyocr
+# import json
+# import uuid
+# import logging
+# import re
+# import time
+# from authlib.integrations.flask_client import OAuth
+# from flask_session import Session
+# # Set up logging
+# logging.basicConfig(level=logging.DEBUG)
+# logger = logging.getLogger(__name__)
+
+# app = Flask(__name__)
+# app.secret_key = "supersecret"
+# app.config["UPLOAD_FOLDER"] = "uploads"
+# os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+
+# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
+# db = SQLAlchemy(app)
+# from flask_session import Session
+
+# app.config["SESSION_TYPE"] = "filesystem"  # or "sqlalchemy"
+# app.config["SESSION_PERMANENT"] = False
+# app.config["SESSION_FILE_DIR"] = os.path.join(os.getcwd(), "flask_session")
+# Session(app)
+
+# login_manager = LoginManager()
+# login_manager.login_view = "login"
+# login_manager.init_app(app)
+
+# # OAuth setup
+# oauth = OAuth(app)
+# REDIRECT_URI = "https://appslocalization.com/auth/google/callback"  # must match Google Console
+
+# # Google OAuth configuration
+import os, io, base64, secrets
 import numpy as np
 import cv2
 from flask import Flask, render_template, request, send_file, redirect, url_for, flash, session
@@ -16,24 +60,59 @@ import re
 import time
 from authlib.integrations.flask_client import OAuth
 from flask_session import Session
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-app.secret_key = "supersecret"
+
+# === SECRET KEY ===
+# Use an environment variable in production. If not set, generate one once and store it.
+app.secret_key = os.environ.get("FLASK_SECRET_KEY") or "replace_with_a_long_random_secret_in_production"
+
+# If you don't have a persistent secret in env, generate and print one (only once) so you can save it.
+if app.secret_key == "replace_with_a_long_random_secret_in_production":
+    # Print a recommended secret to use (copy this to env or config and replace above)
+    print("WARNING: Using placeholder secret. Generate a permanent one with:")
+    print("python3 -c \"import secrets; print(secrets.token_hex(32))\"")
+    # NOTE: Replace the placeholder in code or better: set FLASK_SECRET_KEY in systemd or environment.
+
+# === ProxyFix & URL scheme ===
+# Tell Flask to trust the proxy headers so url_for(..., _external=True) generates https:// URLs
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+app.config['PREFERRED_URL_SCHEME'] = 'https'
+
+# === Session config (Flask-Session using filesystem) ===
+SESSION_DIR = os.path.join(os.getcwd(), "flask_session")
+os.makedirs(SESSION_DIR, exist_ok=True)
+# Ensure proper permissions so the web user can read/write
+try:
+    os.chmod(SESSION_DIR, 0o700)
+except Exception:
+    pass
+
+app.config.update(
+    SESSION_TYPE='filesystem',
+    SESSION_FILE_DIR=SESSION_DIR,
+    SESSION_PERMANENT=False,
+    SESSION_FILE_THRESHOLD=500,
+    # Important cookie settings for OAuth state to persist securely:
+    SESSION_COOKIE_SECURE=True,       # Only send cookie over HTTPS (important in prod)
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Lax'     # 'Lax' is usually OK for OAuth flows
+)
+Session(app)
+
+# Upload folder and DB
 app.config["UPLOAD_FOLDER"] = "uploads"
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
 db = SQLAlchemy(app)
-from flask_session import Session
 
-app.config["SESSION_TYPE"] = "filesystem"  # or "sqlalchemy"
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_FILE_DIR"] = os.path.join(os.getcwd(), "flask_session")
-Session(app)
-
+# Flask-Login
 login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
@@ -42,7 +121,11 @@ login_manager.init_app(app)
 oauth = OAuth(app)
 REDIRECT_URI = "https://appslocalization.com/auth/google/callback"  # must match Google Console
 
-# Google OAuth configuration
+# --- Debug helper (optional) ---
+# When you hit the login route, Authlib will save state in session.
+# These debug logs help you confirm the saved state and the returned state.
+logger.debug("App started. SESSION_FILE_DIR=%s", SESSION_DIR)
+
 google = oauth.register(
     name='google',
     client_id='836571438073-g4foa0u929gskfrqhbi7q7omrl7pif2t.apps.googleusercontent.com',  # Replace with your Google Client ID
