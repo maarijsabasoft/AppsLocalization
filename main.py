@@ -690,7 +690,6 @@ login_manager.init_app(app)
 
 # OAuth setup
 oauth = OAuth(app)
-REDIRECT_URI = "http://127.0.0.1:5000/auth/google/callback"
 
 import socket
 import os
