@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+  <meta name="description" content="Apps Localization - Translate and resize text in images seamlessly for multi-language content creation." />
+  <meta name="keywords" content="image localization, text translation, image editing, multi-language content, Apps Localization, resize images, translate images" />
+  <meta name="author" content="Apps Localization Team" />
+  <meta name="robots" content="index, follow" />
+  <title>Apps Localization - Image Translation & Editing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+      font-family: "Inter", Arial, sans-serif;
+      transition: background 0.5s ease, color 0.3s ease;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    body.light {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #111;
+    }
+
+    body.dark {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #e6e6e6;
+    }
+
+    header, section, footer {
+      width: 100%;
+      padding: clamp(1rem, 5vw, 2rem);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 700;
+      margin: 0;
+      color: inherit;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 600;
+      margin: 0.5rem 0;
+      color: inherit;
+    }
+
+    h3 {
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+
+    p {
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      color: #555;
+      margin: 0.5rem 0;
+      line-height: 1.6;
+    }
+
+    body.dark p {
+      color: #f0f0f0;
+    }
+
+    .btn {
+      display: inline-block;
+      border: 1px solid black;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
+      padding: clamp(0.7rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+      
+      border-radius: clamp(6px, 1.5vw, 8px);
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      font-weight: 600;
+      text-decoration: none;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+    }
+
+    body.dark .btn {
+      background: linear-gradient(135deg, #1a2a3d, #2c5364);
+      border: 1px solid #444;
+    }
+
+    body.dark .btn:hover {
+      box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+    }
+
+    #hero {
+      position: relative;
+      width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body.dark #hero {
+    }
+
+    #hero-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.8;
+    }
+
+    #hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    #hero h1, #hero p {
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .video-error {
+      display: none;
+      color: #ff6b6b;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
+      margin-top: 0.5rem;
+    }
+#tutorial{
+background-color: transparent;
+}
+    #features, #testimonials, #why-apps-localization, #functionality {
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+      padding: clamp(2rem, 5vw, 3rem);
+    }
+
+    body.dark #features, body.dark #testimonials, body.dark #why-apps-localization, body.dark #tutorial, body.dark #functionality {
+      background: rgba(30,32,44,0.95);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.6);
+    }
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 🔹 Always 3 columns */
+  gap: clamp(1rem, 3vw, 2rem);
+  margin-top: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.feature-card {
+  background: rgba(255,255,255,0.8);
+  border-radius: clamp(6px, 1.5vw, 8px);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+
+    body.dark .feature-card {
+      background: rgba(36,38,54,0.8);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    #how-to-use {
+      position: relative;
+    }
+
+    #how-to-use .timeline {
+      position: relative;
+      max-width: min(90vw, 800px);
+      margin: 2rem auto;
+      padding: 0;
+      list-style: none;
+    }
+
+    #how-to-use .timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #007bff;
+    }
+
+    body.dark #how-to-use .timeline::before {
+      background: #00c6ff;
+    }
+
+    #how-to-use .timeline li {
+      position: relative;
+      margin: 2rem 0;
+      padding-left: 50px;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      color: #111;
+      background: rgba(255,255,255,0.9);
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    body.dark #how-to-use .timeline li {
+      color: #e6e6e6;
+      background: rgba(36,38,54,0.9);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    #how-to-use .timeline li::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      background: #007bff;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 3px #007bff;
+    }
+
+    body.dark #how-to-use .timeline li::before {
+      background: #00c6ff;
+      border: 3px solid #2c5364;
+      box-shadow: 0 0 0 3px #00c6ff;
+    }
+
+    #testimonials .testimonial-grid {
+      display: flex;
+      overflow-x: auto;
+      gap: clamp(1rem, 3vw, 2rem);
+      margin-top: clamp(1.5rem, 4vw, 2.5rem);
+      padding-bottom: 1rem;
+      scrollbar-width: thin;
+      scrollbar-color: #007bff #eaeaea;
+    }
+
+    #testimonials .testimonial-grid::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    #testimonials .testimonial-grid::-webkit-scrollbar-track {
+      background: #eaeaea;
+      border-radius: 4px;
+    }
+
+    #testimonials .testimonial-grid::-webkit-scrollbar-thumb {
+      background: #007bff;
+      border-radius: 4px;
+    }
+
+    body.dark #testimonials .testimonial-grid::-webkit-scrollbar-track {
+      background: #2a2d3a;
+    }
+
+    body.dark #testimonials .testimonial-grid::-webkit-scrollbar-thumb {
+      background: #00c6ff;
+    }
+
+    .testimonial-card {
+      flex: 0 0 auto;
+      width: 300px;
+      background: rgba(255,255,255,0.8);
+      border-radius: clamp(6px, 1.5vw, 8px);
+      padding: clamp(1rem, 3vw, 1.5rem);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    body.dark .testimonial-card {
+      background: rgba(36,38,54,0.8);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      /* color: rgba(36,38,54,0.8) ; */
+    }
+
+    .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+    }
+
+    #tutorial iframe {
+      width: 100%;
+      max-width: min(90vw, 800px);
+      height: clamp(200px, 50vw, 450px);
+      border: none;
+      border-radius: clamp(6px, 1.5vw, 8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    body.dark #tutorial iframe {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    footer {
+      margin-top: clamp(2rem, 5vw, 3rem);
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
+      color: #555;
+    }
+
+    body.dark footer {
+      color: #f0f0f0;
+    }
+
+    #theme-toggle {
+      position: fixed;
+      top: clamp(10px, 2vw, 20px);
+      right: clamp(10px, 2vw, 20px);
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: clamp(36px, 8vw, 46px);
+      height: clamp(36px, 8vw, 46px);
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      cursor: pointer;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    #theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.4);
+    }
+
+    /* Functionality Section Styles */
+    #functionality {
+      display: none;
+      width: 100%;
+      max-width: min(90vw, 720px);
+      animation: fadein 0.6s ease;
+    }
+
+    #functionality.active {
+      display: block;
+    }
+
+    .card {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+      border-radius: clamp(0.8rem, 2vw, 1.2rem);
+      padding: clamp(1.5rem, 4vw, 2.8rem);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+      transition: background 0.4s ease, color 0.4s ease, box-shadow 0.3s ease;
+    }
+
+    body.dark .card {
+      background: rgba(30, 32, 44, 0.95);
+      color: #e6e6e6;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.6);
+    }
+
+    body.dark .card h1,
+    body.dark .card .subtitle,
+    body.dark .card label {
+      color: #f0f0f0;
+    }
+
+    #functionality .subtitle {
+      text-align: center;
+      color: #555;
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      margin: 0.5rem 0 clamp(1rem, 3vw, 2.2rem);
+    }
+
+    body.dark #functionality .subtitle {
+      color: #f0f0f0;
+    }
+
+    #functionality label {
+      display: block;
+      margin: clamp(0.8rem, 2vw, 1.4rem) 0 0.5rem;
+      font-weight: 600;
+      color: #333;
+      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+    }
+
+    body.dark #functionality label {
+      color: #f0f0f0;
+    }
+
+    #functionality select, #functionality input[type="file"], #functionality input[type="color"], #functionality input[type="number"] {
+      width: 100%;
+      padding: clamp(0.5rem, 2vw, 0.8rem) 1rem;
+      border: 1px solid #ccc;
+      border-radius: clamp(6px, 1.5vw, 10px);
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    #functionality select:focus, #functionality input[type="file"]:focus, #functionality input[type="color"]:focus, #functionality input[type="number"]:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 6px rgba(0,123,255,0.35);
+    }
+
+    body.dark #functionality select,
+    body.dark #functionality input[type="file"],
+    body.dark #functionality input[type="color"],
+    body.dark #functionality input[type="number"] {
+      background: #2a2d3a;
+      color: #e0e0e0;
+      border: 1px solid #555;
+    }
+
+    body.dark #functionality select:focus,
+    body.dark #functionality input[type="file"]:focus,
+    body.dark #functionality input[type="color"]:focus,
+    body.dark #functionality input[type="number"]:focus {
+      border-color: #00c6ff;
+      box-shadow: 0 0 6px rgba(0,198,255,0.35);
+    }
+
+    button[type="submit"],
+    .download-btn {
+      display: inline-block;
+      margin: clamp(1rem, 3vw, 2rem) clamp(0.5rem, 1vw, 1rem) 0 0;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
+      padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1rem, 2.5vw, 1.6rem);
+      border: none;
+      border-radius: clamp(6px, 1.5vw, 10px);
+      font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
+    }
+
+    button[type="submit"]:hover,
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+    }
+
+    body.dark button[type="submit"],
+    body.dark .download-btn {
+      background: linear-gradient(135deg, #1a2a3d, #2c5364);
+      color: #f2f2f2;
+      border: 1px solid #444;
+    }
+
+    body.dark button[type="submit"]:hover,
+    body.dark .download-btn:hover {
+      box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+    }
+
+    .result {
+      margin-top: clamp(1.5rem, 4vw, 2.5rem);
+      text-align: center;
+      background: rgba(250, 250, 250, 0.95);
+      border-radius: clamp(8px, 2vw, 14px);
+      padding: clamp(1rem, 3vw, 1.5rem);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      color: #222;
+      transition: background 0.4s ease, color 0.4s ease;
+      width: 100%;
+      max-width: min(90vw, 720px);
+    }
+
+    body.dark .result {
+      background: rgba(36, 38, 54, 0.95);
+      color: #f0f0f0;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    }
+
+    #processing-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.95);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      color: #333;
+      animation: fadeInOverlay 0.3s ease forwards;
+    }
+
+    .spinner {
+      border: 6px solid #eaeaea;
+      border-top: 6px solid #007bff;
+      border-right: 6px solid #00c6ff;
+      border-radius: 50%;
+      width: clamp(50px, 10vw, 70px);
+      height: clamp(50px, 10vw, 70px);
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeInOverlay {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    body.dark #processing-overlay {
+      background: rgba(20,22,30,0.92);
+      color: #e6e6e6;
+    }
+
+    body.dark .spinner {
+      border: 6px solid #2a2d3a;
+      border-top: 6px solid #00c6ff;
+      border-right: 6px solid #007bff;
+    }
+
+    .success-msg {
+      font-weight: 600;
+      color: #007bff;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+    }
+
+    .error-msg {
+      font-weight: 600;
+      color: #ff6b6b;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+    }
+
+    body.dark .success-msg {
+      color: #00c6ff;
+    }
+
+    body.dark .error-msg {
+      color: #ff6b6b;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+      max-width: min(90vw, 600px);
+      border-radius: clamp(6px, 1.5vw, 10px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      margin: clamp(0.5rem, 2vw, 1rem) auto 0;
+      display: block;
+    }
+
+    body.dark canvas {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    #controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: clamp(0.3rem, 1vw, 0.5rem);
+      margin: clamp(0.5rem, 2vw, 1rem) 0;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: clamp(6px, 1.5vw, 8px);
+      padding: clamp(0.3rem, 1vw, 0.5rem);
+      width: 100%;
+      max-width: min(90vw, 720px);
+      transition: background 0.4s ease;
+    }
+
+    body.dark #controls {
+      background: rgba(36, 38, 54, 0.95);
+    }
+
+    #controls label {
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+      color: #333;
+    }
+
+    body.dark #controls label {
+      color: #e0e0e0;
+    }
+
+    #controls select,
+    #controls input {
+      width: 100%;
+      padding: clamp(0.2rem, 1vw, 0.3rem);
+      margin-bottom: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: clamp(4px, 1vw, 6px);
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+    }
+
+    body.dark #controls select,
+    body.dark input[type="file"],
+    body.dark input[type="color"],
+    body.dark input[type="number"] {
+      background: #2a2d3a;
+      color: #e0e0e0;
+      border: 1px solid #555;
+    }
+
+    #controls button {
+      width: 100%;
+      padding: clamp(0.2rem, 1vw, 0.3rem);
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
+      border: none;
+      border-radius: clamp(4px, 1vw, 6px);
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+.testimonial-card p:nth-of-type(1) {
+  color: rgba(0, 0, 0, 0.75); /* testimonial text */
+  font-style: italic;
+}
+
+.testimonial-card p:nth-of-type(2) {
+  color: rgba(0, 0, 0, 0.5); /* author line */
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+    body.dark #controls button {
+      background: linear-gradient(135deg, #1a2a3d, #2c5364);
+      border: 1px solid #444;
+    }
+
+    #controls button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 768px) {
+      #controls {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      }
+    }
+
+    @media (max-width: 480px) {
+      #controls {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body class="light">
+  <button id="theme-toggle">🌙</button>
+
+  <header id="hero" class="landing-section">
+    <video autoplay muted loop playsinline id="hero-video">
+      <source src="https://www.pexels.com/download/video/8391324/" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="hero-content">
+      <h1>Apps Localization</h1>
+      <p class="subtitle">Effortlessly translate and customize images for global audiences.</p>
+      <p class="video-error" id="video-error">Video failed to load. Displaying fallback image.</p>
+<a href="/">
+  <button class="btn">Get Started</button>
+</a>
+
+
+    </div>
+  </header>
+
+  <section id="features" class="landing-section">
+    <h2>Powerful Features</h2>
+    <p>Discover why Apps Localization is the ultimate tool for image translation.</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Multi-Language Translation</h3>
+        <p>Translate text in images to multiple languages with high accuracy.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Customizable Text Editing</h3>
+        <p>Adjust font, size, color, and animations to match your brand.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Device-Optimized Resizing</h3>
+        <p>Resize images for phones, tablets, desktops, and more.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Intuitive Interface</h3>
+        <p>User-friendly design for seamless editing and translation.</p>
+      </div>
+      <div class="feature-card">
+        <h3>High-Quality Output</h3>
+        <p>Download crisp, professional images in your preferred format.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Real-Time Preview</h3>
+        <p>Preview changes instantly to ensure perfect results.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-to-use" class="landing-section">
+    <h2>How to Use</h2>
+    <p>Transform your images in just a few simple steps.</p>
+    <ul class="timeline">
+      <li>Upload your image to the Apps Localization platform.</li>
+      <li>Select the target language for translation.</li>
+      <li>Choose the desired output resolution for your device.</li>
+      <li>Customize text appearance with fonts, colors, and animations.</li>
+      <li>Download your localized image instantly.</li>
+    </ul>
+  </section>
+
+  <section id="why-apps-localization" class="landing-section">
+    <h2>Why Apps Localization?</h2>
+    <p>Enhance your content creation with unmatched flexibility and efficiency.</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Global Reach</h3>
+        <p>Engage audiences worldwide with localized content.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Time-Saving</h3>
+        <p>Automate translation and resizing tasks effortlessly.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Brand Consistency</h3>
+        <p>Maintain your visual identity across languages.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="tutorial" class="landing-section">
+    <h2>Watch Our Tutorial</h2>
+    <p>Learn how to use Apps Localization with our step-by-step Loom video.</p>
+<div style="
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  overflow: hidden;
+  border-radius: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: black;
+">
+  <iframe 
+    src="https://www.loom.com/embed/70c2d45cf8dc47e09f30b1296c24a399"
+    frameborder="0"
+    allowfullscreen
+    webkitallowfullscreen
+    mozallowfullscreen
+    style="
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 160%;
+      height: 160%;
+      transform: translate(-50%, -50%) scale(1.05);
+      object-fit: cover;
+      border: none;
+    "
+  ></iframe>
+</div>
+
+
+
+</div>
+
+
+  <section id="cta" class="landing-section">
+    <h2>Ready to Localize Your Images?</h2>
+    <p>Start creating multi-language content today with Apps Localization.</p>
+<button 
+  class="btn" 
+  id="cta-get-started" 
+  aria-label="Get Started with Apps Localization Now"
+  onclick="window.location.href='/'"
+>
+  Get Started Now
+</button>
+  </section>
+
+
+  <script>
+    const body = document.body;
+    const themeToggle = document.getElementById('theme-toggle');
+    const getStartedButtons = document.querySelectorAll('#hero-get-started, #cta-get-started');
+    const backToHomeButton = document.getElementById('back-to-home');
+    const functionalitySection = document.getElementById('functionality');
+    const landingSections = document.querySelectorAll('.landing-section');
+    const heroVideo = document.getElementById('hero-video');
+    const videoError = document.getElementById('video-error');
+    let canvas = null;
+    let texts = [];
+    let scale = 1;
+
+    // Theme toggle
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      body.classList.remove("light");
+      body.classList.add("dark");
+      themeToggle.textContent = "☀️";
+    } else {
+      body.classList.remove("dark");
+      body.classList.add("light");
+      themeToggle.textContent = "🌙";
+    }
+
+    themeToggle.addEventListener("click", () => {
+      if (body.classList.contains("light")) {
+        body.classList.replace("light", "dark");
+        localStorage.setItem("theme", "dark");
+        themeToggle.textContent = "☀️";
+      } else {
+        body.classList.replace("dark", "light");
+        localStorage.setItem("theme", "light");
+        themeToggle.textContent = "🌙";
+      }
+    });
+
+    // Handle video load error
+    heroVideo.addEventListener('error', (e) => {
+      console.error('Failed to load hero video:', e);
+      heroVideo.style.display = 'none';
+      videoError.style.display = 'block';
+    });
+
+    // Verify video load success
+    heroVideo.addEventListener('loadeddata', () => {
+      console.log('Hero video loaded successfully');
+      videoError.style.display = 'none';
+    });
+
+    // Toggle functionality section
+    getStartedButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        landingSections.forEach(section => section.style.display = 'none');
+        functionalitySection.classList.add('active');
+        functionalitySection.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    backToHomeButton.addEventListener('click', () => {
+      landingSections.forEach(section => section.style.display = 'block');
+      functionalitySection.classList.remove('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Mock translation function (replace with actual API call in production)
+    function mockTranslateText(text, targetLang) {
+      return `Translated to ${targetLang}: ${text}`;
+    }
+
+    // Form submission
+    document.getElementById('translate-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('processing-overlay').style.display = 'flex';
+      document.getElementById('error-msg').style.display = 'none';
+
+      const form = e.target;
+      const fileInput = form.querySelector('#image');
+      const language = form.querySelector('#language').value;
+      const resolution = form.querySelector('#resolution').value;
+
+      if (!fileInput.files[0]) {
+        document.getElementById('processing-overlay').style.display = 'none';
+        document.getElementById('error-msg').textContent = 'Please upload an image.';
+        document.getElementById('error-msg').style.display = 'block';
+        return;
+      }
+
+      // Mock processing
+      setTimeout(() => {
+        initCanvas(fileInput.files[0], language, resolution);
+      }, 1000);
+    });
+
+    // Initialize Fabric.js canvas
+    function initCanvas(file, language, resolution) {
+      const fonts = ['Arial', 'Inter', 'Helvetica'];
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.src = reader.result;
+        img.onload = () => {
+          const maxWidth = Math.min(window.innerWidth * 0.9, 600);
+          scale = Math.min(maxWidth / img.width, 1);
+          canvas = new fabric.Canvas('canvas', {
+            width: img.width * scale,
+            height: img.height * scale,
+            preserveObjectStacking: true
+          });
+          const fabricImg = new fabric.Image(img, {
+            scaleX: scale,
+            scaleY: scale,
+            selectable: false,
+            originX: 'left',
+            originY: 'top'
+          });
+          canvas.add(fabricImg);
+          canvas.sendToBack(fabricImg);
+
+          // Mock text detection and translation
+          texts = [
+            {
+              text: mockTranslateText('Sample Text', language),
+              left: 50,
+              top: 50,
+              fontFamily: 'Arial',
+              fontSize: 20,
+              fill: '#000000',
+              textAlign: 'left',
+              lineHeight: 1.2,
+              width: 200
+            }
+          ];
+
+          texts.forEach(text => {
+            const textObj = new fabric.Textbox(text.text, {
+              left: text.left * scale,
+              top: text.top * scale,
+              fontFamily: text.fontFamily,
+              fontSize: text.fontSize * scale,
+              fill: text.fill,
+              textAlign: text.textAlign,
+              lineHeight: text.lineHeight,
+              width: text.width * scale,
+              selectable: true,
+              editable: true
+            });
+            canvas.add(textObj);
+          });
+
+          canvas.on('selection:created', updateControls);
+          canvas.on('selection:updated', updateControls);
+          canvas.on('selection:cleared', updateControls);
+          canvas.on('object:modified', () => canvas.renderAll());
+
+          window.addEventListener('resize', () => {
+            const newMaxWidth = Math.min(window.innerWidth * 0.9, 600);
+            const newScale = Math.min(newMaxWidth / img.width, 1);
+            canvas.setDimensions({
+              width: img.width * newScale,
+              height: img.height * newScale
+            });
+            canvas.getObjects().forEach(obj => {
+              if (obj.type === 'image') {
+                obj.set({ scaleX: newScale, scaleY: newScale });
+              } else if (obj.type === 'textbox') {
+                obj.set({
+                  left: (obj.left / scale) * newScale,
+                  top: (obj.top / scale) * newScale,
+                  fontSize: (obj.fontSize / scale) * newScale,
+                  width: (obj.width / scale) * newScale
+                });
+              }
+            });
+            scale = newScale;
+            canvas.renderAll();
+          });
+
+          canvas.renderAll();
+          document.getElementById('success-msg').textContent = 'Image processed successfully!';
+          document.getElementById('result').style.display = 'block';
+          document.getElementById('processing-overlay').style.display = 'none';
+        };
+        img.onerror = () => {
+          document.getElementById('processing-overlay').style.display = 'none';
+          document.getElementById('error-msg').textContent = 'Error: Could not load the image. Please try again.';
+          document.getElementById('error-msg').style.display = 'block';
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updateControls() {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        document.getElementById('fontFamily').value = activeObject.fontFamily || 'Arial';
+        document.getElementById('fontSize').value = Math.round(activeObject.fontSize / scale) || 20;
+        document.getElementById('fill').value = rgbToHex(activeObject.fill) || '#000000';
+        document.getElementById('stroke').value = rgbToHex(activeObject.stroke) || '#000000';
+        document.getElementById('strokeWidth').value = activeObject.strokeWidth || 0;
+        document.getElementById('lineHeight').value = activeObject.lineHeight || 1.2;
+        document.getElementById('textBackgroundColor').value = rgbToHex(activeObject.textBackgroundColor) || '#ffffff';
+        document.getElementById('textAlign').value = activeObject.textAlign || 'left';
+        document.getElementById('animation').value = activeObject.animation || 'none';
+        document.getElementById('opacity').value = activeObject.opacity || 1;
+        document.getElementById('fontWeight').value = activeObject.fontWeight === 'bold' ? 'bold' : (activeObject.fontWeight || 'normal');
+        document.getElementById('italic').textContent = activeObject.fontStyle === 'italic' ? 'No Italic' : 'Italic';
+      } else {
+        document.getElementById('fontFamily').value = 'Arial';
+        document.getElementById('fontSize').value = 20;
+        document.getElementById('fill').value = '#000000';
+        document.getElementById('stroke').value = '#000000';
+        document.getElementById('strokeWidth').value = 0;
+        document.getElementById('lineHeight').value = 1.2;
+        document.getElementById('textBackgroundColor').value = '#ffffff';
+        document.getElementById('textAlign').value = 'left';
+        document.getElementById('animation').value = 'none';
+        document.getElementById('opacity').value = 1;
+        document.getElementById('fontWeight').value = 'normal';
+        document.getElementById('italic').textContent = 'Italic';
+      }
+    }
+
+    function rgbToHex(rgb) {
+      if (!rgb || rgb.startsWith('#')) return rgb || '#000000';
+      const [r, g, b] = rgb.match(/\d+/g)?.map(Number) || [0, 0, 0];
+      return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+
+    function applyAnimation(obj, animation) {
+      if (!obj) return;
+      obj.animation = animation;
+      if (animation === 'none') {
+        obj.set('animation', null);
+        obj.canvas.renderAll();
+      } else {
+        function animate() {
+          if (obj.animation === 'bounce') {
+            obj.animate('top', obj.top - 10, {
+              duration: 400,
+              onChange: canvas.renderAll.bind(canvas),
+              onComplete: function() {
+                obj.animate('top', obj.top + 10, {
+                  duration: 400,
+                  onChange: canvas.renderAll.bind(canvas),
+                  onComplete: animate
+                });
+              }
+            });
+          } else if (obj.animation === 'pulse') {
+            obj.animate('scaleX', 1.05, {
+              duration: 500,
+              onChange: canvas.renderAll.bind(canvas),
+              onComplete: function() {
+                obj.animate('scaleX', 1, {
+                  duration: 500,
+                  onChange: canvas.renderAll.bind(canvas),
+                  onComplete: animate
+                });
+              }
+            });
+            obj.animate('scaleY', 1.05, {
+              duration: 500,
+              onChange: canvas.renderAll.bind(canvas),
+              onComplete: function() {
+                obj.animate('scaleY', 1, {
+                  duration: 500,
+                  onChange: canvas.renderAll.bind(canvas)
+                });
+              }
+            });
+          }
+        }
+        animate();
+      }
+    }
+
+    document.getElementById('fontFamily').addEventListener('change', (e) => {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        activeObject.set('fontFamily', e.target.value);
+        activeObject.set('dirty', true);
+        canvas.requestRenderAll();
+      }
+    });
+
+    document.getElementById('fontSize').addEventListener('input', (e) => {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        activeObject.set('fontSize', parseInt(e.target.value) * scale);
+        activeObject.set('dirty', true);
+        canvas.requestRenderAll();
+      }
+    });
+
+    document.getElementById('fill').addEventListener('input', (e) => {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        activeObject.set('fill', e.target.value);
+        activeObject.set('dirty', true);
+        canvas.requestRenderAll();
+      }
+    });
+
+    document.getElementById('stroke').addEventListener('input', (e) => {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        activeObject.set('stroke', e.target.value);
+        activeObject.set('dirty', true);
+        canvas.requestRenderAll();
+      }
+    });
+
+    document.getElementById('strokeWidth').addEventListener('input', (e) => {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        activeObject.set('strokeWidth', parseFloat(e.target.value));
+        activeObject.set('dirty', true);
+        canvas.requestRenderAll();
+      }
+    });
+
+    document.getElementById('lineHeight').addEventListener('input', (e) => {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        activeObject.set('lineHeight', parseFloat(e.target.value));
+        activeObject.set('dirty', true);
+        canvas.requestRenderAll();
+      }
+    });
+
+    document.getElementById('textBackgroundColor').addEventListener('input', (e) => {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        activeObject.set('textBackgroundColor', e.target.value);
+        activeObject.set('dirty', true);
+        canvas.requestRenderAll();
+      }
+    });
+
+    document.getElementById('textAlign').addEventListener('change', (e) => {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        activeObject.set('textAlign', e.target.value);
+        activeObject.set('dirty', true);
+        canvas.requestRenderAll();
+      }
+    });
+
+    document.getElementById('animation').addEventListener('change', (e) => {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        applyAnimation(activeObject, e.target.value);
+      }
+    });
+
+    document.getElementById('opacity').addEventListener('input', (e) => {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        activeObject.set('opacity', parseFloat(e.target.value));
+        activeObject.set('dirty', true);
+        canvas.requestRenderAll();
+      }
+    });
+
+    document.getElementById('fontWeight').addEventListener('change', (e) => {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        activeObject.set('fontWeight', e.target.value);
+        activeObject.set('dirty', true);
+        canvas.requestRenderAll();
+      }
+    });
+
+    document.getElementById('italic').addEventListener('click', () => {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        const newStyle = activeObject.fontStyle === 'italic' ? 'normal' : 'italic';
+        activeObject.set('fontStyle', newStyle);
+        activeObject.set('dirty', true);
+        document.getElementById('italic').textContent = newStyle === 'italic' ? 'No Italic' : 'Italic';
+        canvas.requestRenderAll();
+      }
+    });
+
+    document.getElementById('addText').addEventListener('click', () => {
+      if (!canvas) return;
+      const newText = new fabric.Textbox('New Text', {
+        left: 50 * scale,
+        top: 50 * scale,
+        fontFamily: 'Arial',
+        fontSize: 20 * scale,
+        fill: '#000000',
+        textAlign: 'left',
+        lineHeight: 1.2,
+        width: 200 * scale,
+        stroke: null,
+        strokeWidth: 0,
+        textBackgroundColor: '',
+        opacity: 1,
+        fontWeight: 'normal',
+        fontStyle: 'normal',
+        selectable: true,
+        editable: true
+      });
+      canvas.add(newText);
+      texts.push({
+        text: 'New Text',
+        left: 50,
+        top: 50,
+        fontFamily: 'Arial',
+        fontSize: 20,
+        fill: '#000000',
+        textAlign: 'left',
+        lineHeight: 1.2,
+        width: 200,
+        stroke: null,
+        strokeWidth: 0,
+        textBackgroundColor: '',
+        opacity: 1,
+        fontWeight: 'normal',
+        fontStyle: 'normal'
+      });
+      canvas.setActiveObject(newText);
+      updateControls();
+      canvas.renderAll();
+    });
+
+    document.getElementById('removeText').addEventListener('click', () => {
+      const activeObject = canvas?.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        canvas.remove(activeObject);
+        const index = texts.findIndex(t => t.text === activeObject.text && Math.round(t.left * scale) === Math.round(activeObject.left) && Math.round(t.top * scale) === Math.round(activeObject.top));
+        if (index > -1) texts.splice(index, 1);
+        updateControls();
+        canvas.renderAll();
+      }
+    });
+
+    function saveCanvas() {
+      if (!canvas) return;
+      document.getElementById('processing-overlay').style.display = 'flex';
+
+      const animatedObjects = canvas.getObjects().filter(obj => obj.animation && obj.animation !== 'none');
+      const savedStates = animatedObjects.map(obj => {
+        const anim = obj.animation;
+        const state = { top: obj.top, scaleX: obj.scaleX, scaleY: obj.scaleY };
+        obj.set({ animation: 'none' });
+        return { obj, state, anim };
+      });
+      canvas.renderAll();
+
+      const multiplier = 2;
+      const dataURL = canvas.toDataURL({ format: 'png', multiplier: multiplier });
+
+      savedStates.forEach(({ obj, state, anim }) => {
+        obj.set(state);
+        applyAnimation(obj, anim);
+      });
+      canvas.renderAll();
+
+      const link = document.createElement('a');
+      link.download = 'translated_image.png';
+      link.href = dataURL;
+      link.click();
+
+      document.getElementById('processing-overlay').style.display = 'none';
+    }
+
+    document.getElementById('download').addEventListener('click', (e) => {
+      e.preventDefault();
+      saveCanvas();
+    });
+  </script>
+</body>
+</html>
