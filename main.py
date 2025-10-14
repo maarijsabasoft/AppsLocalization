@@ -690,25 +690,20 @@ login_manager.init_app(app)
 
 # OAuth setup
 oauth = OAuth(app)
-
-import socket
-import os
-
-IS_LOCAL = os.environ.get("FLASK_ENV") == "development"
-if IS_LOCAL:
-    REDIRECT_URI = "http://127.0.0.1:5000/auth/google/callback"
-else:
-    REDIRECT_URI = "https://appslocalization.com/auth/google/callback"
+REDIRECT_URI = "https://appslocalization.com/auth/google/callback"
 
 google = oauth.register(
     name='google',
     client_id='836571438073-g4foa0u929gskfrqhbi7q7omrl7pif2t.apps.googleusercontent.com',
     client_secret='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',
-    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+    authorize_params=None,
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    access_token_params=None,
+    refresh_token_url=None,
     client_kwargs={'scope': 'openid email profile'},
-    redirect_uri=REDIRECT_URI
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
 )
-
 
 github = oauth.register(
     name='github',
