@@ -61,72 +61,43 @@ login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
 
-# Global font cache - preloaded at startup
+# Global font cache - preloaded at startup from static/fonts
 FONT_CACHE = {}
 TOP_FONTS = []
+DEFAULT_FONT_NAME = 'arial'
 DEFAULT_FONT_SIZE = 24
 
-def get_production_fonts():
-    """Production-ready font detection with Docker/container support."""
-    system = platform.system()
-    font_paths = []
+def get_static_fonts():
+    """Scan and preload TTF fonts from static/fonts folder."""
+    fonts_dir = os.path.join(app.static_folder or 'static', 'fonts')
+    os.makedirs(fonts_dir, exist_ok=True)
     
-    # Docker/Debian/Ubuntu fonts (most common in production)
-    docker_fonts = [
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
-        "/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
-        "/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf",
-        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
-        "/usr/share/fonts/TTF/DejaVuSans.ttf",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
-        "/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf"
-    ]
-    
-    if system == "Windows":
-        windows_fonts = [
-            r"C:\Windows\Fonts\arial.ttf",
-            r"C:\Windows\Fonts\calibri.ttf",
-            r"C:\Windows\Fonts\segoeui.ttf",
-            r"C:\Windows\Fonts\tahoma.ttf",
-            r"C:\Windows\Fonts\verdana.ttf"
-        ]
-        font_paths.extend(windows_fonts)
-    elif system == "Darwin":  # macOS
-        mac_fonts = [
-            "/System/Library/Fonts/Arial.ttf",
-            "/System/Library/Fonts/Helvetica.ttc",
-            "/Library/Fonts/Arial.ttf",
-            "/System/Library/Fonts/SFNS.ttf"
-        ]
-        font_paths.extend(mac_fonts)
-    
-    font_paths.extend(docker_fonts)  # Always try Docker fonts
-    
+    font_files = [f for f in os.listdir(fonts_dir) if f.lower().endswith('.ttf')]
     available_fonts = []
-    for path in font_paths:
-        if os.path.exists(path) and os.path.isfile(path):
-            try:
-                test_font = ImageFont.truetype(path, 12)
-                font_name = os.path.splitext(os.path.basename(path))[0].replace('-regular', '').replace('.ttc', '.ttf')
-                available_fonts.append((path, font_name))
-                logger.info(f"✓ Production font loaded: {font_name}")
-            except Exception as e:
-                logger.debug(f"✗ Failed to load font {path}: {e}")
     
-    # Always ensure default font
-    try:
-        default_font = ImageFont.load_default()
+    # Prefer arial as default
+    if 'arial.ttf' in font_files:
+        font_files = ['arial.ttf'] + [f for f in font_files if f != 'arial.ttf']
+    
+    for f in font_files[:10]:  # Top 10 fonts
+        path = os.path.join(fonts_dir, f)
+        try:
+            test_font = ImageFont.truetype(path, 12)
+            font_name = os.path.splitext(f)[0].lower().replace('-regular', '')
+            available_fonts.append((path, font_name))
+            logger.info(f"✓ Static font loaded: {font_name}")
+        except Exception as e:
+            logger.warning(f"✗ Failed to load static font {f}: {e}")
+    
+    # Fallback if no fonts
+    if not available_fonts:
+        logger.warning("No static fonts found, using PIL default")
         available_fonts.append(("default", "default"))
-    except:
-        pass
     
-    return available_fonts[:10]  # Top 10 fonts
+    return available_fonts
 
 def preload_fonts(fonts):
-    """Pre-cache fonts with multiple sizes for instant rendering."""
+    """Pre-cache fonts with multiple sizes for fast loading."""
     global FONT_CACHE, TOP_FONTS
     TOP_FONTS = fonts
     
@@ -140,36 +111,20 @@ def preload_fonts(fonts):
                 continue
         else:
             try:
-                sizes = [12, 16, 20, 24, 32, 48, 64]  # Common sizes
+                sizes = [12, 16, 20, 24, 32, 48, 64]  # Common sizes for fast access
                 for size in sizes:
                     key = f"{name}_{size}"
                     FONT_CACHE[key] = ImageFont.truetype(path, size)
                     cache_hits += 1
-                logger.info(f"✓ Pre-cached {name} ({len(sizes)} sizes)")
+                logger.info(f"✓ Pre-cached static font {name} ({len(sizes)} sizes)")
             except Exception as e:
                 logger.warning(f"Failed to preload {name}: {e}")
     
-    logger.info(f"🎉 Font preloading complete: {cache_hits} variants from {len(fonts)} families")
+    logger.info(f"🎉 Static font preloading complete: {cache_hits} variants from {len(fonts)} families")
     return len(FONT_CACHE) > 0
 
-def get_cached_font(font_name="default", size=DEFAULT_FONT_SIZE):
-    """Get closest cached font for instant rendering."""
-    key = f"{font_name}_{size}"
-    if key in FONT_CACHE:
-        return FONT_CACHE[key]
-    
-    # Find closest size
-    font_keys = [k for k in FONT_CACHE.keys() if font_name in k and k != f"{font_name}_default"]
-    if font_keys:
-        sizes = [int(k.split('_')[-1]) for k in font_keys]
-        closest_size = max([s for s in sizes if s <= size], default=min(sizes))
-        return FONT_CACHE[f"{font_name}_{closest_size}"]
-    
-    # Ultimate fallback
-    return ImageFont.load_default()
-
-# Initialize fonts at startup (before OAuth)
-font_initialized = preload_fonts(get_production_fonts())
+# Initialize fonts at startup
+font_initialized = preload_fonts(get_static_fonts())
 
 # OAuth setup (after font init)
 oauth = OAuth(app)
@@ -223,12 +178,17 @@ def preprocess_image_for_ocr(img_path):
     img = cv2.imread(img_path)
     if img is None:
         return None
-    img = cv2.convertScaleAbs(img, alpha=1.5, beta=0)
-    img = cv2.GaussianBlur(img, (3, 3), 0)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    equ = cv2.equalizeHist(gray)
+    # Sharpening instead of blur for better large text detection
+    blur = cv2.GaussianBlur(equ, (0, 0), 3)
+    sharpen = cv2.addWeighted(equ, 1.5, blur, -0.5, 0)
+    # Adaptive thresholding to handle varying lighting
+    binary = cv2.adaptiveThreshold(sharpen, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
     scale_factor = 2.0
-    img = cv2.resize(img, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_LINEAR)
+    resized = cv2.resize(binary, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_LINEAR)
     temp_path = os.path.join(app.config["UPLOAD_FOLDER"], f"temp_{uuid.uuid4().hex[:8]}.png")
-    cv2.imwrite(temp_path, img)
+    cv2.imwrite(temp_path, resized)
     return temp_path, scale_factor
 
 def clean_text(text):
@@ -243,8 +203,17 @@ def perform_ocr(path):
             return []
 
         reader = easyocr.Reader(["en"], model_storage_directory="/tmp/model", gpu=False)
-        result = reader.readtext(preprocessed_path, width_ths=1.0, height_ths=0.7, mag_ratio=2.0,
-                               decoder="greedy", min_size=5, text_threshold=0.3, low_text=0.3, batch_size=16)
+        result = reader.readtext(
+            preprocessed_path,
+            width_ths=1.0,
+            height_ths=0.7,
+            mag_ratio=2.0,
+            decoder="greedy",
+            min_size=10,  # Increased for larger texts
+            text_threshold=0.5,  # Adjusted for better detection
+            low_text=0.4,  # Default value for better large text handling
+            batch_size=16
+        )
 
         os.remove(preprocessed_path)
 
@@ -296,8 +265,8 @@ def translate_and_replace(path, target_lang):
     image = Image.fromarray(cv2.cvtColor(clean, cv2.COLOR_BGR2RGB)).convert("RGBA")
     draw = ImageDraw.Draw(image)
     
-    # Use pre-cached font
-    font_name = TOP_FONTS[0][1] if TOP_FONTS else "default"
+    # Use pre-cached default font (arial)
+    font_name = DEFAULT_FONT_NAME if any(DEFAULT_FONT_NAME in n for _, n in TOP_FONTS) else TOP_FONTS[0][1] if TOP_FONTS else "default"
     font = get_cached_font(font_name, DEFAULT_FONT_SIZE)
 
     texts_list = []
@@ -319,7 +288,7 @@ def translate_and_replace(path, target_lang):
         if not lines:
             lines = [trans]
 
-        # Use fixed font size with scaling
+        # Adjust font size dynamically, using cached versions for speed
         best_size = min(bh // max(1, len(lines)), 48)
         font = get_cached_font(font_name, best_size)
         
@@ -617,6 +586,22 @@ def download():
     
     flash("No image available", "error")
     return redirect(url_for("index"))
+
+def get_cached_font(font_name=DEFAULT_FONT_NAME, size=DEFAULT_FONT_SIZE):
+    """Get closest cached font for fast loading."""
+    key = f"{font_name}_{size}"
+    if key in FONT_CACHE:
+        return FONT_CACHE[key]
+    
+    # Find closest size
+    font_keys = [k for k in FONT_CACHE.keys() if font_name in k and k != f"{font_name}_default"]
+    if font_keys:
+        sizes = [int(k.split('_')[-1]) for k in font_keys]
+        closest_size = max([s for s in sizes if s <= size] or [min(sizes)])
+        return FONT_CACHE[f"{font_name}_{closest_size}"]
+    
+    # Fallback to default
+    return ImageFont.load_default()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv('PORT', 5000)), debug=False)
