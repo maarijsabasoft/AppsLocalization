@@ -209,7 +209,7 @@
     justify-content: center;
     transition: transform 0.2s, box-shadow 0.2s;
   }
-  .tutorial-btn {
+    .tutorial-btn {
     position: fixed;
     top: 15px;
     left: 15px;
@@ -224,16 +224,21 @@
     transition: background-color 0.2s, color 0.2s, transform 0.2s;
     z-index: 1000;
   }
+
   .tutorial-btn:hover {
     transform: translateY(-2px);
     background-color: var(--btn-hover-bg);
   }
+
+  /* Light theme colors */
   body.light {
     --btn-bg: #f4f4f4;
     --btn-border: #ccc;
     --btn-text: #333;
     --btn-hover-bg: #e0e0e0;
   }
+
+  /* Dark theme colors */
   body.dark {
     --btn-bg: #222;
     --btn-border: #444;
@@ -283,9 +288,6 @@
     width: 100%;
     max-width: min(90vw, 720px);
     transition: background 0.4s ease;
-    position: sticky;
-    top: 0;
-    z-index: 10;
   }
   body.dark #controls {
     background: rgba(36, 38, 54, 0.95);
@@ -370,6 +372,7 @@
     display: block;
     margin: clamp(0.5rem, 2vw, 1rem) auto 0;
   }
+
   {% if fonts %}
     {% for font in fonts %}
     @font-face {
@@ -379,9 +382,11 @@
     {% endfor %}
   {% endif %}
 </style>
+
+
 </head>
 <body class="light">
-  <a href="/tutorial" class="tutorial-btn">Tutorial</a>
+    <a href="/tutorial" class="tutorial-btn">Tutorial</a>
   <button id="theme-toggle">🌙</button>
   <main class="card">
     <h1>Apps Localization</h1>
@@ -527,14 +532,6 @@
             <option value="10">10px</option>
           </select>
         </div>
-        <div>
-          <label for="undo">Undo</label>
-          <button id="undo">Undo</button>
-        </div>
-        <div>
-          <label for="redo">Redo</label>
-          <button id="redo">Redo</button>
-        </div>
       </div>
       <canvas id="canvas"></canvas>
       <p><button id="download" class="download-btn">Download Image</button></p>
@@ -554,8 +551,8 @@
     let canvas = null;
     let texts = [];
     let scale = 1;
-    let undoHistory = [];
-    let redoHistory = [];
+    let history = [];
+    let historyIndex = -1;
     let clipboard = null;
     let isPenActive = false;
 
@@ -600,60 +597,34 @@
       });
     }
 
-    // Save state for undo/redo
-    function saveState() {
-      const state = canvas.toJSON(['animation']);
-      undoHistory.push(state);
-      redoHistory = [];
+    // Save state for undo
+    function saveState(action, data) {
+      history = history.slice(0, historyIndex + 1);
+      history.push({ action, data });
+      historyIndex++;
     }
 
-    // Reconstruct texts from canvas objects
-    function reconstructTexts() {
-      texts = canvas.getObjects('textbox').map(obj => ({
-        text: obj.text,
-        left: obj.left / scale,
-        top: obj.top / scale,
-        fontFamily: obj.fontFamily,
-        fontSize: obj.fontSize / scale,
-        fill: obj.fill,
-        textAlign: obj.textAlign,
-        lineHeight: obj.lineHeight,
-        width: obj.width / scale,
-        stroke: obj.stroke,
-        strokeWidth: obj.strokeWidth,
-        textBackgroundColor: obj.textBackgroundColor,
-        opacity: obj.opacity,
-        fontWeight: obj.fontWeight,
-        fontStyle: obj.fontStyle
-      }));
-    }
-
-    // Undo action
+    // Undo last action
     function undo() {
-      if (undoHistory.length > 0) {
-        const currentState = canvas.toJSON(['animation']);
-        redoHistory.push(currentState);
-        const previousState = undoHistory.pop();
-        canvas.loadFromJSON(previousState, () => {
-          canvas.renderAll();
-          updateControls();
-          reconstructTexts();
-        });
+      if (historyIndex < 0) return;
+      const { action, data } = history[historyIndex];
+      if (action === 'add') {
+        canvas.remove(canvas.getObjects().find(obj => obj === data.object));
+        if (data.textData) texts = texts.filter(t => t !== data.textData);
+      } else if (action === 'remove') {
+        canvas.add(data.object);
+        if (data.textData) texts.push(data.textData);
+      } else if (action === 'modify') {
+        const obj = canvas.getObjects().find(o => o === data.object);
+        obj.set(data.prevState);
+        if (data.prevTextData) {
+          const textIndex = texts.findIndex(t => t.text === data.prevState.text && Math.round(t.left * scale) === Math.round(data.prevState.left) && Math.round(t.top * scale) === Math.round(data.prevState.top));
+          if (textIndex > -1) texts[textIndex] = data.prevTextData;
+        }
       }
-    }
-
-    // Redo action
-    function redo() {
-      if (redoHistory.length > 0) {
-        const currentState = canvas.toJSON(['animation']);
-        undoHistory.push(currentState);
-        const nextState = redoHistory.pop();
-        canvas.loadFromJSON(nextState, () => {
-          canvas.renderAll();
-          updateControls();
-          reconstructTexts();
-        });
-      }
+      historyIndex--;
+      canvas.renderAll();
+      updateControls();
     }
 
     // Initialize Fabric.js canvas
@@ -700,11 +671,33 @@
         canvas.on('selection:created', updateControls);
         canvas.on('selection:updated', updateControls);
         canvas.on('selection:cleared', updateControls);
-        canvas.on('object:modified', () => {
-          saveState();
-        });
-        canvas.on('editing:exited', () => {
-          saveState();
+        canvas.on('object:modified', (e) => {
+          if (e.target && (e.target.type === 'textbox' || e.target.type === 'path')) {
+            const prevState = e.target.toObject(['animation']);
+            const textIndex = texts.findIndex(t => t.text === e.target.text && Math.round(t.left * scale) === Math.round(e.target.left) && Math.round(t.top * scale) === Math.round(e.target.top));
+            const prevTextData = textIndex > -1 ? { ...texts[textIndex] } : null;
+            saveState('modify', { object: e.target, prevState, prevTextData });
+            if (e.target.type === 'textbox' && textIndex > -1) {
+              texts[textIndex] = {
+                text: e.target.text,
+                left: e.target.left / scale,
+                top: e.target.top / scale,
+                fontFamily: e.target.fontFamily,
+                fontSize: e.target.fontSize / scale,
+                fill: e.target.fill,
+                textAlign: e.target.textAlign,
+                lineHeight: e.target.lineHeight,
+                width: e.target.width / scale,
+                stroke: e.target.stroke,
+                strokeWidth: e.target.strokeWidth,
+                textBackgroundColor: e.target.textBackgroundColor,
+                opacity: e.target.opacity,
+                fontWeight: e.target.fontWeight,
+                fontStyle: e.target.fontStyle
+              };
+            }
+          }
+          canvas.renderAll();
         });
         // Ctrl+Click for multi-selection
         canvas.on('mouse:down', (o) => {
@@ -720,6 +713,7 @@
               strokeLineJoin: 'round'
             });
             canvas.add(currentPath);
+            saveState('add', { object: currentPath });
             canvas.on('mouse:move', (o) => {
               if (!isDrawing || !isPenActive) return;
               const pointer = canvas.getPointer(o.e);
@@ -731,36 +725,16 @@
               isDrawing = false;
               canvas.off('mouse:move');
               canvas.off('mouse:up');
-              saveState();
             });
           } else if (o.e.ctrlKey) {
             const target = canvas.findTarget(o.e, false);
             if (target && (target.type === 'textbox' || target.type === 'path')) {
-              let activeObjects = canvas.getActiveObjects();
+              const activeObjects = canvas.getActiveObjects();
               if (activeObjects.includes(target)) {
-                activeObjects = activeObjects.filter(obj => obj !== target);
+                canvas.removeFromActiveSelection(target);
               } else {
-                activeObjects.push(target);
+                canvas.addToActiveSelection(target);
               }
-              if (activeObjects.length > 1) {
-                canvas.setActiveObject(new fabric.ActiveSelection(activeObjects, { canvas }));
-              } else if (activeObjects.length === 1) {
-                canvas.setActiveObject(activeObjects[0]);
-              } else {
-                canvas.discardActiveObject();
-              }
-              updateControls();
-              canvas.renderAll();
-            }
-          } else {
-            const target = canvas.findTarget(o.e, false);
-            if (target && (target.type === 'textbox' || target.type === 'path')) {
-              canvas.setActiveObject(target);
-              updateControls();
-              canvas.renderAll();
-            } else if (!target) {
-              canvas.discardActiveObject();
-              updateControls();
               canvas.renderAll();
             }
           }
@@ -770,13 +744,10 @@
           if (e.ctrlKey && e.key === 'z') {
             e.preventDefault();
             undo();
-          } else if (e.ctrlKey && e.key === 'y') {
-            e.preventDefault();
-            redo();
           }
           if (e.ctrlKey && e.key === 'a') {
             e.preventDefault();
-            const textObjects = canvas.getObjects().filter(obj => obj.type === 'textbox' || obj.type === 'path');
+            const textObjects = canvas.getObjects().filter(obj => obj.type === 'textbox');
             if (textObjects.length > 0) {
               canvas.setActiveObject(new fabric.ActiveSelection(textObjects, { canvas }));
               updateControls();
@@ -796,12 +767,20 @@
             if (activeObjects.length > 0) {
               clipboard = activeObjects.map(obj => obj.toObject(['animation']));
               activeObjects.forEach(obj => {
+                if (obj.type === 'textbox') {
+                  const index = texts.findIndex(t => t.text === obj.text && Math.round(t.left * scale) === Math.round(obj.left) && Math.round(t.top * scale) === Math.round(obj.top));
+                  if (index > -1) {
+                    saveState('remove', { object: obj, textData: texts[index] });
+                    texts.splice(index, 1);
+                  }
+                } else {
+                  saveState('remove', { object: obj });
+                }
                 canvas.remove(obj);
               });
               canvas.discardActiveObject();
               updateControls();
               canvas.renderAll();
-              saveState();
             }
           }
           if (e.ctrlKey && e.key === 'v') {
@@ -819,6 +798,24 @@
                     editable: true
                   });
                   canvas.add(newText);
+                  texts.push({
+                    text: item.text,
+                    left: item.left / scale + 10,
+                    top: item.top / scale + 10,
+                    fontFamily: item.fontFamily,
+                    fontSize: item.fontSize / scale,
+                    fill: item.fill,
+                    textAlign: item.textAlign,
+                    lineHeight: item.lineHeight,
+                    width: item.width / scale,
+                    stroke: item.stroke,
+                    strokeWidth: item.strokeWidth,
+                    textBackgroundColor: item.textBackgroundColor,
+                    opacity: item.opacity,
+                    fontWeight: item.fontWeight,
+                    fontStyle: item.fontStyle
+                  });
+                  saveState('add', { object: newText, textData: texts[texts.length - 1] });
                 } else if (item.type === 'path') {
                   const newPath = new fabric.Path(item.path, {
                     ...item,
@@ -827,41 +824,37 @@
                     selectable: true
                   });
                   canvas.add(newPath);
+                  saveState('add', { object: newPath });
                 }
               });
               canvas.renderAll();
-              saveState();
-              reconstructTexts();
             }
           }
-          if (e.key === 'Backspace' && !canvas.getActiveObject()?.isEditing) {
+          if (e.key === 'Backspace' && !e.target.isContentEditable) {
             e.preventDefault();
             const activeObjects = canvas.getActiveObjects();
             if (activeObjects.length > 0) {
               activeObjects.forEach(obj => {
-                if (obj.type !== 'textbox') {
+                if (obj.type === 'textbox') {
+                  if (obj.isEditing) {
+                    // Allow default backspace behavior in editing mode
+                    return;
+                  } else {
+                    const prevState = obj.toObject(['animation']);
+                    const textIndex = texts.findIndex(t => t.text === obj.text && Math.round(t.left * scale) === Math.round(obj.left) && Math.round(t.top * scale) === Math.round(obj.top));
+                    const prevTextData = textIndex > -1 ? { ...texts[textIndex] } : null;
+                    obj.set('text', '');
+                    if (textIndex > -1) texts[textIndex].text = '';
+                    saveState('modify', { object: obj, prevState, prevTextData });
+                  }
+                } else {
+                  saveState('remove', { object: obj });
                   canvas.remove(obj);
                 }
               });
               canvas.discardActiveObject();
               updateControls();
               canvas.renderAll();
-              saveState();
-              reconstructTexts();
-            }
-          }
-          if (e.key === 'Delete' && !canvas.getActiveObject()?.isEditing) {
-            e.preventDefault();
-            const activeObjects = canvas.getActiveObjects();
-            if (activeObjects.length > 0) {
-              activeObjects.forEach(obj => {
-                canvas.remove(obj);
-              });
-              canvas.discardActiveObject();
-              updateControls();
-              canvas.renderAll();
-              saveState();
-              reconstructTexts();
             }
           }
         });
@@ -889,13 +882,10 @@
           canvas.renderAll();
         });
         canvas.renderAll();
-        saveState(); // Initial state
-        document.getElementById('processing-overlay').style.display = 'none';
       };
       img.onerror = () => {
         console.error('Failed to load image');
         alert('Error: Could not load the image. Please try again.');
-        document.getElementById('processing-overlay').style.display = 'none';
       };
     }
 
@@ -990,13 +980,20 @@
       const activeObjects = canvas.getActiveObjects();
       activeObjects.forEach(obj => {
         if (obj.type === 'textbox' || obj.type === 'i-text') {
+          const prevState = obj.toObject(['animation']);
+          const textIndex = texts.findIndex(t => t.text === obj.text && Math.round(t.left * scale) === Math.round(obj.left) && Math.round(t.top * scale) === Math.round(obj.top));
+          const prevTextData = textIndex > -1 ? { ...texts[textIndex] } : null;
           obj.set(property, transform(value));
           obj.set('dirty', true);
+          if (textIndex > -1) {
+            texts[textIndex][property] = transform(value);
+            if (property === 'fontSize') texts[textIndex][property] = transform(value) / scale;
+            if (property === 'left' || property === 'top' || property === 'width') texts[textIndex][property] = transform(value) / scale;
+          }
+          saveState('modify', { object: obj, prevState, prevTextData });
         }
       });
       canvas.requestRenderAll();
-      saveState();
-      reconstructTexts();
     }
 
     document.getElementById('fontFamily').addEventListener('change', (e) => {
@@ -1038,7 +1035,6 @@
           applyAnimation(obj, e.target.value);
         }
       });
-      saveState();
     });
 
     document.getElementById('opacity').addEventListener('input', (e) => {
@@ -1053,9 +1049,14 @@
       const activeObjects = canvas.getActiveObjects();
       activeObjects.forEach(obj => {
         if (obj.type === 'textbox' || obj.type === 'i-text') {
+          const prevState = obj.toObject(['animation']);
+          const textIndex = texts.findIndex(t => t.text === obj.text && Math.round(t.left * scale) === Math.round(obj.left) && Math.round(t.top * scale) === Math.round(obj.top));
+          const prevTextData = textIndex > -1 ? { ...texts[textIndex] } : null;
           const newStyle = obj.fontStyle === 'italic' ? 'normal' : 'italic';
           obj.set('fontStyle', newStyle);
           obj.set('dirty', true);
+          if (textIndex > -1) texts[textIndex].fontStyle = newStyle;
+          saveState('modify', { object: obj, prevState, prevTextData });
         }
       });
       const activeObject = canvas.getActiveObject();
@@ -1063,8 +1064,6 @@
         document.getElementById('italic').textContent = activeObject.fontStyle === 'italic' ? 'No Italic' : 'Italic';
       }
       canvas.requestRenderAll();
-      saveState();
-      reconstructTexts();
     });
 
     document.getElementById('addText').addEventListener('click', () => {
@@ -1087,24 +1086,47 @@
         editable: true
       });
       canvas.add(newText);
+      texts.push({
+        text: 'New Text',
+        left: 50,
+        top: 50,
+        fontFamily: 'Arial',
+        fontSize: 20,
+        fill: '#000000',
+        textAlign: 'left',
+        lineHeight: 1.2,
+        width: 200,
+        stroke: null,
+        strokeWidth: 0,
+        textBackgroundColor: '',
+        opacity: 1,
+        fontWeight: 'normal',
+        fontStyle: 'normal'
+      });
+      saveState('add', { object: newText, textData: texts[texts.length - 1] });
       canvas.setActiveObject(newText);
       updateControls();
       canvas.renderAll();
-      saveState();
-      reconstructTexts();
     });
 
     document.getElementById('removeText').addEventListener('click', () => {
       const activeObjects = canvas.getActiveObjects();
       if (activeObjects.length > 0) {
         activeObjects.forEach(obj => {
+          if (obj.type === 'textbox') {
+            const index = texts.findIndex(t => t.text === obj.text && Math.round(t.left * scale) === Math.round(obj.left) && Math.round(t.top * scale) === Math.round(obj.top));
+            if (index > -1) {
+              saveState('remove', { object: obj, textData: texts[index] });
+              texts.splice(index, 1);
+            }
+          } else {
+            saveState('remove', { object: obj });
+          }
           canvas.remove(obj);
         });
         canvas.discardActiveObject();
         updateControls();
         canvas.renderAll();
-        saveState();
-        reconstructTexts();
       }
     });
 
@@ -1136,9 +1158,6 @@
       }
     });
 
-    document.getElementById('undo').addEventListener('click', undo);
-    document.getElementById('redo').addEventListener('click', redo);
-
     function saveCanvas() {
       if (!canvas) return;
       document.getElementById('processing-overlay').style.display = 'flex';
@@ -1169,7 +1188,6 @@
       saveCanvas();
     });
 
-    document.getElementById('processing-overlay').style.display = 'flex';
     initCanvas();
     {% endif %}
   </script>
