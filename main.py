@@ -842,7 +842,7 @@ def translate_and_replace(path, target_lang):
     clean = cv2.inpaint(cv_img, mask, 3, cv2.INPAINT_TELEA)
     image = Image.fromarray(cv2.cvtColor(clean, cv2.COLOR_BGR2RGB)).convert("RGBA")
     draw = ImageDraw.Draw(image)
-    font_path = "static/fonts/arial.ttf"
+    font_path = "static/font/arial.ttf"
 
     texts_list = []
     for box, text in boxes:
@@ -1177,7 +1177,7 @@ def index():
         session['last_image_width'] = clean_img.width
         session['last_image_height'] = clean_img.height
 
-        fonts_dir = os.path.join(app.static_folder, 'fonts') if app.static_folder else 'static/fonts'
+        fonts_dir = os.path.join(app.static_folder, 'font') if app.static_folder else 'static/font'
         os.makedirs(fonts_dir, exist_ok=True)
         fonts_files = [f for f in os.listdir(fonts_dir) if f.lower().endswith('.ttf')]
         fonts = [os.path.splitext(f)[0] for f in fonts_files]
