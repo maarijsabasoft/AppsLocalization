@@ -690,20 +690,26 @@ login_manager.init_app(app)
 
 # OAuth setup
 oauth = OAuth(app)
-REDIRECT_URI = "https://appslocalization.com/auth/google/callback"
+REDIRECT_URI = "http://127.0.0.1:5000/auth/google/callback"
+
+import socket
+import os
+
+IS_LOCAL = os.environ.get("FLASK_ENV") == "development"
+if IS_LOCAL:
+    REDIRECT_URI = "http://127.0.0.1:5000/auth/google/callback"
+else:
+    REDIRECT_URI = "https://appslocalization.com/auth/google/callback"
 
 google = oauth.register(
     name='google',
     client_id='836571438073-g4foa0u929gskfrqhbi7q7omrl7pif2t.apps.googleusercontent.com',
     client_secret='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',
-    authorize_url='https://accounts.google.com/o/oauth2/auth',
-    authorize_params=None,
-    access_token_url='https://accounts.google.com/o/oauth2/token',
-    access_token_params=None,
-    refresh_token_url=None,
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
     client_kwargs={'scope': 'openid email profile'},
-    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
+    redirect_uri=REDIRECT_URI
 )
+
 
 github = oauth.register(
     name='github',
@@ -842,7 +848,7 @@ def translate_and_replace(path, target_lang):
     clean = cv2.inpaint(cv_img, mask, 3, cv2.INPAINT_TELEA)
     image = Image.fromarray(cv2.cvtColor(clean, cv2.COLOR_BGR2RGB)).convert("RGBA")
     draw = ImageDraw.Draw(image)
-    font_path = "static/font/arial.ttf"
+    font_path = "static/fonts/arial.ttf"
 
     texts_list = []
     for box, text in boxes:
@@ -1177,7 +1183,7 @@ def index():
         session['last_image_width'] = clean_img.width
         session['last_image_height'] = clean_img.height
 
-        fonts_dir = os.path.join(app.static_folder, 'font') if app.static_folder else 'static/font'
+        fonts_dir = os.path.join(app.static_folder, 'fonts') if app.static_folder else 'static/fonts'
         os.makedirs(fonts_dir, exist_ok=True)
         fonts_files = [f for f in os.listdir(fonts_dir) if f.lower().endswith('.ttf')]
         fonts = [os.path.splitext(f)[0] for f in fonts_files]
