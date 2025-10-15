@@ -190,7 +190,8 @@ def translate_and_replace(path, target_lang):
     clean = cv2.inpaint(cv_img, mask, 3, cv2.INPAINT_TELEA)
     image = Image.fromarray(cv2.cvtColor(clean, cv2.COLOR_BGR2RGB)).convert("RGBA")
     draw = ImageDraw.Draw(image)
-    font_path = "static/font/arial.ttf"
+    font_path = os.path.join(app.static_folder, "font", "arial.ttf")
+    font = ImageFont.truetype(font_path, 24)
 
     texts_list = []
     for box, text in boxes:
