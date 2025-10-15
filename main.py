@@ -1,4 +1,3 @@
-
 import os, io, base64
 import numpy as np
 import cv2
@@ -527,7 +526,6 @@ def logout():
     session.pop('last_texts_json', None)
     session.pop('last_image_width', None)
     session.pop('last_image_height', None)
-    session.pop('last_fonts', None)
     session.pop('google_nonce', None)
     logout_user()
     return redirect(url_for("login"))
@@ -616,12 +614,6 @@ def index():
         session['last_image_width'] = clean_img.width
         session['last_image_height'] = clean_img.height
 
-        fonts_dir = os.path.join(app.static_folder, 'font') if app.static_folder else 'static/font'
-        os.makedirs(fonts_dir, exist_ok=True)
-        fonts_files = [f for f in os.listdir(fonts_dir) if f.lower().endswith('.ttf')]
-        fonts = [os.path.splitext(f)[0] for f in fonts_files]
-        session['last_fonts'] = fonts
-
         try:
             os.remove(in_path)
         except:
@@ -640,7 +632,6 @@ def index():
         return render_template("index.html",
                                clean_image=encoded,
                                texts_json=session['last_texts_json'],
-                               fonts=fonts,
                                image_width=session['last_image_width'],
                                image_height=session['last_image_height'],
                                success="Translation complete!")
