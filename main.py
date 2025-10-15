@@ -17,6 +17,8 @@ import secrets
 from authlib.integrations.flask_client import OAuth
 from flask_session import Session
 from authlib.common.errors import AuthlibBaseError
+from werkzeug.middleware.proxy_fix import ProxyFix
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
