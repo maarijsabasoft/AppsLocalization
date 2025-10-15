@@ -209,7 +209,7 @@
     justify-content: center;
     transition: transform 0.2s, box-shadow 0.2s;
   }
-  .tutorial-btn {
+    .tutorial-btn {
     position: fixed;
     top: 15px;
     left: 15px;
@@ -224,16 +224,21 @@
     transition: background-color 0.2s, color 0.2s, transform 0.2s;
     z-index: 1000;
   }
+
   .tutorial-btn:hover {
     transform: translateY(-2px);
     background-color: var(--btn-hover-bg);
   }
+
+  /* Light theme colors */
   body.light {
     --btn-bg: #f4f4f4;
     --btn-border: #ccc;
     --btn-text: #333;
     --btn-hover-bg: #e0e0e0;
   }
+
+  /* Dark theme colors */
   body.dark {
     --btn-bg: #222;
     --btn-border: #444;
@@ -370,6 +375,7 @@
     display: block;
     margin: clamp(0.5rem, 2vw, 1rem) auto 0;
   }
+
   {% if fonts %}
     {% for font in fonts %}
     @font-face {
@@ -379,9 +385,11 @@
     {% endfor %}
   {% endif %}
 </style>
+
+
 </head>
 <body class="light">
-  <a href="/tutorial" class="tutorial-btn">Tutorial</a>
+    <a href="/tutorial" class="tutorial-btn">Tutorial</a>
   <button id="theme-toggle">🌙</button>
   <main class="card">
     <h1>Apps Localization</h1>
@@ -526,14 +534,6 @@
             <option value="5">5px</option>
             <option value="10">10px</option>
           </select>
-        </div>
-        <div>
-          <label for="undo">Undo</label>
-          <button id="undo">Undo</button>
-        </div>
-        <div>
-          <label for="redo">Redo</label>
-          <button id="redo">Redo</button>
         </div>
       </div>
       <canvas id="canvas"></canvas>
@@ -703,9 +703,6 @@
         canvas.on('object:modified', () => {
           saveState();
         });
-        canvas.on('editing:exited', () => {
-          saveState();
-        });
         // Ctrl+Click for multi-selection
         canvas.on('mouse:down', (o) => {
           if (isPenActive) {
@@ -736,31 +733,12 @@
           } else if (o.e.ctrlKey) {
             const target = canvas.findTarget(o.e, false);
             if (target && (target.type === 'textbox' || target.type === 'path')) {
-              let activeObjects = canvas.getActiveObjects();
+              const activeObjects = canvas.getActiveObjects();
               if (activeObjects.includes(target)) {
-                activeObjects = activeObjects.filter(obj => obj !== target);
+                canvas.removeFromActiveSelection(target);
               } else {
-                activeObjects.push(target);
+                canvas.addToActiveSelection(target);
               }
-              if (activeObjects.length > 1) {
-                canvas.setActiveObject(new fabric.ActiveSelection(activeObjects, { canvas }));
-              } else if (activeObjects.length === 1) {
-                canvas.setActiveObject(activeObjects[0]);
-              } else {
-                canvas.discardActiveObject();
-              }
-              updateControls();
-              canvas.renderAll();
-            }
-          } else {
-            const target = canvas.findTarget(o.e, false);
-            if (target && (target.type === 'textbox' || target.type === 'path')) {
-              canvas.setActiveObject(target);
-              updateControls();
-              canvas.renderAll();
-            } else if (!target) {
-              canvas.discardActiveObject();
-              updateControls();
               canvas.renderAll();
             }
           }
@@ -776,7 +754,7 @@
           }
           if (e.ctrlKey && e.key === 'a') {
             e.preventDefault();
-            const textObjects = canvas.getObjects().filter(obj => obj.type === 'textbox' || obj.type === 'path');
+            const textObjects = canvas.getObjects().filter(obj => obj.type === 'textbox');
             if (textObjects.length > 0) {
               canvas.setActiveObject(new fabric.ActiveSelection(textObjects, { canvas }));
               updateControls();
@@ -834,12 +812,16 @@
               reconstructTexts();
             }
           }
-          if (e.key === 'Backspace' && !canvas.getActiveObject()?.isEditing) {
+          if (e.key === 'Backspace' && !e.target.isContentEditable) {
             e.preventDefault();
             const activeObjects = canvas.getActiveObjects();
             if (activeObjects.length > 0) {
               activeObjects.forEach(obj => {
-                if (obj.type !== 'textbox') {
+                if (obj.type === 'textbox') {
+                  const newText = obj.text.slice(0, -1);
+                  obj.set('text', newText);
+                  obj.set('dirty', true);
+                } else {
                   canvas.remove(obj);
                 }
               });
@@ -850,7 +832,7 @@
               reconstructTexts();
             }
           }
-          if (e.key === 'Delete' && !canvas.getActiveObject()?.isEditing) {
+          if (e.key === 'Delete' && !e.target.isContentEditable) {
             e.preventDefault();
             const activeObjects = canvas.getActiveObjects();
             if (activeObjects.length > 0) {
@@ -1135,9 +1117,6 @@
         canvas.freeDrawingBrush.width = parseInt(e.target.value);
       }
     });
-
-    document.getElementById('undo').addEventListener('click', undo);
-    document.getElementById('redo').addEventListener('click', redo);
 
     function saveCanvas() {
       if (!canvas) return;
