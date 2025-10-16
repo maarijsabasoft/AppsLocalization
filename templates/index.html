@@ -8,388 +8,484 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
   <style>
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    width: 100%;
-    overflow-x: hidden;
-    font-family: "Inter", sans-serif;
-    transition: background 0.5s ease, color 0.3s ease;
-  }
-  body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: clamp(1rem, 5vw, 2rem);
-  }
-  body.light {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    color: #333;
-  }
-  body.dark {
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: #e6e6e6;
-  }
-  .card {
-    width: 100%;
-    max-width: min(90vw, 720px);
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(6px);
-    border-radius: clamp(0.8rem, 2vw, 1.2rem);
-    padding: clamp(1.5rem, 4vw, 2.8rem);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
-    animation: fadein 0.6s ease;
-    transition: background 0.4s ease, color 0.4s ease, box-shadow 0.3s ease;
-  }
-  @keyframes fadein {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  body.dark .card {
-    background: rgba(30, 32, 44, 0.95);
-    color: #e6e6e6;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.6);
-  }
-  body.dark .card h1,
-  body.dark .card .subtitle,
-  body.dark .card label {
-    color: #f0f0f0;
-  }
-  h1 {
-    text-align: center;
-    margin: 0;
-    font-weight: 700;
-    font-size: clamp(1.5rem, 5vw, 2.4rem);
-    color: #111;
-  }
-  .subtitle {
-    text-align: center;
-    color: #555;
-    font-size: clamp(0.9rem, 3vw, 1.2rem);
-    margin: 0.5rem 0 clamp(1rem, 3vw, 2.2rem);
-  }
-  label {
-    display: block;
-    margin: clamp(0.8rem, 2vw, 1.4rem) 0 0.5rem;
-    font-weight: 600;
-    color: #333;
-    font-size: clamp(0.9rem, 2.5vw, 1.05rem);
-  }
-  select, input[type="file"], input[type="color"], input[type="number"] {
-    width: 100%;
-    padding: clamp(0.5rem, 2vw, 0.8rem) 1rem;
-    border: 1px solid #ccc;
-    border-radius: clamp(6px, 1.5vw, 10px);
-    font-size: clamp(0.85rem, 2.5vw, 1rem);
-    transition: border 0.2s, box-shadow 0.2s;
-  }
-  select:focus, input[type="file"]:focus, input[type="color"]:focus, input[type="number"]:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 6px rgba(0,123,255,0.35);
-  }
-  body.dark select,
-  body.dark input[type="file"],
-  body.dark input[type="color"],
-  body.dark input[type="number"] {
-    background: #2a2d3a;
-    color: #e0e0e0;
-    border: 1px solid #555;
-  }
-  body.dark select:focus,
-  body.dark input[type="file"]:focus,
-  body.dark input[type="color"]:focus,
-  body.dark input[type="number"]:focus {
-    border-color: #00c6ff;
-    box-shadow: 0 0 6px rgba(0,198,255,0.35);
-  }
-  button[type="submit"],
-  .download-btn {
-    display: inline-block;
-    margin: clamp(1rem, 3vw, 2rem) clamp(0.5rem, 1vw, 1rem) 0 0;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    color: #fff;
-    padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1rem, 2.5vw, 1.6rem);
-    border: none;
-    border-radius: clamp(6px, 1.5vw, 10px);
-    font-size: clamp(0.8rem, 2.5vw, 0.95rem);
-    font-weight: 600;
-    cursor: pointer;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
-  }
-  button[type="submit"]:hover,
-  .download-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.18);
-  }
-  body.dark button[type="submit"],
-  body.dark .download-btn {
-    background: linear-gradient(135deg, #1a2a3d, #2c5364);
-    color: #f2f2f2;
-    border: 1px solid #444;
-  }
-  body.dark button[type="submit"]:hover,
-  body.dark .download-btn:hover {
-    box-shadow: 0 8px 18px rgba(0,0,0,0.5);
-  }
-  .result {
-    margin-top: clamp(1.5rem, 4vw, 2.5rem);
-    text-align: center;
-    background: rgba(250, 250, 250, 0.95);
-    border-radius: clamp(8px, 2vw, 14px);
-    padding: clamp(1rem, 3vw, 1.5rem);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    color: #222;
-    transition: background 0.4s ease, color 0.4s ease;
-    width: 100%;
-    max-width: min(90vw, 720px);
-  }
-  body.dark .result {
-    background: rgba(36, 38, 54, 0.95);
-    color: #f0f0f0;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
-  }
-  #processing-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(255,255,255,0.95);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    font-size: clamp(0.9rem, 3vw, 1.2rem);
-    color: #333;
-    animation: fadeInOverlay 0.3s ease forwards;
-  }
-  .spinner {
-    border: 6px solid #eaeaea;
-    border-top: 6px solid #007bff;
-    border-right: 6px solid #00c6ff;
-    border-radius: 50%;
-    width: clamp(50px, 10vw, 70px);
-    height: clamp(50px, 10vw, 70px);
-    animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes fadeInOverlay {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  body.dark #processing-overlay {
-    background: rgba(20,22,30,0.92);
-    color: #e6e6e6;
-  }
-  body.dark .spinner {
-    border: 6px solid #2a2d3a;
-    border-top: 6px solid #00c6ff;
-    border-right: 6px solid #007bff;
-  }
-  #theme-toggle {
-    position: fixed;
-    top: clamp(10px, 2vw, 20px);
-    right: clamp(10px, 2vw, 20px);
-    background: rgba(0,0,0,0.6);
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: clamp(36px, 8vw, 46px);
-    height: clamp(36px, 8vw, 46px);
-    font-size: clamp(0.9rem, 3vw, 1.2rem);
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+      font-family: "Inter", sans-serif;
+      transition: background 0.5s ease, color 0.3s ease;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: clamp(1rem, 5vw, 2rem);
+    }
+
+    body.light {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #333;
+    }
+
+    body.dark {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #e6e6e6;
+    }
+
+    .card {
+      width: 100%;
+      max-width: min(90vw, 720px);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+      border-radius: clamp(0.8rem, 2vw, 1.2rem);
+      padding: clamp(1.5rem, 4vw, 2.8rem);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+      animation: fadein 0.6s ease;
+      transition: background 0.4s ease, color 0.4s ease, box-shadow 0.3s ease;
+    }
+
+    @keyframes fadein {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.dark .card {
+      background: rgba(30, 32, 44, 0.95);
+      color: #e6e6e6;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+    }
+
+    body.dark .card h1,
+    body.dark .card .subtitle,
+    body.dark .card label {
+      color: #f0f0f0;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 0;
+      font-weight: 700;
+      font-size: clamp(1.5rem, 5vw, 2.4rem);
+      color: #111;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #555;
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      margin: 0.5rem 0 clamp(1rem, 3vw, 2.2rem);
+    }
+
+    label {
+      display: block;
+      margin: clamp(0.8rem, 2vw, 1.4rem) 0 0.5rem;
+      font-weight: 600;
+      color: #333;
+      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+    }
+
+    select,
+    input[type="file"],
+    input[type="color"],
+    input[type="number"] {
+      width: 100%;
+      padding: clamp(0.5rem, 2vw, 0.8rem) 1rem;
+      border: 1px solid #ccc;
+      border-radius: clamp(6px, 1.5vw, 10px);
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    select:focus,
+    input[type="file"]:focus,
+    input[type="color"]:focus,
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 6px rgba(0, 123, 255, 0.35);
+    }
+
+    body.dark select,
+    body.dark input[type="file"],
+    body.dark input[type="color"],
+    body.dark input[type="number"] {
+      background: #2a2d3a;
+      color: #e0e0e0;
+      border: 1px solid #555;
+    }
+
+    body.dark select:focus,
+    body.dark input[type="file"]:focus,
+    body.dark input[type="color"]:focus,
+    body.dark input[type="number"]:focus {
+      border-color: #00c6ff;
+      box-shadow: 0 0 6px rgba(0, 198, 255, 0.35);
+    }
+
+    button[type="submit"],
+    .download-btn {
+      display: inline-block;
+      margin: clamp(1rem, 3vw, 2rem) clamp(0.5rem, 1vw, 1rem) 0 0;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
+      padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1rem, 2.5vw, 1.6rem);
+      border: none;
+      border-radius: clamp(6px, 1.5vw, 10px);
+      font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
+    }
+
+    button[type="submit"]:hover,
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+    }
+
+    body.dark button[type="submit"],
+    body.dark .download-btn {
+      background: linear-gradient(135deg, #1a2a3d, #2c5364);
+      color: #f2f2f2;
+      border: 1px solid #444;
+    }
+
+    body.dark button[type="submit"]:hover,
+    body.dark .download-btn:hover {
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+    }
+
+    .result {
+      margin-top: clamp(1.5rem, 4vw, 2.5rem);
+      text-align: center;
+      background: rgba(250, 250, 250, 0.95);
+      border-radius: clamp(8px, 2vw, 14px);
+      padding: clamp(1rem, 3vw, 1.5rem);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      color: #222;
+      transition: background 0.4s ease, color 0.4s ease;
+      width: 100%;
+      max-width: min(90vw, 720px);
+    }
+
+    body.dark .result {
+      background: rgba(36, 38, 54, 0.95);
+      color: #f0f0f0;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+    }
+
+    #processing-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      color: #333;
+      animation: fadeInOverlay 0.3s ease forwards;
+    }
+
+    .spinner {
+      border: 6px solid #eaeaea;
+      border-top: 6px solid #007bff;
+      border-right: 6px solid #00c6ff;
+      border-radius: 50%;
+      width: clamp(50px, 10vw, 70px);
+      height: clamp(50px, 10vw, 70px);
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes fadeInOverlay {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    body.dark #processing-overlay {
+      background: rgba(20, 22, 30, 0.92);
+      color: #e6e6e6;
+    }
+
+    body.dark .spinner {
+      border: 6px solid #2a2d3a;
+      border-top: 6px solid #00c6ff;
+      border-right: 6px solid #007bff;
+    }
+
+    #theme-toggle {
+      position: fixed;
+      top: clamp(10px, 2vw, 20px);
+      right: clamp(10px, 2vw, 20px);
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: clamp(36px, 8vw, 46px);
+      height: clamp(36px, 8vw, 46px);
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      cursor: pointer;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
     .tutorial-btn {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 500;
-    text-decoration: none;
-    background-color: var(--btn-bg);
-    color: var(--btn-text);
-    border: 1px solid var(--btn-border);
-    transition: background-color 0.2s, color 0.2s, transform 0.2s;
-    z-index: 1000;
-  }
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      border: 1px solid var(--btn-border);
+      transition: background-color 0.2s, color 0.2s, transform 0.2s;
+      z-index: 1000;
+    }
 
-  .tutorial-btn:hover {
-    transform: translateY(-2px);
-    background-color: var(--btn-hover-bg);
-  }
+    .tutorial-btn:hover {
+      transform: translateY(-2px);
+      background-color: var(--btn-hover-bg);
+    }
 
-  /* Light theme colors */
-  body.light {
-    --btn-bg: #f4f4f4;
-    --btn-border: #ccc;
-    --btn-text: #333;
-    --btn-hover-bg: #e0e0e0;
-  }
+    /* Light theme colors */
+    body.light {
+      --btn-bg: #f4f4f4;
+      --btn-border: #ccc;
+      --btn-text: #333;
+      --btn-hover-bg: #e0e0e0;
+    }
 
-  /* Dark theme colors */
-  body.dark {
-    --btn-bg: #222;
-    --btn-border: #444;
-    --btn-text: #f8f8f8;
-    --btn-hover-bg: #333;
-  }
-  #theme-toggle:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.4);
-  }
-  .success-msg {
-    font-weight: 600;
-    color: #007bff;
-    font-size: clamp(0.9rem, 2.5vw, 1rem);
-  }
-  .error-msg {
-    font-weight: 600;
-    color: #ff6b6b;
-    font-size: clamp(0.9rem, 2.5vw, 1rem);
-  }
-  body.dark .success-msg {
-    color: #00c6ff;
-  }
-  body.dark .error-msg {
-    color: #ff6b6b;
-  }
-  canvas {
-    width: 100% !important;
-    height: auto !important;
-    max-width: min(90vw, 600px);
-    border-radius: clamp(6px, 1.5vw, 10px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    margin: clamp(0.5rem, 2vw, 1rem) auto 0;
-    display: block;
-  }
-  body.dark canvas {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  }
-  #controls {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: clamp(0.3rem, 1vw, 0.5rem);
-    margin: clamp(0.5rem, 2vw, 1rem) 0;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: clamp(6px, 1.5vw, 8px);
-    padding: clamp(0.3rem, 1vw, 0.5rem);
-    width: 100%;
-    max-width: min(90vw, 720px);
-    transition: background 0.4s ease;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  body.dark #controls {
-    background: rgba(36, 38, 54, 0.95);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  }
-  #controls label {
-    display: block;
-    margin-bottom: 0.2rem;
-    font-size: clamp(0.7rem, 2vw, 0.8rem);
-    color: #333;
-  }
-  body.dark #controls label {
-    color: #e0e0e0;
-  }
-  #controls select,
-  #controls input {
-    width: 100%;
-    padding: clamp(0.2rem, 1vw, 0.3rem);
-    margin-bottom: 0.3rem;
-    border: 1px solid #ccc;
-    border-radius: clamp(4px, 1vw, 6px);
-    font-size: clamp(0.7rem, 2vw, 0.8rem);
-  }
-  body.dark #controls select,
-  body.dark input[type="file"],
-  body.dark input[type="color"],
-  body.dark input[type="number"] {
-    background: #2a2d3a;
-    color: #e0e0e0;
-    border: 1px solid #555;
-  }
-  #controls button {
-    width: 100%;
-    padding: clamp(0.2rem, 1vw, 0.3rem);
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    color: #fff;
-    border: none;
-    border-radius: clamp(4px, 1vw, 6px);
-    font-size: clamp(0.7rem, 2vw, 0.8rem);
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s;
-  }
-  body.dark #controls button {
-    background: linear-gradient(135deg, #1a2a3d, #2c5364);
-    border: 1px solid #444;
-  }
-  #controls button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  }
-  #controls button.active {
-    background: linear-gradient(135deg, #007bff, #00c6ff);
-    transform: scale(0.95);
-  }
-  body.dark #controls button.active {
-    background: linear-gradient(135deg, #005b99, #0088cc);
-  }
-  @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-10px); }
-    60% { transform: translateY(-5px); }
-  }
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-  }
-  @media (max-width: 768px) {
+    /* Dark theme colors */
+    body.dark {
+      --btn-bg: #222;
+      --btn-border: #444;
+      --btn-text: #f8f8f8;
+      --btn-hover-bg: #333;
+    }
+
+    #theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+    }
+
+    .success-msg {
+      font-weight: 600;
+      color: #007bff;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+    }
+
+    .error-msg {
+      font-weight: 600;
+      color: #ff6b6b;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+    }
+
+    body.dark .success-msg {
+      color: #00c6ff;
+    }
+
+    body.dark .error-msg {
+      color: #ff6b6b;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+      max-width: min(90vw, 600px);
+      border-radius: clamp(6px, 1.5vw, 10px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      margin: clamp(0.5rem, 2vw, 1rem) auto 0;
+      display: block;
+    }
+
+    body.dark canvas {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
     #controls {
-      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: clamp(0.3rem, 1vw, 0.5rem);
+      margin: clamp(0.5rem, 2vw, 1rem) 0;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: clamp(6px, 1.5vw, 8px);
+      padding: clamp(0.3rem, 1vw, 0.5rem);
+      width: 100%;
+      max-width: min(90vw, 720px);
+      transition: background 0.4s ease;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
-  }
-  @media (max-width: 480px) {
-    #controls {
-      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+
+    body.dark #controls {
+      background: rgba(36, 38, 54, 0.95);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
-  }
-  .result canvas {
-    width: 100% !important;
-    height: auto !important;
-    max-width: min(90vw, 600px);
-    display: block;
-    margin: clamp(0.5rem, 2vw, 1rem) auto 0;
-  }
 
-  {% if fonts %}
-    {% for font in fonts %}
-    @font-face {
-      font-family: "{{ font }}";
-      src: url("{{ url_for('static', filename='fonts/' + font + '.ttf') }}") format("truetype");
+    #controls label {
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+      color: #333;
     }
-    {% endfor %}
-  {% endif %}
-</style>
 
+    body.dark #controls label {
+      color: #e0e0e0;
+    }
 
+    #controls select,
+    #controls input {
+      width: 100%;
+      padding: clamp(0.2rem, 1vw, 0.3rem);
+      margin-bottom: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: clamp(4px, 1vw, 6px);
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+    }
+
+    body.dark #controls select,
+    body.dark input[type="file"],
+    body.dark input[type="color"],
+    body.dark input[type="number"] {
+      background: #2a2d3a;
+      color: #e0e0e0;
+      border: 1px solid #555;
+    }
+
+    #controls button {
+      width: 100%;
+      padding: clamp(0.2rem, 1vw, 0.3rem);
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
+      border: none;
+      border-radius: clamp(4px, 1vw, 6px);
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    body.dark #controls button {
+      background: linear-gradient(135deg, #1a2a3d, #2c5364);
+      border: 1px solid #444;
+    }
+
+    #controls button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    #controls button.active {
+      background: linear-gradient(135deg, #007bff, #00c6ff);
+      transform: scale(0.95);
+    }
+
+    body.dark #controls button.active {
+      background: linear-gradient(135deg, #005b99, #0088cc);
+    }
+
+    @keyframes bounce {
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateY(0);
+      }
+
+      40% {
+        transform: translateY(-10px);
+      }
+
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @media (max-width: 768px) {
+      #controls {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      }
+    }
+
+    @media (max-width: 480px) {
+      #controls {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      }
+    }
+
+    .result canvas {
+      width: 100% !important;
+      height: auto !important;
+      max-width: min(90vw, 600px);
+      display: block;
+      margin: clamp(0.5rem, 2vw, 1rem) auto 0;
+    }
+
+    {% if fonts %}
+      {% for font in fonts %}
+        @font-face {
+          font-family: "{{ font }}";
+          src: url("{{ url_for('static', filename='fonts/' + font + '.ttf') }}") format("truetype");
+        }
+      {% endfor %}
+    {% endif %}
+  </style>
 </head>
+
 <body class="light">
-    <a href="/tutorial" class="tutorial-btn">Tutorial</a>
+  <a href="/tutorial" class="tutorial-btn">Tutorial</a>
   <button id="theme-toggle">🌙</button>
   <main class="card">
     <h1>Apps Localization</h1>
@@ -548,68 +644,77 @@
     <div class="spinner"></div>
     <p>Processing your image… please wait!</p>
   </div>
-  <script>
-    const body = document.body;
-    const themeToggle = document.getElementById('theme-toggle');
-    let canvas = null;
-    let texts = [];
-    let scale = 1;
-    let undoHistory = [];
-    let redoHistory = [];
-    let clipboard = null;
-    let isPenActive = false;
+ <script>
+const body = document.body;
+const themeToggle = document.getElementById('theme-toggle');
+let canvas = null;
+let texts = [];
+let scale = 1;
+let undoHistory = [];
+let redoHistory = [];
+let clipboard = null;
+let isPenActive = false;
 
-    // Theme toggle
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      body.classList.remove("light");
-      body.classList.add("dark");
-      themeToggle.textContent = "☀️";
-    } else {
-      body.classList.remove("dark");
-      body.classList.add("light");
-      themeToggle.textContent = "🌙";
-    }
-    themeToggle.addEventListener("click", () => {
-      if (body.classList.contains("light")) {
+// Theme toggle
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+    body.classList.remove("light");
+    body.classList.add("dark");
+    themeToggle.textContent = "☀️";
+} else {
+    body.classList.remove("dark");
+    body.classList.add("light");
+    themeToggle.textContent = "🌙";
+}
+themeToggle.addEventListener("click", () => {
+    if (body.classList.contains("light")) {
         body.classList.replace("light", "dark");
         localStorage.setItem("theme", "dark");
         themeToggle.textContent = "☀️";
-      } else {
+    } else {
         body.classList.replace("dark", "light");
         localStorage.setItem("theme", "light");
         themeToggle.textContent = "🌙";
-      }
-    });
+    }
+});
 
-    // Form submission
-    document.getElementById('translate-form').addEventListener('submit', () => {
-      document.getElementById('processing-overlay').style.display = 'flex';
-    });
+// Form submission
+document.getElementById('translate-form').addEventListener('submit', () => {
+    document.getElementById('processing-overlay').style.display = 'flex';
+});
 
-    // Preload fonts
-    function preloadFonts(fonts) {
-      fonts.forEach(font => {
-        const fontFace = new FontFace(font, `url({{ url_for('static', filename='fonts/') }}${font}.ttf)`);
+// Preload fonts with fallback
+function preloadFonts(fonts) {
+    const fontPromises = fonts.map(font => {
+        const fontUrl = `{{ url_for('static', filename='fonts/') }}${font}.ttf`;
+        const fontFace = new FontFace(font, `url(${fontUrl})`);
         document.fonts.add(fontFace);
-        fontFace.load().catch(err => console.error(`Failed to load font ${font}:`, err));
-      });
-      document.fonts.ready.then(() => {
-        console.log('All fonts loaded');
-        if (canvas) canvas.renderAll();
-      });
-    }
+        return fontFace.load().catch(err => {
+            console.error(`Failed to load font ${font}:`, err);
+            return null; // Continue despite font loading failure
+        });
+    });
+    // Use timeout to prevent hanging if fonts fail to load
+    const timeout = new Promise(resolve => setTimeout(resolve, 3000)); // 3-second timeout
+    Promise.race([Promise.all(fontPromises), timeout]).then(() => {
+        console.log('Font loading completed or timed out');
+        if (canvas) canvas.renderAll(); // Render canvas with available fonts
+    }).catch(err => {
+        console.error('Font preloading error:', err);
+        if (canvas) canvas.renderAll(); // Render canvas with default fonts
+    });
+}
 
-    // Save state for undo/redo
-    function saveState() {
-      const state = canvas.toJSON(['animation']);
-      undoHistory.push(state);
-      redoHistory = [];
-    }
+// Save state for undo/redo
+function saveState() {
+    const state = canvas.toJSON(['animation']);
+    undoHistory.push(state);
+    redoHistory = [];
+}
 
-    // Reconstruct texts from canvas objects
-    function reconstructTexts() {
-      texts = canvas.getObjects('textbox').map(obj => ({
+// Reconstruct texts from canvas objects
+function reconstructTexts() {
+    texts = canvas.getObjects('textbox').map(obj => ({
         text: obj.text,
         left: obj.left / scale,
         top: obj.top / scale,
@@ -625,265 +730,271 @@
         opacity: obj.opacity,
         fontWeight: obj.fontWeight,
         fontStyle: obj.fontStyle
-      }));
-    }
+    }));
+}
 
-    // Undo action
-    function undo() {
-      if (undoHistory.length > 0) {
+// Undo action
+function undo() {
+    if (undoHistory.length > 0) {
         const currentState = canvas.toJSON(['animation']);
         redoHistory.push(currentState);
         const previousState = undoHistory.pop();
         canvas.loadFromJSON(previousState, () => {
-          canvas.renderAll();
-          updateControls();
-          reconstructTexts();
+            canvas.renderAll();
+            updateControls();
+            reconstructTexts();
         });
-      }
     }
+}
 
-    // Redo action
-    function redo() {
-      if (redoHistory.length > 0) {
+// Redo action
+function redo() {
+    if (redoHistory.length > 0) {
         const currentState = canvas.toJSON(['animation']);
         undoHistory.push(currentState);
         const nextState = redoHistory.pop();
         canvas.loadFromJSON(nextState, () => {
-          canvas.renderAll();
-          updateControls();
-          reconstructTexts();
+            canvas.renderAll();
+            updateControls();
+            reconstructTexts();
         });
-      }
     }
+}
 
-    // Initialize Fabric.js canvas
-    {% if success %}
-    function initCanvas() {
-      const fonts = [{% for font in fonts %}'{{ font }}'{% if not loop.last %},{% endif %}{% endfor %}];
-      preloadFonts(fonts);
-      const img = new Image();
-      img.src = "data:image/png;base64,{{ clean_image }}";
-      img.onload = () => {
-        const maxWidth = Math.min(window.innerWidth * 0.9, 600);
-        scale = Math.min(maxWidth / img.width, 1);
-        canvas = new fabric.Canvas('canvas', {
-          width: img.width * scale,
-          height: img.height * scale,
-          preserveObjectStacking: true,
-          selection: true
-        });
-        const fabricImg = new fabric.Image(img, {
-          scaleX: scale,
-          scaleY: scale,
-          selectable: false,
-          originX: 'left',
-          originY: 'top'
-        });
-        canvas.add(fabricImg);
-        canvas.sendToBack(fabricImg);
-        texts = JSON.parse('{{ texts_json | safe }}');
-        texts.forEach(text => {
-          const textObj = new fabric.Textbox(text.text, {
-            left: text.left * scale,
-            top: text.top * scale,
-            fontFamily: text.fontFamily || 'Arial',
-            fontSize: text.fontSize * scale,
-            fill: text.fill,
-            textAlign: text.textAlign || 'left',
-            lineHeight: text.lineHeight || 1.2,
-            width: (text.width || img.width) * scale,
-            selectable: true,
-            editable: true
-          });
-          canvas.add(textObj);
-        });
-        canvas.on('selection:created', updateControls);
-        canvas.on('selection:updated', updateControls);
-        canvas.on('selection:cleared', updateControls);
-        canvas.on('object:modified', () => {
-          saveState();
-        });
-        // Ctrl+Click for multi-selection
-        canvas.on('mouse:down', (o) => {
-          if (isPenActive) {
-            let isDrawing = true;
-            const pointer = canvas.getPointer(o.e);
-            const currentPath = new fabric.Path(`M ${pointer.x} ${pointer.y}`, {
-              stroke: document.getElementById('penColor').value,
-              strokeWidth: parseInt(document.getElementById('penWidth').value),
-              fill: null,
-              selectable: true,
-              strokeLineCap: 'round',
-              strokeLineJoin: 'round'
+// Initialize Fabric.js canvas
+{% if success %}
+function initCanvas() {
+    const fonts = [{% for font in fonts %}'{{ font }}'{% if not loop.last %},{% endif %}{% endfor %}];
+    const img = new Image();
+    img.src = "data:image/png;base64,{{ clean_image }}";
+    img.onload = () => {
+        try {
+            const maxWidth = Math.min(window.innerWidth * 0.9, 600);
+            scale = Math.min(maxWidth / img.width, 1);
+            canvas = new fabric.Canvas('canvas', {
+                width: img.width * scale,
+                height: img.height * scale,
+                preserveObjectStacking: true,
+                selection: true
             });
-            canvas.add(currentPath);
-            canvas.on('mouse:move', (o) => {
-              if (!isDrawing || !isPenActive) return;
-              const pointer = canvas.getPointer(o.e);
-              currentPath.path.push(['L', pointer.x, pointer.y]);
-              currentPath.set('dirty', true);
-              canvas.renderAll();
+            const fabricImg = new fabric.Image(img, {
+                scaleX: scale,
+                scaleY: scale,
+                selectable: false,
+                originX: 'left',
+                originY: 'top'
             });
-            canvas.on('mouse:up', () => {
-              isDrawing = false;
-              canvas.off('mouse:move');
-              canvas.off('mouse:up');
-              saveState();
-            });
-          } else if (o.e.ctrlKey) {
-            const target = canvas.findTarget(o.e, false);
-            if (target && (target.type === 'textbox' || target.type === 'path')) {
-              const activeObjects = canvas.getActiveObjects();
-              if (activeObjects.includes(target)) {
-                canvas.removeFromActiveSelection(target);
-              } else {
-                canvas.addToActiveSelection(target);
-              }
-              canvas.renderAll();
-            }
-          }
-        });
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-          if (e.ctrlKey && e.key === 'z') {
-            e.preventDefault();
-            undo();
-          } else if (e.ctrlKey && e.key === 'y') {
-            e.preventDefault();
-            redo();
-          }
-          if (e.ctrlKey && e.key === 'a') {
-            e.preventDefault();
-            const textObjects = canvas.getObjects().filter(obj => obj.type === 'textbox');
-            if (textObjects.length > 0) {
-              canvas.setActiveObject(new fabric.ActiveSelection(textObjects, { canvas }));
-              updateControls();
-              canvas.renderAll();
-            }
-          }
-          if (e.ctrlKey && e.key === 'c') {
-            e.preventDefault();
-            const activeObjects = canvas.getActiveObjects();
-            if (activeObjects.length > 0) {
-              clipboard = activeObjects.map(obj => obj.toObject(['animation']));
-            }
-          }
-          if (e.ctrlKey && e.key === 'x') {
-            e.preventDefault();
-            const activeObjects = canvas.getActiveObjects();
-            if (activeObjects.length > 0) {
-              clipboard = activeObjects.map(obj => obj.toObject(['animation']));
-              activeObjects.forEach(obj => {
-                canvas.remove(obj);
-              });
-              canvas.discardActiveObject();
-              updateControls();
-              canvas.renderAll();
-              saveState();
-            }
-          }
-          if (e.ctrlKey && e.key === 'v') {
-            e.preventDefault();
-            if (clipboard) {
-              clipboard.forEach(item => {
-                if (item.type === 'textbox') {
-                  const newText = new fabric.Textbox(item.text, {
-                    ...item,
-                    left: (item.left / scale + 10) * scale,
-                    top: (item.top / scale + 10) * scale,
-                    fontSize: item.fontSize,
-                    width: item.width,
+            canvas.add(fabricImg);
+            canvas.sendToBack(fabricImg);
+            texts = JSON.parse('{{ texts_json | safe }}');
+            texts.forEach(text => {
+                const textObj = new fabric.Textbox(text.text, {
+                    left: text.left * scale,
+                    top: text.top * scale,
+                    fontFamily: text.fontFamily || 'Arial', // Fallback to Arial
+                    fontSize: text.fontSize * scale,
+                    fill: text.fill,
+                    textAlign: text.textAlign || 'left',
+                    lineHeight: text.lineHeight || 1.2,
+                    width: (text.width || img.width) * scale,
                     selectable: true,
                     editable: true
-                  });
-                  canvas.add(newText);
-                } else if (item.type === 'path') {
-                  const newPath = new fabric.Path(item.path, {
-                    ...item,
-                    left: (item.left / scale + 10) * scale,
-                    top: (item.top / scale + 10) * scale,
-                    selectable: true
-                  });
-                  canvas.add(newPath);
+                });
+                canvas.add(textObj);
+            });
+            canvas.on('selection:created', updateControls);
+            canvas.on('selection:updated', updateControls);
+            canvas.on('selection:cleared', updateControls);
+            canvas.on('object:modified', () => {
+                saveState();
+            });
+            // Ctrl+Click for multi-selection
+            canvas.on('mouse:down', (o) => {
+                if (isPenActive) {
+                    let isDrawing = true;
+                    const pointer = canvas.getPointer(o.e);
+                    const currentPath = new fabric.Path(`M ${pointer.x} ${pointer.y}`, {
+                        stroke: document.getElementById('penColor').value,
+                        strokeWidth: parseInt(document.getElementById('penWidth').value),
+                        fill: null,
+                        selectable: true,
+                        strokeLineCap: 'round',
+                        strokeLineJoin: 'round'
+                    });
+                    canvas.add(currentPath);
+                    canvas.on('mouse:move', (o) => {
+                        if (!isDrawing || !isPenActive) return;
+                        const pointer = canvas.getPointer(o.e);
+                        currentPath.path.push(['L', pointer.x, pointer.y]);
+                        currentPath.set('dirty', true);
+                        canvas.renderAll();
+                    });
+                    canvas.on('mouse:up', () => {
+                        isDrawing = false;
+                        canvas.off('mouse:move');
+                        canvas.off('mouse:up');
+                        saveState();
+                    });
+                } else if (o.e.ctrlKey) {
+                    const target = canvas.findTarget(o.e, false);
+                    if (target && (target.type === 'textbox' || target.type === 'path')) {
+                        const activeObjects = canvas.getActiveObjects();
+                        if (activeObjects.includes(target)) {
+                            canvas.removeFromActiveSelection(target);
+                        } else {
+                            canvas.addToActiveSelection(target);
+                        }
+                        canvas.renderAll();
+                    }
                 }
-              });
-              canvas.renderAll();
-              saveState();
-              reconstructTexts();
-            }
-          }
-          if (e.key === 'Backspace' && !e.target.isContentEditable) {
-            e.preventDefault();
-            const activeObjects = canvas.getActiveObjects();
-            if (activeObjects.length > 0) {
-              activeObjects.forEach(obj => {
-                if (obj.type === 'textbox') {
-                  const newText = obj.text.slice(0, -1);
-                  obj.set('text', newText);
-                  obj.set('dirty', true);
-                } else {
-                  canvas.remove(obj);
+            });
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key === 'z') {
+                    e.preventDefault();
+                    undo();
+                } else if (e.ctrlKey && e.key === 'y') {
+                    e.preventDefault();
+                    redo();
                 }
-              });
-              canvas.discardActiveObject();
-              updateControls();
-              canvas.renderAll();
-              saveState();
-              reconstructTexts();
-            }
-          }
-          if (e.key === 'Delete' && !e.target.isContentEditable) {
-            e.preventDefault();
-            const activeObjects = canvas.getActiveObjects();
-            if (activeObjects.length > 0) {
-              activeObjects.forEach(obj => {
-                canvas.remove(obj);
-              });
-              canvas.discardActiveObject();
-              updateControls();
-              canvas.renderAll();
-              saveState();
-              reconstructTexts();
-            }
-          }
-        });
-        // Window resize
-        window.addEventListener('resize', () => {
-          const newMaxWidth = Math.min(window.innerWidth * 0.9, 600);
-          const newScale = Math.min(newMaxWidth / img.width, 1);
-          canvas.setDimensions({
-            width: img.width * newScale,
-            height: img.height * newScale
-          });
-          canvas.getObjects().forEach(obj => {
-            if (obj.type === 'image') {
-              obj.set({ scaleX: newScale, scaleY: newScale });
-            } else if (obj.type === 'textbox' || obj.type === 'path') {
-              obj.set({
-                left: (obj.left / scale) * newScale,
-                top: (obj.top / scale) * newScale,
-                fontSize: obj.type === 'textbox' ? (obj.fontSize / scale) * newScale : obj.fontSize,
-                width: obj.type === 'textbox' ? (obj.width / scale) * newScale : obj.width
-              });
-            }
-          });
-          scale = newScale;
-          canvas.renderAll();
-        });
-        canvas.renderAll();
-        saveState(); // Initial state
-        document.getElementById('processing-overlay').style.display = 'none';
-      };
-      img.onerror = () => {
+                if (e.ctrlKey && e.key === 'a') {
+                    e.preventDefault();
+                    const textObjects = canvas.getObjects().filter(obj => obj.type === 'textbox');
+                    if (textObjects.length > 0) {
+                        canvas.setActiveObject(new fabric.ActiveSelection(textObjects, { canvas }));
+                        updateControls();
+                        canvas.renderAll();
+                    }
+                }
+                if (e.ctrlKey && e.key === 'c') {
+                    e.preventDefault();
+                    const activeObjects = canvas.getActiveObjects();
+                    if (activeObjects.length > 0) {
+                        clipboard = activeObjects.map(obj => obj.toObject(['animation']));
+                    }
+                }
+                if (e.ctrlKey && e.key === 'x') {
+                    e.preventDefault();
+                    const activeObjects = canvas.getActiveObjects();
+                    if (activeObjects.length > 0) {
+                        clipboard = activeObjects.map(obj => obj.toObject(['animation']));
+                        activeObjects.forEach(obj => {
+                            canvas.remove(obj);
+                        });
+                        canvas.discardActiveObject();
+                        updateControls();
+                        canvas.renderAll();
+                        saveState();
+                    }
+                }
+                if (e.ctrlKey && e.key === 'v') {
+                    e.preventDefault();
+                    if (clipboard) {
+                        clipboard.forEach(item => {
+                            if (item.type === 'textbox') {
+                                const newText = new fabric.Textbox(item.text, {
+                                    ...item,
+                                    left: (item.left / scale + 10) * scale,
+                                    top: (item.top / scale + 10) * scale,
+                                    fontSize: item.fontSize,
+                                    width: item.width,
+                                    selectable: true,
+                                    editable: true
+                                });
+                                canvas.add(newText);
+                            } else if (item.type === 'path') {
+                                const newPath = new fabric.Path(item.path, {
+                                    ...item,
+                                    left: (item.left / scale + 10) * scale,
+                                    top: (item.top / scale + 10) * scale,
+                                    selectable: true
+                                });
+                                canvas.add(newPath);
+                            }
+                        });
+                        canvas.renderAll();
+                        saveState();
+                        reconstructTexts();
+                    }
+                }
+                if (e.key === 'Backspace' && !e.target.isContentEditable) {
+                    e.preventDefault();
+                    const activeObjects = canvas.getActiveObjects();
+                    if (activeObjects.length > 0) {
+                        activeObjects.forEach(obj => {
+                            if (obj.type === 'textbox') {
+                                const newText = obj.text.slice(0, -1);
+                                obj.set('text', newText);
+                                obj.set('dirty', true);
+                            } else {
+                                canvas.remove(obj);
+                            }
+                        });
+                        canvas.discardActiveObject();
+                        updateControls();
+                        canvas.renderAll();
+                        saveState();
+                        reconstructTexts();
+                    }
+                }
+                if (e.key === 'Delete' && !e.target.isContentEditable) {
+                    e.preventDefault();
+                    const activeObjects = canvas.getActiveObjects();
+                    if (activeObjects.length > 0) {
+                        activeObjects.forEach(obj => {
+                            canvas.remove(obj);
+                        });
+                        canvas.discardActiveObject();
+                        updateControls();
+                        canvas.renderAll();
+                        saveState();
+                        reconstructTexts();
+                    }
+                }
+            });
+            // Window resize
+            window.addEventListener('resize', () => {
+                const newMaxWidth = Math.min(window.innerWidth * 0.9, 600);
+                const newScale = Math.min(newMaxWidth / img.width, 1);
+                canvas.setDimensions({
+                    width: img.width * newScale,
+                    height: img.height * newScale
+                });
+                canvas.getObjects().forEach(obj => {
+                    if (obj.type === 'image') {
+                        obj.set({ scaleX: newScale, scaleY: newScale });
+                    } else if (obj.type === 'textbox' || obj.type === 'path') {
+                        obj.set({
+                            left: (obj.left / scale) * newScale,
+                            top: (obj.top / scale) * newScale,
+                            fontSize: obj.type === 'textbox' ? (obj.fontSize / scale) * newScale : obj.fontSize,
+                            width: obj.type === 'textbox' ? (obj.width / scale) * newScale : obj.width
+                        });
+                    }
+                });
+                scale = newScale;
+                canvas.renderAll();
+            });
+            canvas.renderAll();
+            saveState(); // Initial state
+            document.getElementById('processing-overlay').style.display = 'none'; // Hide overlay immediately
+            preloadFonts(fonts); // Start font loading after canvas setup
+        } catch (err) {
+            console.error('Canvas initialization failed:', err);
+            alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
+            document.getElementById('processing-overlay').style.display = 'none';
+        }
+    };
+    img.onerror = () => {
         console.error('Failed to load image');
-        alert('Error: Could not load the image. Please try again.');
+        alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
         document.getElementById('processing-overlay').style.display = 'none';
-      };
-    }
+    };
+}
 
-    function updateControls() {
-      const activeObjects = canvas.getActiveObjects();
-      if (activeObjects.length === 1 && (activeObjects[0].type === 'textbox' || activeObjects[0].type === 'i-text')) {
+function updateControls() {
+    const activeObjects = canvas.getActiveObjects();
+    if (activeObjects.length === 1 && (activeObjects[0].type === 'textbox' || activeObjects[0].type === 'i-text')) {
         const activeObject = activeObjects[0];
         document.getElementById('fontFamily').value = activeObject.fontFamily || 'Arial';
         document.getElementById('fontSize').value = Math.round(activeObject.fontSize / scale) || 20;
@@ -897,7 +1008,7 @@
         document.getElementById('opacity').value = activeObject.opacity || 1;
         document.getElementById('fontWeight').value = activeObject.fontWeight === 'bold' ? 'bold' : (activeObject.fontWeight || 'normal');
         document.getElementById('italic').textContent = activeObject.fontStyle === 'italic' ? 'No Italic' : 'Italic';
-      } else {
+    } else {
         document.getElementById('fontFamily').value = 'Arial';
         document.getElementById('fontSize').value = 20;
         document.getElementById('fill').value = '#000000';
@@ -910,147 +1021,147 @@
         document.getElementById('opacity').value = 1;
         document.getElementById('fontWeight').value = 'normal';
         document.getElementById('italic').textContent = 'Italic';
-      }
     }
+}
 
-    function rgbToHex(rgb) {
-      if (!rgb || rgb.startsWith('#')) return rgb || '#000000';
-      const [r, g, b] = rgb.match(/\d+/g)?.map(Number) || [0, 0, 0];
-      return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
-    }
+function rgbToHex(rgb) {
+    if (!rgb || rgb.startsWith('#')) return rgb || '#000000';
+    const [r, g, b] = rgb.match(/\d+/g)?.map(Number) || [0, 0, 0];
+    return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+}
 
-    function applyAnimation(obj, animation) {
-      if (!obj) return;
-      obj.animation = animation;
-      if (animation === 'none') {
+function applyAnimation(obj, animation) {
+    if (!obj) return;
+    obj.animation = animation;
+    if (animation === 'none') {
         obj.set('animation', null);
         obj.canvas.renderAll();
-      } else {
+    } else {
         function animate() {
-          if (obj.animation === 'bounce') {
-            obj.animate('top', obj.top - 10, {
-              duration: 400,
-              onChange: canvas.renderAll.bind(canvas),
-              onComplete: function() {
-                obj.animate('top', obj.top + 10, {
-                  duration: 400,
-                  onChange: canvas.renderAll.bind(canvas),
-                  onComplete: animate
+            if (obj.animation === 'bounce') {
+                obj.animate('top', obj.top - 10, {
+                    duration: 400,
+                    onChange: canvas.renderAll.bind(canvas),
+                    onComplete: function() {
+                        obj.animate('top', obj.top + 10, {
+                            duration: 400,
+                            onChange: canvas.renderAll.bind(canvas),
+                            onComplete: animate
+                        });
+                    }
                 });
-              }
-            });
-          } else if (obj.animation === 'pulse') {
-            obj.animate('scaleX', 1.05, {
-              duration: 500,
-              onChange: canvas.renderAll.bind(canvas),
-              onComplete: function() {
-                obj.animate('scaleX', 1, {
-                  duration: 500,
-                  onChange: canvas.renderAll.bind(canvas),
-                  onComplete: animate
+            } else if (obj.animation === 'pulse') {
+                obj.animate('scaleX', 1.05, {
+                    duration: 500,
+                    onChange: canvas.renderAll.bind(canvas),
+                    onComplete: function() {
+                        obj.animate('scaleX', 1, {
+                            duration: 500,
+                            onChange: canvas.renderAll.bind(canvas),
+                            onComplete: animate
+                        });
+                    }
                 });
-              }
-            });
-            obj.animate('scaleY', 1.05, {
-              duration: 500,
-              onChange: canvas.renderAll.bind(canvas),
-              onComplete: function() {
-                obj.animate('scaleY', 1, {
-                  duration: 500,
-                  onChange: canvas.renderAll.bind(canvas)
+                obj.animate('scaleY', 1.05, {
+                    duration: 500,
+                    onChange: canvas.renderAll.bind(canvas),
+                    onComplete: function() {
+                        obj.animate('scaleY', 1, {
+                            duration: 500,
+                            onChange: canvas.renderAll.bind(canvas)
+                        });
+                    }
                 });
-              }
-            });
-          }
+            }
         }
         animate();
-      }
     }
+}
 
-    // Update controls for multiple selected textboxes
-    function applyToSelected(property, value, transform = v => v) {
-      const activeObjects = canvas.getActiveObjects();
-      activeObjects.forEach(obj => {
+// Update controls for multiple selected textboxes
+function applyToSelected(property, value, transform = v => v) {
+    const activeObjects = canvas.getActiveObjects();
+    activeObjects.forEach(obj => {
         if (obj.type === 'textbox' || obj.type === 'i-text') {
-          obj.set(property, transform(value));
-          obj.set('dirty', true);
+            obj.set(property, transform(value));
+            obj.set('dirty', true);
         }
-      });
-      canvas.requestRenderAll();
-      saveState();
-      reconstructTexts();
-    }
-
-    document.getElementById('fontFamily').addEventListener('change', (e) => {
-      applyToSelected('fontFamily', e.target.value);
     });
+    canvas.requestRenderAll();
+    saveState();
+    reconstructTexts();
+}
 
-    document.getElementById('fontSize').addEventListener('input', (e) => {
-      applyToSelected('fontSize', e.target.value, v => parseInt(v) * scale);
-    });
+document.getElementById('fontFamily').addEventListener('change', (e) => {
+    applyToSelected('fontFamily', e.target.value);
+});
 
-    document.getElementById('fill').addEventListener('input', (e) => {
-      applyToSelected('fill', e.target.value);
-    });
+document.getElementById('fontSize').addEventListener('input', (e) => {
+    applyToSelected('fontSize', e.target.value, v => parseInt(v) * scale);
+});
 
-    document.getElementById('stroke').addEventListener('input', (e) => {
-      applyToSelected('stroke', e.target.value);
-    });
+document.getElementById('fill').addEventListener('input', (e) => {
+    applyToSelected('fill', e.target.value);
+});
 
-    document.getElementById('strokeWidth').addEventListener('input', (e) => {
-      applyToSelected('strokeWidth', e.target.value, parseFloat);
-    });
+document.getElementById('stroke').addEventListener('input', (e) => {
+    applyToSelected('stroke', e.target.value);
+});
 
-    document.getElementById('lineHeight').addEventListener('input', (e) => {
-      applyToSelected('lineHeight', e.target.value, parseFloat);
-    });
+document.getElementById('strokeWidth').addEventListener('input', (e) => {
+    applyToSelected('strokeWidth', e.target.value, parseFloat);
+});
 
-    document.getElementById('textBackgroundColor').addEventListener('input', (e) => {
-      applyToSelected('textBackgroundColor', e.target.value);
-    });
+document.getElementById('lineHeight').addEventListener('input', (e) => {
+    applyToSelected('lineHeight', e.target.value, parseFloat);
+});
 
-    document.getElementById('textAlign').addEventListener('change', (e) => {
-      applyToSelected('textAlign', e.target.value);
-    });
+document.getElementById('textBackgroundColor').addEventListener('input', (e) => {
+    applyToSelected('textBackgroundColor', e.target.value);
+});
 
-    document.getElementById('animation').addEventListener('change', (e) => {
-      const activeObjects = canvas.getActiveObjects();
-      activeObjects.forEach(obj => {
+document.getElementById('textAlign').addEventListener('change', (e) => {
+    applyToSelected('textAlign', e.target.value);
+});
+
+document.getElementById('animation').addEventListener('change', (e) => {
+    const activeObjects = canvas.getActiveObjects();
+    activeObjects.forEach(obj => {
         if (obj.type === 'textbox' || obj.type === 'i-text') {
-          applyAnimation(obj, e.target.value);
+            applyAnimation(obj, e.target.value);
         }
-      });
-      saveState();
     });
+    saveState();
+});
 
-    document.getElementById('opacity').addEventListener('input', (e) => {
-      applyToSelected('opacity', e.target.value, parseFloat);
-    });
+document.getElementById('opacity').addEventListener('input', (e) => {
+    applyToSelected('opacity', e.target.value, parseFloat);
+});
 
-    document.getElementById('fontWeight').addEventListener('change', (e) => {
-      applyToSelected('fontWeight', e.target.value);
-    });
+document.getElementById('fontWeight').addEventListener('change', (e) => {
+    applyToSelected('fontWeight', e.target.value);
+});
 
-    document.getElementById('italic').addEventListener('click', () => {
-      const activeObjects = canvas.getActiveObjects();
-      activeObjects.forEach(obj => {
+document.getElementById('italic').addEventListener('click', () => {
+    const activeObjects = canvas.getActiveObjects();
+    activeObjects.forEach(obj => {
         if (obj.type === 'textbox' || obj.type === 'i-text') {
-          const newStyle = obj.fontStyle === 'italic' ? 'normal' : 'italic';
-          obj.set('fontStyle', newStyle);
-          obj.set('dirty', true);
+            const newStyle = obj.fontStyle === 'italic' ? 'normal' : 'italic';
+            obj.set('fontStyle', newStyle);
+            obj.set('dirty', true);
         }
-      });
-      const activeObject = canvas.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+    });
+    const activeObject = canvas.getActiveObject();
+    if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         document.getElementById('italic').textContent = activeObject.fontStyle === 'italic' ? 'No Italic' : 'Italic';
-      }
-      canvas.requestRenderAll();
-      saveState();
-      reconstructTexts();
-    });
+    }
+    canvas.requestRenderAll();
+    saveState();
+    reconstructTexts();
+});
 
-    document.getElementById('addText').addEventListener('click', () => {
-      const newText = new fabric.Textbox('New Text', {
+document.getElementById('addText').addEventListener('click', () => {
+    const newText = new fabric.Textbox('New Text', {
         left: 50 * scale,
         top: 50 * scale,
         fontFamily: 'Arial',
@@ -1067,90 +1178,91 @@
         fontStyle: 'normal',
         selectable: true,
         editable: true
-      });
-      canvas.add(newText);
-      canvas.setActiveObject(newText);
-      updateControls();
-      canvas.renderAll();
-      saveState();
-      reconstructTexts();
     });
+    canvas.add(newText);
+    canvas.setActiveObject(newText);
+    updateControls();
+    canvas.renderAll();
+    saveState();
+    reconstructTexts();
+});
 
-    document.getElementById('removeText').addEventListener('click', () => {
-      const activeObjects = canvas.getActiveObjects();
-      if (activeObjects.length > 0) {
+document.getElementById('removeText').addEventListener('click', () => {
+    const activeObjects = canvas.getActiveObjects();
+    if (activeObjects.length > 0) {
         activeObjects.forEach(obj => {
-          canvas.remove(obj);
+            canvas.remove(obj);
         });
         canvas.discardActiveObject();
         updateControls();
         canvas.renderAll();
         saveState();
         reconstructTexts();
-      }
-    });
+    }
+});
 
-    // Pen tool toggle
-    document.getElementById('penTool').addEventListener('click', () => {
-      isPenActive = !isPenActive;
-      canvas.isDrawingMode = isPenActive;
-      const penButton = document.getElementById('penTool');
-      if (isPenActive) {
+// Pen tool toggle
+document.getElementById('penTool').addEventListener('click', () => {
+    isPenActive = !isPenActive;
+    canvas.isDrawingMode = isPenActive;
+    const penButton = document.getElementById('penTool');
+    if (isPenActive) {
         penButton.classList.add('active');
         canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
         canvas.freeDrawingBrush.color = document.getElementById('penColor').value;
         canvas.freeDrawingBrush.width = parseInt(document.getElementById('penWidth').value);
-      } else {
+    } else {
         penButton.classList.remove('active');
         canvas.isDrawingMode = false;
-      }
-    });
+    }
+});
 
-    document.getElementById('penColor').addEventListener('input', (e) => {
-      if (isPenActive) {
+document.getElementById('penColor').addEventListener('input', (e) => {
+    if (isPenActive) {
         canvas.freeDrawingBrush.color = e.target.value;
-      }
-    });
+    }
+});
 
-    document.getElementById('penWidth').addEventListener('change', (e) => {
-      if (isPenActive) {
+document.getElementById('penWidth').addEventListener('change', (e) => {
+    if (isPenActive) {
         canvas.freeDrawingBrush.width = parseInt(e.target.value);
-      }
-    });
+    }
+});
 
-    function saveCanvas() {
-      if (!canvas) return;
-      document.getElementById('processing-overlay').style.display = 'flex';
-      const animatedObjects = canvas.getObjects().filter(obj => obj.animation && obj.animation !== 'none');
-      const savedStates = animatedObjects.map(obj => {
+function saveCanvas() {
+    if (!canvas) return;
+    document.getElementById('processing-overlay').style.display = 'flex';
+    const animatedObjects = canvas.getObjects().filter(obj => obj.animation && obj.animation !== 'none');
+    const savedStates = animatedObjects.map(obj => {
         const anim = obj.animation;
         const state = { top: obj.top, scaleX: obj.scaleX, scaleY: obj.scaleY };
         obj.set({ animation: 'none' });
         return { obj, state, anim };
-      });
-      canvas.renderAll();
-      const multiplier = {{ image_width }} / canvas.width;
-      const dataURL = canvas.toDataURL({ format: 'png', multiplier: multiplier });
-      savedStates.forEach(({ obj, state, anim }) => {
+    });
+    canvas.renderAll();
+    const multiplier = {{ image_width }} / canvas.width;
+    const dataURL = canvas.toDataURL({ format: 'png', multiplier: multiplier });
+    savedStates.forEach(({ obj, state, anim }) => {
         obj.set(state);
         applyAnimation(obj, anim);
-      });
-      canvas.renderAll();
-      const link = document.createElement('a');
-      link.download = 'translated_image.png';
-      link.href = dataURL;
-      link.click();
-      document.getElementById('processing-overlay').style.display = 'none';
-    }
-
-    document.getElementById('download').addEventListener('click', (e) => {
-      e.preventDefault();
-      saveCanvas();
     });
+    canvas.renderAll();
+    const link = document.createElement('a');
+    link.download = 'translated_image.png';
+    link.href = dataURL;
+    link.click();
+    document.getElementById('processing-overlay').style.display = 'none';
+}
 
-    document.getElementById('processing-overlay').style.display = 'flex';
-    initCanvas();
-    {% endif %}
-  </script>
+document.getElementById('download').addEventListener('click', (e) => {
+    e.preventDefault();
+    saveCanvas();
+});
+
+document.getElementById('processing-overlay').style.display = 'flex';
+initCanvas();
+{% endif %}
+</script>
 </body>
+
 </html>
