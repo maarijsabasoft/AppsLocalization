@@ -534,26 +534,26 @@ def logout():
 @app.route("/tutorial")
 def landing():
     return render_template("landing.html")
-
 @app.route("/", methods=["GET", "POST"])
 def index():
     start_time = time.time()
-
     if request.method == "POST":
+        # Check if user is a guest and has already generated an image
+        if not current_user.is_authenticated and session.get('guest_image_generated', False):
+            flash("Please log in to generate another image.", "error")
+            return redirect(url_for("login"))
+
         lang = request.form.get("language")
         res_key = request.form.get("resolution")
         file = request.files.get("image")
-
         if not file or not file.filename:
             flash("Please upload a valid image.", "error")
             return render_template("index.html", error="Upload an image.")
-
         if not file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
             flash("Unsupported file format. Use PNG, JPG, or BMP.", "error")
             return render_template("index.html", error="Unsupported file format.")
 
         user_id = current_user.id if current_user.is_authenticated else "guest"
-
         for f in os.listdir(app.config["UPLOAD_FOLDER"]):
             if f.startswith(f"user_{user_id}_"):
                 try:
@@ -579,15 +579,17 @@ def index():
                 pass
             return render_template("index.html", error="Image processing failed.")
 
+        # Set flag for guest user after successful image generation
+        if not current_user.is_authenticated:
+            session['guest_image_generated'] = True
+
         orig_w, orig_h = clean_img.size
         scale = 1.0
         offset = (0, 0)
-
         if res_key in RESOLUTIONS:
             target_w, target_h = RESOLUTIONS[res_key]
             pad_color = edge_avg_color(clean_img)
             clean_img, offset, scale = pad_keep_aspect(clean_img, target_w, target_h, pad_color)
-
         for t in texts_list:
             t['left'] = t['left'] * scale + offset[0]
             t['top'] = t['top'] * scale + offset[1]
@@ -598,7 +600,6 @@ def index():
 
         processed_filename = f"user_{user_id}_{uuid.uuid4().hex[:8]}_processed.png"
         processed_path = os.path.join(app.config["UPLOAD_FOLDER"], processed_filename)
-
         try:
             clean_img.save(processed_path, format="PNG")
         except Exception as e:
@@ -614,18 +615,15 @@ def index():
         session['last_texts_json'] = json.dumps(texts_list)
         session['last_image_width'] = clean_img.width
         session['last_image_height'] = clean_img.height
-
         fonts_dir = os.path.join(app.static_folder, 'font') if app.static_folder else 'static/font'
         os.makedirs(fonts_dir, exist_ok=True)
         fonts_files = [f for f in os.listdir(fonts_dir) if f.lower().endswith('.ttf')]
         fonts = [os.path.splitext(f)[0] for f in fonts_files]
         session['last_fonts'] = fonts
-
         try:
             os.remove(in_path)
         except:
             logger.warning(f"Failed to delete input file {in_path}")
-
         try:
             with open(processed_path, "rb") as f:
                 encoded = base64.b64encode(f.read()).decode("utf-8")
@@ -635,17 +633,15 @@ def index():
             return render_template("index.html", error="Failed to load processed image.")
 
         logger.debug(f"Index POST completed in {time.time() - start_time:.2f} seconds")
-
         return render_template("index.html",
-                               clean_image=encoded,
-                               texts_json=session['last_texts_json'],
-                               fonts=fonts,
-                               image_width=session['last_image_width'],
-                               image_height=session['last_image_height'],
-                               success="Translation complete!")
-
+                              clean_image=encoded,
+                              texts_json=session['last_texts_json'],
+                              fonts=fonts,
+                              image_width=session['last_image_width'],
+                              image_height=session['last_image_height'],
+                              success="Translation complete!")
     return render_template("index.html")
-
+    
 @app.route("/save-edited", methods=["POST"])
 @login_required
 def save_edited():
