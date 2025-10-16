@@ -944,26 +944,42 @@ function initCanvas() {
                         reconstructTexts();
                     }
                 }
-                if (e.key === 'Backspace' && !e.target.isContentEditable) {
-                    e.preventDefault();
-                    const activeObjects = canvas.getActiveObjects();
-                    if (activeObjects.length > 0) {
-                        activeObjects.forEach(obj => {
-                            if (obj.type === 'textbox') {
-                                const newText = obj.text.slice(0, -1);
-                                obj.set('text', newText);
-                                obj.set('dirty', true);
-                            } else {
-                                canvas.remove(obj);
-                            }
-                        });
-                        canvas.discardActiveObject();
-                        updateControls();
-                        canvas.renderAll();
-                        saveState();
-                        reconstructTexts();
-                    }
+if (e.key === 'Backspace' && !e.target.isContentEditable) {
+    e.preventDefault();
+    const activeObjects = canvas.getActiveObjects();
+
+    if (activeObjects.length > 0) {
+        activeObjects.forEach(obj => {
+            if (obj.type === 'textbox') {
+                const selectionStart = obj.selectionStart;
+                const selectionEnd = obj.selectionEnd;
+                let text = obj.text;
+
+                if (selectionStart !== selectionEnd) {
+                    // Delete selected text
+                    text = text.slice(0, selectionStart) + text.slice(selectionEnd);
+                    obj.selectionStart = obj.selectionEnd = selectionStart;
+                } else if (selectionStart > 0) {
+                    // Delete one character before cursor
+                    text = text.slice(0, selectionStart - 1) + text.slice(selectionEnd);
+                    obj.selectionStart = obj.selectionEnd = selectionStart - 1;
                 }
+
+                obj.text = text;
+                obj.set('dirty', true);
+                canvas.requestRenderAll();
+            } else {
+                // Remove non-text objects
+                canvas.remove(obj);
+            }
+        });
+
+        updateControls();
+        saveState();
+        reconstructTexts();
+    }
+}
+
                 if (e.key === 'Delete' && !e.target.isContentEditable) {
                     e.preventDefault();
                     const activeObjects = canvas.getActiveObjects();
@@ -1323,6 +1339,7 @@ initCanvas();
 </body>
 
 </html>
+
 
 
 
