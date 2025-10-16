@@ -641,7 +641,13 @@
         </div>
       </div>
       <canvas id="canvas"></canvas>
-      <p><button id="download" class="download-btn">Download Image</button></p>
+      <p style="display: flex; gap: 10px;">
+  <button id="download" class="download-btn">Download Image</button>
+  <button id="share" class="share-btn">Share Image</button>
+</p>
+
+
+      
     </div>
     {% endif %}
     {% if error %}
@@ -1270,8 +1276,39 @@ document.getElementById('download').addEventListener('click', (e) => {
 document.getElementById('processing-overlay').style.display = 'flex';
 initCanvas();
 {% endif %}
+     const shareBtn = document.getElementById("share");
+
+  shareBtn.addEventListener("click", async () => {
+    // Replace this with your actual image URL or dynamically get it
+    const imageUrl = window.location.origin + "/static/edited_image.png"; 
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Check out my generated image!",
+          text: "I created this using AskMyDatabase — try it out!",
+          url: imageUrl
+        });
+        console.log("Shared successfully");
+      } catch (err) {
+        console.error("Share failed:", err.message);
+      }
+    } else {
+      // Fallback for browsers without Web Share API
+      const shareOptions = `
+        <div style="margin-top:10px">
+          <a href="https://wa.me/?text=${encodeURIComponent(imageUrl)}" target="_blank">Share on WhatsApp</a> |
+          <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(imageUrl)}" target="_blank">Share on Twitter</a> |
+          <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}" target="_blank">Share on Facebook</a>
+        </div>
+      `;
+      alert("Sharing not supported on this browser. Copy or use the links below.");
+      document.body.insertAdjacentHTML("beforeend", shareOptions);
+    }
+  });
 </script>
 </body>
 
 </html>
+
 
