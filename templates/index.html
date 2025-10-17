@@ -5,7 +5,6 @@
   <title>Apps Localization</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
   <meta name="description" content="PicLingo – Translate & resize text in your images seamlessly. Perfect for multi-language content creation." />
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NFM92282DY"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -271,14 +270,12 @@
       transform: translateY(-2px);
       background-color: var(--btn-hover-bg);
     }
-    /* Light theme colors */
     body.light {
       --btn-bg: #f4f4f4;
       --btn-border: #ccc;
       --btn-text: #333;
       --btn-hover-bg: #e0e0e0;
     }
-    /* Dark theme colors */
     body.dark {
       --btn-bg: #222;
       --btn-border: #444;
@@ -389,11 +386,7 @@
       background: linear-gradient(135deg, #005b99, #0088cc);
     }
     @keyframes bounce {
-      0%,
-      20%,
-      50%,
-      80%,
-      100% {
+      0%, 20%, 50%, 80%, 100% {
         transform: translateY(0);
       }
       40% {
@@ -487,8 +480,6 @@
           <option value="landscape-16to9">Landscape 16:9 (1920×1080)</option>
         </optgroup>
       </select>
-      <label for="customFont">Upload custom font (.ttf, .otf)</label>
-      <input type="file" name="customFont" id="customFont" accept=".ttf,.otf" aria-label="Upload custom font" />
       <button type="submit">Translate &amp; Convert</button>
     </form>
     {% if success %}
@@ -501,8 +492,11 @@
             {% for font in fonts %}
             <option value="{{ font }}">{{ font }}</option>
             {% endfor %}
-            <option value="customFont">Custom Font</option>
           </select>
+        </div>
+        <div>
+          <label for="customFont">Upload Font (.ttf, .otf)</label>
+          <input id="customFont" type="file" accept=".ttf,.otf" aria-label="Upload custom font">
         </div>
         <div>
           <label for="fontSize">Size</label>
@@ -669,6 +663,7 @@
             if (canvas) canvas.renderAll();
           }).catch(err => {
             console.error(`Failed to load custom font ${fontName}:`, err);
+            alert('Failed to load custom font. Please try another font file.');
           });
         };
         reader.readAsDataURL(file);
@@ -1116,6 +1111,12 @@
         }
       });
       saveState();
+    });
+    document.getElementById('opacity').addEventListener('input', (e) => {
+      applyToSelected('opacity', e.target.value, parseFloat);
+    });
+    document.getElementById('fontWeight').addEventListener('change', (e) => {
+      applyToSelected('fontWeight', e.target.value);
     });
     document.getElementById('italic').addEventListener('click', () => {
       const activeObjects = canvas.getActiveObjects();
