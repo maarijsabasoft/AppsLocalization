@@ -914,26 +914,44 @@ body.dark .preview-image img {
 
 </div>
 
-<div class="language-preview-container">
-  <div class="portrait-image">
-    <img src="9.png" alt="Portrait Image" id="portrait-img">
+<div class="language-preview-container" style="
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  width: 80%;
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+">
+  <div class="portrait-image" style="margin-bottom: 15px;">
+    <img src="9.png" alt="Portrait Image" id="portrait-img" style="width: 120px; height: auto; border-radius: 10px;">
   </div>
-  <h3>Preview Translations</h3>
-  <ul class="language-options">
-    <li class="language-option" data-lang="french" data-img="french.png">French</li>
-    <li class="language-option" data-lang="german" data-img="german.png">German</li>
-    <li class="language-option" data-lang="dutch" data-img="dutch.png">Dutch</li>
-    <li class="language-option" data-lang="italian" data-img="italian.png">Italian</li>
-    <li class="language-option" data-lang="spanish" data-img="spanish.png">Spanish</li>
+
+  <h3 style="margin-bottom: 15px;">Preview Translations</h3>
+
+  <ul class="language-options" style="list-style: none; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+    <li class="language-option" data-lang="french" data-img="French.png" style="cursor: pointer;">French</li>
+    <li class="language-option" data-lang="german" data-img="German.png" style="cursor: pointer;">German</li>
+    <li class="language-option" data-lang="dutch" data-img="Dutch.png" style="cursor: pointer;">Dutch</li>
+    <li class="language-option" data-lang="italian" data-img="Italian.png" style="cursor: pointer;">Italian</li>
+    <li class="language-option" data-lang="spanish" data-img="Spanish.png" style="cursor: pointer;">Spanish</li>
   </ul>
-  <div class="preview-image" id="preview-image">
-    <img src="" alt="Language Preview" id="preview-img">
+
+  <div class="preview-image" id="preview-image" style="margin-top: 20px;">
+    <img src="" alt="Language Preview" id="preview-img" style="max-width: 100%; border-radius: 10px;">
   </div>
-  <div class="modal" id="image-modal">
-    <span class="modal-close">&times;</span>
+
+  <div class="modal" id="image-modal" style="display: none;">
+    <span class="modal-close" style="cursor: pointer;">&times;</span>
     <img src="" alt="Full-size Preview" id="modal-img">
   </div>
 </div>
+
   <section id="cta" class="landing-section">
     <h2>Ready to Localize Your Images?</h2>
     <p>Start creating multi-language content today with Apps Localization.</p>
@@ -1468,3 +1486,4 @@ modal.addEventListener('click', (e) => {
 </body>
 
 </html>
+
