@@ -1494,10 +1494,18 @@
       border-top: 6px solid #00c6ff;
       border-right: 6px solid #007bff;
     }
-    #theme-toggle {
+    
+    /* Header buttons container */
+    .header-buttons {
       position: fixed;
       top: clamp(10px, 2vw, 20px);
       right: clamp(10px, 2vw, 20px);
+      display: flex;
+      gap: 10px;
+      z-index: 10000;
+    }
+    
+    #theme-toggle {
       background: rgba(0, 0, 0, 0.6);
       color: #fff;
       border: none;
@@ -1506,7 +1514,6 @@
       height: clamp(36px, 8vw, 46px);
       font-size: clamp(0.9rem, 3vw, 1.2rem);
       cursor: pointer;
-      z-index: 10000;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1523,36 +1530,30 @@
       font-size: 15px;
       font-weight: 600;
       text-decoration: none;
-      background: linear-gradient(135deg, #4a6ee0 0%, #6a11cb 100%);
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
       color: white;
       border: none;
-      box-shadow: 0 4px 12px rgba(229, 46, 113, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       transition: all 0.3s ease;
       z-index: 1000;
       display: flex;
       align-items: center;
       gap: 8px;
     }
+    body.dark .tutorial-btn {
+      background: linear-gradient(135deg, #1a2a3d, #2c5364);
+      color: #f2f2f2;
+      border: 1px solid #444;
+    }
     .tutorial-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(229, 46, 113, 0.4);
-      background: linear-gradient(135deg, #ff9a3c, #ff6b6b);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
     }
     .tutorial-btn:active {
       transform: translateY(-1px);
     }
-    .tutorial-btn::before {
-      /* content: "🎓"; */
-      font-size: 18px;
-    }
     
     /* Language Toggle Button */
-    .language-toggle {
-      position: fixed;
-      top: 15px;
-      right: 70px;
-      z-index: 1000;
-    }
     .language-btn {
       padding: 10px 16px;
       border-radius: 12px;
@@ -1577,10 +1578,6 @@
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
-    .language-btn::before {
-      content: "🌐";
-      font-size: 16px;
-    }
     .language-dropdown {
       position: absolute;
       top: 100%;
@@ -1594,8 +1591,6 @@
       display: none;
       z-index: 1001;
       animation: dropdownFade 0.2s ease;
-      margin-top: 50px; /* was 8px */
-
     }
     body.dark .language-dropdown {
       background: #2a2d3a;
@@ -1765,16 +1760,10 @@
       #controls {
         grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
       }
-      .language-toggle {
-        right: 60px;
-      }
     }
     @media (max-width: 480px) {
       #controls {
         grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-      }
-      .language-toggle {
-        right: 50px;
       }
       .tutorial-btn, .language-btn {
         padding: 8px 12px;
@@ -1795,45 +1784,49 @@
           src: url("{{ url_for('static', filename='fonts/' + font + '.ttf') }}") format("truetype");
         }
       {% endfor %}
-    {% endif %}
+    {% endif }
   </style>
 </head>
 <body class="light">
   <a href="/tutorial" class="tutorial-btn">Tutorial</a>
   
-  <!-- Language Toggle Button -->
-  <div class="language-toggle">
-    <button class="language-btn">English</button>
-    <div class="language-dropdown">
-      <div class="language-option active" data-lang="en">
-        <span class="language-flag">🇺🇸</span> English
-      </div>
-      <div class="language-option" data-lang="fr">
-        <span class="language-flag">🇫🇷</span> French
-      </div>
-      <div class="language-option" data-lang="de">
-        <span class="language-flag">🇩🇪</span> German
-      </div>
-      <div class="language-option" data-lang="es">
-        <span class="language-flag">🇪🇸</span> Spanish
-      </div>
-      <div class="language-option" data-lang="nl">
-        <span class="language-flag">🇳🇱</span> Dutch
-      </div>
-      <div class="language-option" data-lang="it">
-        <span class="language-flag">🇮🇹</span> Italian
+  <!-- Header buttons container -->
+  <div class="header-buttons">
+    <!-- Language Toggle Button -->
+    <div class="language-toggle">
+      <button class="language-btn">English</button>
+      <div class="language-dropdown">
+        <div class="language-option active" data-lang="en">
+          <span class="language-flag">🇺🇸</span> English
+        </div>
+        <div class="language-option" data-lang="fr">
+          <span class="language-flag">🇫🇷</span> French
+        </div>
+        <div class="language-option" data-lang="de">
+          <span class="language-flag">🇩🇪</span> German
+        </div>
+        <div class="language-option" data-lang="es">
+          <span class="language-flag">🇪🇸</span> Spanish
+        </div>
+        <div class="language-option" data-lang="nl">
+          <span class="language-flag">🇳🇱</span> Dutch
+        </div>
+        <div class="language-option" data-lang="it">
+          <span class="language-flag">🇮🇹</span> Italian
+        </div>
       </div>
     </div>
+    
+    <button id="theme-toggle">🌙</button>
   </div>
   
-  <button id="theme-toggle">🌙</button>
   <main class="card">
-    <h1>Apps Localization</h1>
-    <p class="subtitle">Translate &amp; resize text in your images seamlessly</p>
+    <h1 data-i18n="app_title">Apps Localization</h1>
+    <p class="subtitle" data-i18n="app_subtitle">Translate &amp; resize text in your images seamlessly</p>
     <form id="translate-form" method="POST" enctype="multipart/form-data">
-      <label for="image">Upload image</label>
+      <label for="image" data-i18n="upload_image">Upload image</label>
       <input type="file" name="image" id="image" accept="image/*" required aria-label="Upload image" />
-      <label for="language">Target language</label>
+      <label for="language" data-i18n="target_language">Target language</label>
       <select name="language" id="language" required aria-label="Select target language">
         <option value="en">English</option>
         <option value="fr">French</option>
@@ -1842,10 +1835,10 @@
         <option value="it">Italian</option>
         <option value="nl">Dutch</option>
       </select>
-      <label for="resolution">Output resolution</label>
+      <label for="resolution" data-i18n="output_resolution">Output resolution</label>
       <select name="resolution" id="resolution" required aria-label="Select output resolution">
         <optgroup label="Original">
-          <option value="original">Use Original Size</option>
+          <option value="original" data-i18n="original_size">Use Original Size</option>
         </optgroup>
         <optgroup label="Phones – Portrait">
           <option value="iphone-15">iPhone 15 (1290×2796)</option>
@@ -1870,14 +1863,14 @@
           <option value="landscape-16to9">Landscape 16:9 (1920×1080)</option>
         </optgroup>
       </select>
-      <button type="submit">Translate &amp; Convert</button>
+      <button type="submit" data-i18n="translate_convert">Translate &amp; Convert</button>
     </form>
     {% if success %}
     <div class="result">
       <p class="success-msg">{{ success }}</p>
       <div id="controls">
         <div>
-          <label for="fontFamily">Font</label>
+          <label for="fontFamily" data-i18n="font">Font</label>
           <select id="fontFamily">
             {% for font in fonts %}
             <option value="{{ font }}">{{ font }}</option>
@@ -1885,89 +1878,89 @@
           </select>
         </div>
         <div>
-          <label for="customFont">Upload Font (.ttf, .otf)</label>
+          <label for="customFont" data-i18n="upload_font">Upload Font (.ttf, .otf)</label>
           <input id="customFont" type="file" accept=".ttf,.otf" aria-label="Upload custom font">
         </div>
         <div>
-          <label for="fontSize">Size</label>
+          <label for="fontSize" data-i18n="size">Size</label>
           <input id="fontSize" type="number" min="8" step="1">
         </div>
         <div>
-          <label for="fill">Color</label>
+          <label for="fill" data-i18n="color">Color</label>
           <input id="fill" type="color" value="#000000">
         </div>
         <div>
-          <label for="stroke">Outline</label>
+          <label for="stroke" data-i18n="outline">Outline</label>
           <input id="stroke" type="color" value="#000000">
         </div>
         <div>
-          <label for="strokeWidth">Width</label>
+          <label for="strokeWidth" data-i18n="width">Width</label>
           <input id="strokeWidth" type="number" min="0" max="10" step="0.5" value="0">
         </div>
         <div>
-          <label for="lineHeight">Height</label>
+          <label for="lineHeight" data-i18n="height">Height</label>
           <input id="lineHeight" type="number" min="0.5" max="3" step="0.1" value="1.2">
         </div>
         <div>
-          <label for="textBackgroundColor">Bg Color</label>
+          <label for="textBackgroundColor" data-i18n="bg_color">Bg Color</label>
           <input id="textBackgroundColor" type="color" value="#ffffff">
         </div>
         <div>
-          <label for="textAlign">Align</label>
+          <label for="textAlign" data-i18n="align">Align</label>
           <select id="textAlign">
-            <option value="left">Left</option>
-            <option value="center">Center</option>
-            <option value="right">Right</option>
+            <option value="left" data-i18n="left">Left</option>
+            <option value="center" data-i18n="center">Center</option>
+            <option value="right" data-i18n="right">Right</option>
           </select>
         </div>
         <div>
-          <label for="animation">Animation</label>
+          <label for="animation" data-i18n="animation">Animation</label>
           <select id="animation">
-            <option value="none">None</option>
-            <option value="bounce">Bounce</option>
-            <option value="pulse">Pulse</option>
+            <option value="none" data-i18n="none">None</option>
+            <option value="bounce" data-i18n="bounce">Bounce</option>
+            <option value="pulse" data-i18n="pulse">Pulse</option>
           </select>
         </div>
         <div>
-          <label for="opacity">Opacity</label>
+          <label for="opacity" data-i18n="opacity">Opacity</label>
           <input id="opacity" type="number" min="0" max="1" step="0.1" value="1">
         </div>
         <div>
-          <label for="fontWeight">Weight</label>
+          <label for="fontWeight" data-i18n="weight">Weight</label>
           <select id="fontWeight">
             <option value="100">100</option>
             <option value="200">200</option>
             <option value="300">300</option>
-            <option value="normal">Normal</option>
+            <option value="normal" data-i18n="normal">Normal</option>
             <option value="500">500</option>
             <option value="600">600</option>
-            <option value="bold">Bold</option>
+            <option value="bold" data-i18n="bold">Bold</option>
             <option value="800">800</option>
             <option value="900">900</option>
           </select>
         </div>
         <div>
-          <label for="italic">Style</label>
-          <button id="italic">Italic</button>
+          <label for="italic" data-i18n="style">Style</label>
+          <button id="italic" data-i18n="italic">Italic</button>
         </div>
         <div>
-          <label for="addText">Add</label>
-          <button id="addText">Add Text</button>
+          <label for="addText" data-i18n="add">Add</label>
+          <button id="addText" data-i18n="add_text">Add Text</button>
         </div>
         <div>
-          <label for="removeText">Delete</label>
-          <button id="removeText">Delete</button>
+          <label for="removeText" data-i18n="delete">Delete</label>
+          <button id="removeText" data-i18n="delete">Delete</button>
         </div>
         <div>
-          <label for="penTool">Pen</label>
-          <button id="penTool">Pen</button>
+          <label for="penTool" data-i18n="pen">Pen</label>
+          <button id="penTool" data-i18n="pen">Pen</button>
         </div>
         <div>
-          <label for="penColor">Pen Color</label>
+          <label for="penColor" data-i18n="pen_color">Pen Color</label>
           <input id="penColor" type="color" value="#000000">
         </div>
         <div>
-          <label for="penWidth">Pen Width</label>
+          <label for="penWidth" data-i18n="pen_width">Pen Width</label>
           <select id="penWidth">
             <option value="1">1px</option>
             <option value="3">3px</option>
@@ -1978,8 +1971,8 @@
       </div>
       <canvas id="canvas"></canvas>
       <p style="display: flex; gap: 10px;">
-        <button id="download" class="download-btn">Download Image</button>
-        <button id="share" class="download-btn">Share Image</button>
+        <button id="download" class="download-btn" data-i18n="download_image">Download Image</button>
+        <button id="share" class="download-btn" data-i18n="share_image">Share Image</button>
       </p>
     </div>
     {% endif %}
@@ -1989,9 +1982,253 @@
   </main>
   <div id="processing-overlay">
     <div class="spinner"></div>
-    <p>Processing your image… please wait!</p>
+    <p data-i18n="processing">Processing your image… please wait!</p>
   </div>
   <script>
+    // Language translations
+    const translations = {
+      en: {
+        app_title: "Apps Localization",
+        app_subtitle: "Translate & resize text in your images seamlessly",
+        upload_image: "Upload image",
+        target_language: "Target language",
+        output_resolution: "Output resolution",
+        original_size: "Use Original Size",
+        translate_convert: "Translate & Convert",
+        font: "Font",
+        upload_font: "Upload Font (.ttf, .otf)",
+        size: "Size",
+        color: "Color",
+        outline: "Outline",
+        width: "Width",
+        height: "Height",
+        bg_color: "Bg Color",
+        align: "Align",
+        left: "Left",
+        center: "Center",
+        right: "Right",
+        animation: "Animation",
+        none: "None",
+        bounce: "Bounce",
+        pulse: "Pulse",
+        opacity: "Opacity",
+        weight: "Weight",
+        normal: "Normal",
+        bold: "Bold",
+        style: "Style",
+        italic: "Italic",
+        add: "Add",
+        add_text: "Add Text",
+        delete: "Delete",
+        pen: "Pen",
+        pen_color: "Pen Color",
+        pen_width: "Pen Width",
+        download_image: "Download Image",
+        share_image: "Share Image",
+        processing: "Processing your image… please wait!"
+      },
+      fr: {
+        app_title: "Localisation d'Applications",
+        app_subtitle: "Traduisez et redimensionnez le texte dans vos images facilement",
+        upload_image: "Télécharger l'image",
+        target_language: "Langue cible",
+        output_resolution: "Résolution de sortie",
+        original_size: "Utiliser la taille originale",
+        translate_convert: "Traduire et Convertir",
+        font: "Police",
+        upload_font: "Télécharger Police (.ttf, .otf)",
+        size: "Taille",
+        color: "Couleur",
+        outline: "Contour",
+        width: "Largeur",
+        height: "Hauteur",
+        bg_color: "Couleur de fond",
+        align: "Aligner",
+        left: "Gauche",
+        center: "Centre",
+        right: "Droite",
+        animation: "Animation",
+        none: "Aucune",
+        bounce: "Rebond",
+        pulse: "Pulsation",
+        opacity: "Opacité",
+        weight: "Poids",
+        normal: "Normal",
+        bold: "Gras",
+        style: "Style",
+        italic: "Italique",
+        add: "Ajouter",
+        add_text: "Ajouter Texte",
+        delete: "Supprimer",
+        pen: "Stylo",
+        pen_color: "Couleur Stylo",
+        pen_width: "Largeur Stylo",
+        download_image: "Télécharger Image",
+        share_image: "Partager Image",
+        processing: "Traitement de votre image… veuillez patienter!"
+      },
+      de: {
+        app_title: "App-Lokalisierung",
+        app_subtitle: "Text in Ihren Bildern übersetzen und skalieren",
+        upload_image: "Bild hochladen",
+        target_language: "Zielsprache",
+        output_resolution: "Ausgabequalität",
+        original_size: "Originalgröße verwenden",
+        translate_convert: "Übersetzen und Konvertieren",
+        font: "Schriftart",
+        upload_font: "Schriftart hochladen (.ttf, .otf)",
+        size: "Größe",
+        color: "Farbe",
+        outline: "Kontur",
+        width: "Breite",
+        height: "Höhe",
+        bg_color: "Hintergrundfarbe",
+        align: "Ausrichten",
+        left: "Links",
+        center: "Zentriert",
+        right: "Rechts",
+        animation: "Animation",
+        none: "Keine",
+        bounce: "Springen",
+        pulse: "Pulsieren",
+        opacity: "Deckkraft",
+        weight: "Gewicht",
+        normal: "Normal",
+        bold: "Fett",
+        style: "Stil",
+        italic: "Kursiv",
+        add: "Hinzufügen",
+        add_text: "Text hinzufügen",
+        delete: "Löschen",
+        pen: "Stift",
+        pen_color: "Stiftfarbe",
+        pen_width: "Stiftbreite",
+        download_image: "Bild herunterladen",
+        share_image: "Bild teilen",
+        processing: "Bild wird verarbeitet… bitte warten!"
+      },
+      es: {
+        app_title: "Localización de Aplicaciones",
+        app_subtitle: "Traduce y redimensiona texto en tus imágenes fácilmente",
+        upload_image: "Subir imagen",
+        target_language: "Idioma objetivo",
+        output_resolution: "Resolución de salida",
+        original_size: "Usar tamaño original",
+        translate_convert: "Traducir y Convertir",
+        font: "Fuente",
+        upload_font: "Subir Fuente (.ttf, .otf)",
+        size: "Tamaño",
+        color: "Color",
+        outline: "Contorno",
+        width: "Ancho",
+        height: "Altura",
+        bg_color: "Color de fondo",
+        align: "Alinear",
+        left: "Izquierda",
+        center: "Centro",
+        right: "Derecha",
+        animation: "Animación",
+        none: "Ninguna",
+        bounce: "Rebotar",
+        pulse: "Pulso",
+        opacity: "Opacidad",
+        weight: "Peso",
+        normal: "Normal",
+        bold: "Negrita",
+        style: "Estilo",
+        italic: "Cursiva",
+        add: "Agregar",
+        add_text: "Agregar Texto",
+        delete: "Eliminar",
+        pen: "Lápiz",
+        pen_color: "Color del Lápiz",
+        pen_width: "Ancho del Lápiz",
+        download_image: "Descargar Imagen",
+        share_image: "Compartir Imagen",
+        processing: "Procesando tu imagen… ¡por favor espera!"
+      },
+      nl: {
+        app_title: "App-localisatie",
+        app_subtitle: "Vertaal en verander de grootte van tekst in uw afbeeldingen naadloos",
+        upload_image: "Afbeelding uploaden",
+        target_language: "Doeltaal",
+        output_resolution: "Uitvoerresolutie",
+        original_size: "Originele grootte gebruiken",
+        translate_convert: "Vertalen en Converteren",
+        font: "Lettertype",
+        upload_font: "Lettertype uploaden (.ttf, .otf)",
+        size: "Grootte",
+        color: "Kleur",
+        outline: "Omtrek",
+        width: "Breedte",
+        height: "Hoogte",
+        bg_color: "Achtergrondkleur",
+        align: "Uitlijnen",
+        left: "Links",
+        center: "Midden",
+        right: "Rechts",
+        animation: "Animatie",
+        none: "Geen",
+        bounce: "Stuiteren",
+        pulse: "Pulseren",
+        opacity: "Doorzichtigheid",
+        weight: "Gewicht",
+        normal: "Normaal",
+        bold: "Vet",
+        style: "Stijl",
+        italic: "Cursief",
+        add: "Toevoegen",
+        add_text: "Tekst toevoegen",
+        delete: "Verwijderen",
+        pen: "Pen",
+        pen_color: "Penkleur",
+        pen_width: "Pendikte",
+        download_image: "Afbeelding downloaden",
+        share_image: "Afbeelding delen",
+        processing: "Uw afbeelding wordt verwerkt… even geduld!"
+      },
+      it: {
+        app_title: "Localizzazione App",
+        app_subtitle: "Traduci e ridimensiona il testo nelle tue immagini senza problemi",
+        upload_image: "Carica immagine",
+        target_language: "Lingua di destinazione",
+        output_resolution: "Risoluzione di output",
+        original_size: "Usa dimensione originale",
+        translate_convert: "Traduci e Converti",
+        font: "Carattere",
+        upload_font: "Carica Carattere (.ttf, .otf)",
+        size: "Dimensione",
+        color: "Colore",
+        outline: "Contorno",
+        width: "Larghezza",
+        height: "Altezza",
+        bg_color: "Colore sfondo",
+        align: "Allinea",
+        left: "Sinistra",
+        center: "Centro",
+        right: "Destra",
+        animation: "Animazione",
+        none: "Nessuna",
+        bounce: "Rimbalzo",
+        pulse: "Impulso",
+        opacity: "Opacità",
+        weight: "Spessore",
+        normal: "Normale",
+        bold: "Grassetto",
+        style: "Stile",
+        italic: "Corsivo",
+        add: "Aggiungi",
+        add_text: "Aggiungi Testo",
+        delete: "Elimina",
+        pen: "Penna",
+        pen_color: "Colore Penna",
+        pen_width: "Spessore Penna",
+        download_image: "Scarica Immagine",
+        share_image: "Condividi Immagine",
+        processing: "Elaborazione della tua immagine… attendi prego!"
+      }
+    };
+
     const body = document.body;
     const themeToggle = document.getElementById('theme-toggle');
     let canvas = null;
@@ -2002,6 +2239,23 @@
     let clipboard = null;
     let isPenActive = false;
     let customFontName = null;
+
+    // Set language
+    function setLanguage(lang) {
+      document.documentElement.lang = lang;
+      const elements = document.querySelectorAll('[data-i18n]');
+      elements.forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+          if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+            element.placeholder = translations[lang][key];
+          } else {
+            element.textContent = translations[lang][key];
+          }
+        }
+      });
+      localStorage.setItem('language', lang);
+    }
 
     // Theme toggle
     const savedTheme = localStorage.getItem("theme");
@@ -2031,6 +2285,16 @@
     const languageDropdown = document.querySelector('.language-dropdown');
     const languageOptions = document.querySelectorAll('.language-option');
     
+    // Set initial language
+    const savedLanguage = localStorage.getItem('language') || 'en';
+    setLanguage(savedLanguage);
+    languageBtn.textContent = savedLanguage === 'en' ? 'English' : 
+                             savedLanguage === 'fr' ? 'Français' :
+                             savedLanguage === 'de' ? 'Deutsch' :
+                             savedLanguage === 'es' ? 'Español' :
+                             savedLanguage === 'nl' ? 'Nederlands' :
+                             savedLanguage === 'it' ? 'Italiano' : 'English';
+    
     languageBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       languageDropdown.style.display = languageDropdown.style.display === 'block' ? 'none' : 'block';
@@ -2039,10 +2303,9 @@
     languageOptions.forEach(option => {
       option.addEventListener('click', () => {
         const lang = option.getAttribute('data-lang');
-        const text = option.textContent.trim();
         
         // Update button text
-        languageBtn.textContent = text.split(' ')[1]; // Just the language name
+        languageBtn.textContent = option.textContent.trim().split(' ')[1];
         
         // Update active state
         languageOptions.forEach(opt => opt.classList.remove('active'));
@@ -2050,6 +2313,9 @@
         
         // Update form select
         document.getElementById('language').value = lang;
+        
+        // Set language for the whole page
+        setLanguage(lang);
         
         // Close dropdown
         languageDropdown.style.display = 'none';
@@ -2337,7 +2603,7 @@
                 reconstructTexts();
               }
             }
- if (e.key === 'Backspace' && !e.target.isContentEditable) {
+            if (e.key === 'Backspace' && !e.target.isContentEditable) {
               e.preventDefault();
               const activeObjects = canvas.getActiveObjects();
               if (activeObjects.length > 0) {
@@ -2679,7 +2945,7 @@
           try {
             await navigator.share({
               title: "Check out my generated image!",
-              text: "I created this using AskMyDatabase — try it out!",
+              text: "I created this using Appslocalization — try it out!",
               url: imageUrl
             });
             console.log("Shared successfully");
@@ -2702,6 +2968,3 @@
   </script>
 </body>
 </html>
-
-
-
