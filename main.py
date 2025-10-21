@@ -510,7 +510,10 @@ def github_auth_callback():
         logger.error(traceback.format_exc())
         flash(f"GitHub login failed: {str(e)}", "error")
         return redirect(url_for("login"))
-
+@app.route('/templates/<path:filename>')
+def serve_template_files(filename):
+    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+    return send_from_directory(base_dir, filename)
 @app.route("/logout")
 @login_required
 def logout():
