@@ -2441,9 +2441,10 @@
       }
     });
     // Preload fonts with fallback
+    // Preload fonts with fallback
     function preloadFonts(fonts) {
       const fontPromises = fonts.map(font => {
-        const fontUrl = `{{ url_for('static', filename='font/' + font + '.ttf') }}`;
+        const fontUrl = `{{ url_for('static', filename='fonts/') }}${font}.ttf`;
         const fontFace = new FontFace(font, `url(${fontUrl})`);
         document.fonts.add(fontFace);
         return fontFace.load().catch(err => {
@@ -3031,6 +3032,7 @@
   </script>
 </body>
 </html>
+
 
 
 
