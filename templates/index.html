@@ -1542,7 +1542,7 @@
       transform: translateY(-1px);
     }
     .tutorial-btn::before {
-      content: "🎓";
+      /* content: "🎓"; */
       font-size: 18px;
     }
     
@@ -2337,14 +2337,12 @@
                 reconstructTexts();
               }
             }
-            if (e.key === 'Backspace' && !e.target.isContentEditable) {
+ if (e.key === 'Backspace' && !e.target.isContentEditable) {
+              e.preventDefault();
               const activeObjects = canvas.getActiveObjects();
               if (activeObjects.length > 0) {
                 activeObjects.forEach(obj => {
-                  if (obj.type === 'textbox' && obj.isEditing) {
-                    // Let fabric handle text editing backspace
-                    return;
-                  } else if (obj.type === 'textbox') {
+                  if (obj.type === 'textbox') {
                     const selectionStart = obj.selectionStart;
                     const selectionEnd = obj.selectionEnd;
                     let text = obj.text;
@@ -2704,4 +2702,5 @@
   </script>
 </body>
 </html>
+
 
