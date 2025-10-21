@@ -1813,8 +1813,8 @@
 </head>
 <body class="light">
   <a href="/tutorial" class="tutorial-btn" data-i18n="tutorial">Tutorial</a>
-  <!-- Language Selector -->
-  <div id="language-selector">
+  <!-- <!-- Language Selector -->
+  <!-- <div id="language-selector">
     <span>🌐</span>
     <select id="language" name="language" onchange="updateImageLanguage(this.value)">
       <option value="en">English</option>
@@ -1825,36 +1825,65 @@
       <option value="nl">Dutch</option>
       <option value="ar">Arabic</option>
     </select>
-  </div>
-  <!-- Header buttons container -->
-  <div class="header-buttons">
-    <!-- Language Toggle Button -->
-    <div class="language-toggle">
-      <button class="language-btn">🌐 English</button>
-      <div class="language-dropdown">
-        <div class="language-option active" data-lang="en">
-          <span class="language-flag">🇺🇸</span> English
-        </div>
-        <div class="language-option" data-lang="fr">
-          <span class="language-flag">🇫🇷</span> French
-        </div>
-        <div class="language-option" data-lang="de">
-          <span class="language-flag">🇩🇪</span> German
-        </div>
-        <div class="language-option" data-lang="es">
-          <span class="language-flag">🇪🇸</span> Spanish
-        </div>
-        <div class="language-option" data-lang="nl">
-          <span class="language-flag">🇳🇱</span> Dutch
-        </div>
-        <div class="language-option" data-lang="it">
-          <span class="language-flag">🇮🇹</span> Italian
-        </div>
-        <div class="language-option" data-lang="ar">
-          <span class="language-flag">🇸🇦</span> Arabic
-        </div>
+  </div> --> -->
+  <div class="header-buttons" 
+     style="position: relative; display: flex; align-items: center; justify-content: center; margin-top: 30px;">
+
+  <!-- Language Toggle Button -->
+  <div class="language-toggle" style="position: relative;">
+    <button class="language-btn" 
+      style="background: white; border: 1px solid #ccc; border-radius: 10px; 
+             padding: 6px 12px; font-weight: 500; font-size: 0.9rem; 
+             cursor: pointer; display: flex; align-items: center; gap: 6px;
+             box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: 0.2s ease;">
+      🌐 English <span style="font-size: 10px;">▼</span>
+    </button>
+
+    <div class="language-dropdown" style="
+        position: absolute;
+        top: calc(100% + 20px);
+        right: 0;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        padding: 6px 0;
+        min-width: 150px;
+        display: none;
+        z-index: 1001;
+        animation: dropdownFade 0.2s ease;
+      ">
+      <div class="language-option active" data-lang="en" 
+           style="padding: 6px 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        <span class="language-flag">🇺🇸</span> English
+      </div>
+      <div class="language-option" data-lang="fr" 
+           style="padding: 6px 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        <span class="language-flag">🇫🇷</span> French
+      </div>
+      <div class="language-option" data-lang="de" 
+           style="padding: 6px 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        <span class="language-flag">🇩🇪</span> German
+      </div>
+      <div class="language-option" data-lang="es" 
+           style="padding: 6px 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        <span class="language-flag">🇪🇸</span> Spanish
+      </div>
+      <div class="language-option" data-lang="nl" 
+           style="padding: 6px 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        <span class="language-flag">🇳🇱</span> Dutch
+      </div>
+      <div class="language-option" data-lang="it" 
+           style="padding: 6px 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        <span class="language-flag">🇮🇹</span> Italian
+      </div>
+      <div class="language-option" data-lang="ar" 
+           style="padding: 6px 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        <span class="language-flag">🇸🇦</span> Arabic
       </div>
     </div>
+  </div>
+</div>
+
     <button id="theme-toggle">🌙</button>
   </div>
   <main class="card">
@@ -3032,6 +3061,7 @@
   </script>
 </body>
 </html>
+
 
 
 
