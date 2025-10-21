@@ -4293,9 +4293,26 @@
         }
       });
     }
+      document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.querySelector(".language-btn");
+    const dropdown = document.querySelector(".language-dropdown");
+
+    // Toggle dropdown visibility
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isVisible = dropdown.style.display === "block";
+      dropdown.style.display = isVisible ? "none" : "block";
+    });
+
+    // Hide dropdown on outside click
+    document.addEventListener("click", () => {
+      dropdown.style.display = "none";
+    });
+  });
   </script>
 </body>
 </html>
+
 
 
 
