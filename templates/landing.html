@@ -914,41 +914,41 @@ body.dark .preview-image img {
 
 </div>
 
-<div class="language-preview-container" style="
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: white;
-  width: 80%;
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  text-align: center;
-">
+<div class="language-preview-container" 
+     style="display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: white; min-height: 100vh; text-align: center;">
+
+  <!-- Portrait Image -->
   <div class="portrait-image" style="margin-bottom: 15px;">
-    <img src="9.png" alt="Portrait Image" id="portrait-img" style="width: 120px; height: auto; border-radius: 10px;">
+    <img src="9.png" alt="Portrait Image" id="portrait-img"
+         style="width: 120px; height: auto; border-radius: 10px;">
   </div>
 
+  <!-- Heading -->
   <h3 style="margin-bottom: 15px;">Preview Translations</h3>
 
-  <ul class="language-options" style="list-style: none; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-    <li class="language-option" data-lang="french" data-img="French.png" style="cursor: pointer;">French</li>
-    <li class="language-option" data-lang="german" data-img="German.png" style="cursor: pointer;">German</li>
-    <li class="language-option" data-lang="dutch" data-img="Dutch.png" style="cursor: pointer;">Dutch</li>
-    <li class="language-option" data-lang="italian" data-img="Italian.png" style="cursor: pointer;">Italian</li>
-    <li class="language-option" data-lang="spanish" data-img="Spanish.png" style="cursor: pointer;">Spanish</li>
+  <!-- Language Options -->
+  <ul class="language-options"
+      style="list-style: none; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+    <li class="language-option" data-img="French.png" style="cursor: pointer;">French</li>
+    <li class="language-option" data-img="German.png" style="cursor: pointer;">German</li>
+    <li class="language-option" data-img="Dutch.png" style="cursor: pointer;">Dutch</li>
+    <li class="language-option" data-img="Italian.png" style="cursor: pointer;">Italian</li>
+    <li class="language-option" data-img="Spanish.png" style="cursor: pointer;">Spanish</li>
   </ul>
 
+  <!-- Preview Image -->
   <div class="preview-image" id="preview-image" style="margin-top: 20px;">
-    <img src="" alt="Language Preview" id="preview-img" style="max-width: 100%; border-radius: 10px;">
+    <img src="" alt="Language Preview" id="preview-img"
+         style="max-width: 100%; border-radius: 10px; display: none;">
   </div>
 
-  <div class="modal" id="image-modal" style="display: none;">
-    <span class="modal-close" style="cursor: pointer;">&times;</span>
-    <img src="" alt="Full-size Preview" id="modal-img">
+  <!-- Modal -->
+  <div class="modal" id="image-modal"
+       style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+              background: rgba(0,0,0,0.7); align-items: center; justify-content: center;">
+    <span class="modal-close" style="cursor: pointer; position: absolute; top: 20px; right: 30px; color: white; font-size: 30px;">&times;</span>
+    <img src="" alt="Full-size Preview" id="modal-img" style="max-width: 80%; border-radius: 10px;">
   </div>
 </div>
 
@@ -1486,4 +1486,5 @@ modal.addEventListener('click', (e) => {
 </body>
 
 </html>
+
 
