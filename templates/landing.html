@@ -1,1408 +1,1689 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
-  <meta name="description" content="Apps Localization - Translate and resize text in images seamlessly for multi-language content creation." />
-  <meta name="keywords" content="image localization, text translation, image editing, multi-language content, Apps Localization, resize images, translate images" />
-  <meta name="author" content="Apps Localization Team" />
-  <meta name="robots" content="index, follow" />
-  <title>Apps Localization - Image Translation & Editing</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      width: 100%;
-      overflow-x: hidden;
-      font-family: "Inter", "Amiri", Arial, sans-serif;
-      transition: background 0.5s ease, color 0.3s ease;
-    }
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    body.light {
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      color: #111;
-    }
-    body.dark {
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: #e6e6e6;
-    }
-    [lang="ar"] {
-      direction: rtl;
-      font-family: "Amiri", "Inter", Arial, sans-serif;
-    }
-    header, section, footer {
-      width: 100%;
-      padding: clamp(1rem, 5vw, 2rem);
-      text-align: center;
-    }
-    [lang="ar"] header, [lang="ar"] section, [lang="ar"] footer {
-      text-align: right;
-    }
-    h1 {
-      font-size: clamp(2rem, 6vw, 3.2rem);
-      font-weight: 700;
-      margin: 0;
-      color: inherit;
-    }
-    h2 {
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      font-weight: 600;
-      margin: 0.5rem 0;
-      color: inherit;
-    }
-    h3 {
-      font-size: clamp(1.2rem, 3vw, 1.5rem);
-      font-weight: 600;
-      margin: 0.5rem 0;
-    }
-    p {
-      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-      color: #555;
-      margin: 0.5rem 0;
-      line-height: 1.6;
-    }
-    body.dark p {
-      color: #f0f0f0;
-    }
-    .btn {
-      display: inline-block;
-      border: none;
-      background: linear-gradient(135deg, #4a6ee0 0%, #6a11cb 100%);
-      color: #fff;
-      padding: clamp(0.7rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
-      border-radius: clamp(6px, 1.5vw, 8px);
-      font-size: clamp(0.9rem, 2.5vw, 1rem);
-      font-weight: 600;
-      text-decoration: none;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.2);
-    }
-    body.dark .btn {
-      background: linear-gradient(135deg, #1a2a3d, #2c5364);
-      border: 1px solid #444;
-    }
-    body.dark .btn:hover {
-      box-shadow: 0 8px 18px rgba(0,0,0,0.5);
-    }
-    #hero {
-      position: relative;
-      width: 100vw;
-      min-height: 400px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    body.dark #hero {
-    }
-    #hero-video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      z-index: -1;
-      opacity: 0.8;
-    }
-    #hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      background: rgba(0,0,0,0.4);
-    }
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      max-width: 800px;
-      padding: 2rem;
-    }
-    [lang="ar"] .hero-content {
-      text-align: right;
-    }
-    #hero h1, #hero p {
-      color: #fff;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-    .video-error {
-      display: none;
-      color: #ff6b6b;
-      font-size: clamp(0.8rem, 2vw, 0.9rem);
-      margin-top: 0.5rem;
-    }
-    #tutorial{
-      background-color: transparent;
-    }
-    #features, #testimonials, #why-apps-localization, #translation-preview {
-      background: rgba(255,255,255,0.95);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
-      padding: clamp(2rem, 5vw, 3rem);
-      margin: 2rem 0;
-      border-radius: 20px;
-    }
-    body.dark #features, body.dark #testimonials, body.dark #why-apps-localization, body.dark #tutorial, body.dark #translation-preview {
-      background: rgba(30,32,44,0.95);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.6);
-    }
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: clamp(1rem, 3vw, 2rem);
-      margin-top: clamp(1.5rem, 4vw, 2.5rem);
-    }
-    .feature-card {
-      background: rgba(255,255,255,0.8);
-      border-radius: clamp(6px, 1.5vw, 8px);
-      padding: clamp(1rem, 3vw, 1.5rem);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
-    }
-    .feature-card:hover {
-      transform: translateY(-5px);
-    }
-    body.dark .feature-card {
-      background: rgba(36,38,54,0.8);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    }
-    #how-to-use {
-      position: relative;
-    }
-    #how-to-use .timeline {
-      position: relative;
-      max-width: min(90vw, 800px);
-      margin: 2rem auto;
-      padding: 0;
-      list-style: none;
-    }
-    #how-to-use .timeline::before {
-      content: '';
-      position: absolute;
-      left: 20px;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: #007bff;
-    }
-    [lang="ar"] #how-to-use .timeline::before {
-      left: auto;
-      right: 20px;
-    }
-    body.dark #how-to-use .timeline::before {
-      background: #00c6ff;
-    }
-    #how-to-use .timeline li {
-      position: relative;
-      margin: 2rem 0;
-      padding-left: 50px;
-      font-size: clamp(0.9rem, 2.5vw, 1rem);
-      color: #111;
-      background: rgba(255,255,255,0.9);
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    [lang="ar"] #how-to-use .timeline li {
-      padding-left: 0;
-      padding-right: 50px;
-      text-align: right;
-    }
-    body.dark #how-to-use .timeline li {
-      color: #e6e6e6;
-      background: rgba(36,38,54,0.9);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    }
-    #how-to-use .timeline li::before {
-      content: '';
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 20px;
-      height: 20px;
-      background: #007bff;
-      border-radius: 50%;
-      border: 3px solid #fff;
-      box-shadow: 0 0 0 3px #007bff;
-    }
-    [lang="ar"] #how-to-use .timeline li::before {
-      left: auto;
-      right: 12px;
-    }
-    body.dark #how-to-use .timeline li::before {
-      background: #00c6ff;
-      border: 3px solid #2c5364;
-      box-shadow: 0 0 0 3px #00c6ff;
-    }
-    #testimonials .testimonial-grid {
-      display: flex;
-      overflow-x: auto;
-      gap: clamp(1rem, 3vw, 2rem);
-      margin-top: clamp(1.5rem, 4vw, 2.5rem);
-      padding-bottom: 1rem;
-      scrollbar-width: thin;
-      scrollbar-color: #007bff #eaeaea;
-    }
-    #testimonials .testimonial-grid::-webkit-scrollbar {
-      height: 8px;
-    }
-    #testimonials .testimonial-grid::-webkit-scrollbar-track {
-      background: #eaeaea;
-      border-radius: 4px;
-    }
-    #testimonials .testimonial-grid::-webkit-scrollbar-thumb {
-      background: #007bff;
-      border-radius: 4px;
-    }
-    body.dark #testimonials .testimonial-grid::-webkit-scrollbar-track {
-      background: #2a2d3a;
-    }
-    body.dark #testimonials .testimonial-grid::-webkit-scrollbar-thumb {
-      background: #00c6ff;
-    }
-    .testimonial-card {
-      flex: 0 0 auto;
-      width: 300px;
-      background: rgba(255,255,255,0.8);
-      border-radius: clamp(6px, 1.5vw, 8px);
-      padding: clamp(1rem, 3vw, 1.5rem);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    [lang="ar"] .testimonial-card {
-      text-align: right;
-    }
-    body.dark .testimonial-card {
-      background: rgba(36,38,54,0.8);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    }
-    .avatar {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 0.5rem;
-    }
-    #tutorial iframe {
-      width: 100%;
-      max-width: min(90vw, 800px);
-      height: clamp(200px, 50vw, 450px);
-      border: none;
-      border-radius: clamp(6px, 1.5vw, 8px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    body.dark #tutorial iframe {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    }
-    footer {
-      margin-top: clamp(2rem, 5vw, 3rem);
-      font-size: clamp(0.8rem, 2vw, 0.9rem);
-      color: #555;
-    }
-    body.dark footer {
-      color: #f0f0f0;
-    }
-    #theme-toggle {
-      position: fixed;
-      top: clamp(10px, 2vw, 20px);
-      right: clamp(10px, 2vw, 20px);
-      background: rgba(0,0,0,0.6);
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: clamp(36px, 8vw, 46px);
-      height: clamp(36px, 8vw, 46px);
-      font-size: clamp(0.9rem, 3vw, 1.2rem);
-      cursor: pointer;
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    [lang="ar"] #theme-toggle {
-      right: auto;
-      left: clamp(10px, 2vw, 20px);
-    }
-    #theme-toggle:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.4);
-    }
-    /* Language Selector Styles */
-    #language-selector {
-      position: fixed;
-      top: clamp(10px, 2vw, 20px);
-      left: clamp(10px, 2vw, 20px);
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      background: rgba(0,0,0,0.6);
-      border-radius: 50px;
-      padding: 8px 15px;
-      color: white;
-    }
-    [lang="ar"] #language-selector {
-      left: auto;
-      right: clamp(10px, 2vw, 20px);
-    }
-    #language-selector select {
-      background: transparent;
-      border: none;
-      color: white;
-      font-size: 0.9rem;
-      margin-left: 8px;
-      cursor: pointer;
-    }
-    [lang="ar"] #language-selector select {
-      margin-left: 0;
-      margin-right: 8px;
-    }
-    #language-selector select option {
-      background: #333;
-      color: white;
-    }
-    /* Translation Preview Styles */
-    .translation-preview-container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .language-selector-preview {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 2rem;
-      gap: 1rem;
-    }
-    [lang="ar"] .language-selector-preview {
-      justify-content: flex-end;
-    }
-    .language-selector-preview label {
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
-    .language-selector-preview select {
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    body.dark .language-selector-preview select {
-      background: #2a2d3a;
-      color: #e0e0e0;
-      border: 1px solid #555;
-    }
-    .original-preview-section {
-      margin-bottom: 3rem;
-    }
-    .preview-image-container {
-      position: relative;
-      max-width: 600px;
-      margin: 0 auto;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    }
-    .preview-image-container img {
-      width: 100%;
-      display: block;
-      transition: transform 0.5s ease;
-    }
-    .preview-image-container:hover img {
-      transform: scale(1.03);
-    }
-    .image-placeholder-preview {
-      width: 100%;
-      height: 400px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      color: #4a6ee0;
-      font-weight: 600;
-      font-size: 1.1rem;
-      border-radius: 15px;
-    }
-    body.dark .image-placeholder-preview {
-      background: linear-gradient(135deg, #1a2a3d, #2c5364);
-      color: #e0e0e0;
-    }
-    .image-label-preview {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      padding: 15px;
-      font-size: 1.2rem;
-    }
-    .translations-grid-preview {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
-      align-items: start;
-    }
-    .translation-card-preview {
-      background: white;
-      border-radius: 15px;
-      overflow: visible;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
-      border: 1px solid #f0f0f0;
-      height: auto;
-    }
-    .translation-card-preview:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-    }
-    body.dark .translation-card-preview {
-      background: rgba(36,38,54,0.8);
-      border: 1px solid #444;
-    }
-    .translation-image-preview {
-      width: 100%;
-      height: auto;
-      overflow: visible;
-      background-color: #f8f9fa;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    body.dark .translation-image-preview {
-      background-color: #2a2d3a;
-    }
-    .translation-image-preview img {
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-      transition: transform 0.5s ease;
-    }
-    .translation-card-preview:hover .translation-image-preview img {
-      transform: scale(1.1);
-    }
-    .translation-info-preview {
-      padding: 20px;
-      text-align: left;
-    }
-    [lang="ar"] .translation-info-preview {
-      text-align: right;
-    }
-    .translation-title-preview {
-      font-size: 1.2rem;
-      color: #333;
-      margin-bottom: 10px;
-      font-weight: 500;
-    }
-    body.dark .translation-title-preview {
-      color: #f0f0f0;
-    }
-    .translation-desc-preview {
-      color: #666;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-    body.dark .translation-desc-preview {
-      color: #e0e0e0;
-    }
-    .language-badge-preview {
-      display: inline-block;
-      background: linear-gradient(to right, #4a6ee0, #6a11cb);
-      color: white;
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      margin-top: 10px;
-    }
-    .testimonial-card p:nth-of-type(1) {
-      color: rgba(0, 0, 0, 0.75);
-      font-style: italic;
-    }
-    .testimonial-card p:nth-of-type(2) {
-      color: rgba(0, 0, 0, 0.5);
-      font-weight: 600;
-      margin-top: 0.5rem;
-    }
-    body.dark .testimonial-card p:nth-of-type(1) {
-      color: rgba(255, 255, 255, 0.75);
-    }
-    body.dark .testimonial-card p:nth-of-type(2) {
-      color: rgba(255, 255, 255, 0.5);
-    }
-    @media (max-width: 768px) {
-      .translations-grid-preview {
-        grid-template-columns: 1fr;
-      }
-      .language-selector-preview {
-        flex-direction: column;
-      }
-      #language-selector {
-        top: 60px;
-      }
-      .translation-image-preview {
-        height: auto;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<title>SQL Nurse - Your Database Management Solution</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+/* Theme Variables */
+body.theme-dark {
+    --bg-gradient: linear-gradient(135deg, #000000, #1a1a1a);
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-heading: #ffffff;
+    --bg-secondary: rgba(0,0,0,0.8);
+    --bg-input: rgba(0,0,0,0.7);
+    --bg-faint: rgba(255,255,255,0.05);
+    --border-color: #444444;
+    --button-gradient: linear-gradient(45deg, #1a1a1a, #333333);
+    --tab-inactive: rgba(255,255,255,0.1);
+    --h1-gradient: linear-gradient(to right, #aaaaaa, #dddddd);
+    --card-bg: rgba(0,0,0,0.7);
+    --card-border: rgba(255,255,255,0.1);
+    --card-h3: #cccccc;
+    --card-p: #b0b0b0;
+    --section-bg: rgba(0,0,0,0.6);
+    --cta-bg: linear-gradient(45deg, #2c3e50, #3498db);
+}
+body.theme-light {
+    --bg-gradient: linear-gradient(135deg, #ffffff, #f0f0f0);
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --text-heading: #000000;
+    --bg-secondary: rgba(255,255,255,0.8);
+    --bg-input: rgba(255,255,255,0.7);
+    --bg-faint: rgba(0,0,0,0.05);
+    --border-color: #cccccc;
+    --button-gradient: linear-gradient(45deg, #e0e0e0, #cccccc);
+    --tab-inactive: rgba(0,0,0,0.1);
+    --h1-gradient: linear-gradient(to right, #333333, #000000);
+    --card-bg: rgba(255,255,255,0.7);
+    --card-border: rgba(0,0,0,0.1);
+    --card-h3: #333333;
+    --card-p: #666666;
+    --section-bg: rgba(255,255,255,0.8);
+    --cta-bg: linear-gradient(45deg, #3498db, #2c3e50);
+}
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: var(--text-primary);
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* Landing Page Styles */
+#landing-page {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.hero-section {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+}
+
+.hero-section h1 {
+    font-size: 3.5rem;
+    background: var(--h1-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+}
+
+.hero-section p {
+    font-size: 1.3rem;
+    max-width: 700px;
+    margin-bottom: 40px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.cta-button {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    background: var(--cta-bg);
+    color: white;
+    font-weight: bold;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.cta-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+.section {
+    padding: 80px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    color: var(--text-heading);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.feature-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 30px;
+    border: 1px solid var(--card-border);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.feature-card h3 {
+    color: var(--card-h3);
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.feature-card p {
+    color: var(--card-p);
+    line-height: 1.6;
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.how-it-works {
+    background: var(--section-bg);
+    border-radius: 20px;
+    padding: 50px;
+}
+
+.steps-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.step {
+    flex: 1;
+    min-width: 250px;
+    text-align: center;
+    padding: 20px;
+}
+
+.step-number {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 50%;
+    background: var(--cta-bg);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.testimonials-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 30px;
+    padding: 20px 0;
+    scrollbar-width: none;
+}
+
+.testimonials-container::-webkit-scrollbar {
+    display: none;
+}
+
+.testimonial {
+    min-width: 300px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 30px;
+    border: 1px solid var(--card-border);
+}
+
+.testimonial-text {
+    font-style: italic;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.testimonial-author {
+    font-weight: bold;
+    color: var(--text-heading);
+}
+
+.pricing-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.pricing-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 40px 30px;
+    border: 1px solid var(--card-border);
+    text-align: center;
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+    transition: transform 0.3s;
+}
+
+.pricing-card:hover {
+    transform: scale(1.05);
+}
+
+.pricing-card.featured {
+    border: 2px solid #3498db;
+    position: relative;
+}
+
+.pricing-card.featured::before {
+    content: "Most Popular";
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #3498db;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.pricing-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--text-heading);
+}
+
+.price {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 20px 0;
+    color: var(--text-heading);
+}
+
+.price-period {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.pricing-features {
+    list-style: none;
+    padding: 0;
+    margin: 30px 0;
+    text-align: left;
+}
+
+.pricing-features li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.pricing-features li:last-child {
+    border-bottom: none;
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.faq-question {
+    padding: 20px;
+    background: var(--bg-faint);
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.faq-answer {
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s, padding 0.3s;
+}
+
+.faq-item.active .faq-answer {
+    padding: 20px;
+    max-height: 500px;
+}
+
+.final-cta {
+    text-align: center;
+    padding: 80px 20px;
+    background: var(--section-bg);
+    border-radius: 20px;
+}
+
+.final-cta h2 {
+    margin-bottom: 20px;
+}
+
+.final-cta p {
+    max-width: 600px;
+    margin: 0 auto 40px;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+}
+
+/* Navigation */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    z-index: 1000;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s;
+}
+
+.navbar.scrolled {
+    background: rgba(0,0,0,0.9);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: var(--h1-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.navbar-nav {
+    display: flex;
+    gap: 30px;
+}
+
+.navbar-nav a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.navbar-nav a:hover {
+    color: var(--text-heading);
+}
+
+/* Existing app styles (kept for when user logs in) */
+header {
+    text-align: center;
+    padding: 20px 0;
+}
+header h1 {
+    font-size: 2.5rem;
+    background: var(--h1-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+header p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin: 5px 0 0;
+}
+#landing {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: opacity 0.5s ease;
+}
+#landing h1 {
+    font-size: 3rem;
+    background: var(--h1-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+}
+#landing p {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    color: var(--text-secondary);
+}
+#landing button {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    border-radius: 30px;
+    width: 200px;
+    border: none;
+    cursor: pointer;
+    background: var(--button-gradient);
+    color: var(--text-heading);
+    transition: transform 0.2s;
+}
+#landing button:hover { transform: scale(1.05); }
+#app {
+    display: none;
+    padding: 60px 20px 50px 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+.tab {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 20px;
+}
+.tab button {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 10px 10px 0 0;
+    border: none;
+    background: var(--tab-inactive);
+    color: var(--text-primary);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.tab button.active {
+    background: var(--button-gradient);
+    color: var(--text-heading);
+}
+.tabcontent {
+    display: none;
+    padding: 20px;
+    background: var(--bg-secondary);
+    border-radius: 0 10px 10px 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    animation: fadeIn 0.5s;
+}
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+h2 {
+    color: var(--text-heading);
+    margin-bottom: 10px;
+}
+select, input, textarea, button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+textarea { resize: vertical; }
+button {
+    background: var(--button-gradient);
+    color: var(--text-heading);
+    font-weight: bold;
+}
+button:hover { opacity: 0.9; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+th, td {
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    text-align: left;
+}
+th {
+    background: var(--bg-faint);
+}
+pre {
+    background: var(--bg-secondary);
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+#db_description {
+    background: var(--bg-faint);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+#db_prompt, #new_db_name, #add_row_values, #question,
+#connect_db_file, #connect_host, #connect_port,
+#connect_database, #connect_user, #connect_password,
+#viz_prompt {
+    width: calc(100% - 25px);
+}
+.subscriptions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.card {
+    background: var(--card-bg);
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    width: 260px;
+}
+.card h3 { margin: 0 0 8px 0; color: var(--card-h3); }
+.card p { color: var(--card-p); margin: 0 0 12px 0; }
+.card button { width: 100%; }
+#theme-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    padding: 8px;
+    border-radius: 50%;
+    background: var(--button-gradient);
+    color: var(--text-heading);
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#auth-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+#auth-section input {
+    width: 300px;
+}
+#auth-message {
+    color: var(--text-secondary);
+    margin-top: 10px;
+}
+#profile-container {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+}
+#profile-icon {
+    padding: 8px;
+    border-radius: 50%;
+    background: var(--button-gradient);
+    color: var(--text-heading);
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#logout {
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: var(--button-gradient);
+    color: var(--text-heading);
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+#popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    z-index: 2000;
+    text-align: center;
+    max-width: 400px;
+}
+#popup p {
+    color: var(--card-p);
+    margin-bottom: 20px;
+}
+#popup button {
+    padding: 10px 20px;
+}
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1500;
+}
+
+/* Auth Modal Styles */
+.auth-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-container {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.auth-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--text-heading);
+}
+
+.auth-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.auth-tab.active {
+    color: var(--text-heading);
+    border-bottom: 2px solid #3498db;
+}
+
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+.auth-form input {
+    width: calc(100% - 24px);
+    margin-bottom: 15px;
+}
+
+.auth-form button {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.auth-error {
+    color: #e74c3c;
+    margin-top: 10px;
+    display: none;
+}
+
+.close-auth {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+</style>
 </head>
-<body class="light">
-  <div id="language-selector">
-    <span>🌐</span>
-    <select id="language-select">
-      <option value="en">English</option>
-      <option value="fr">French</option>
-      <option value="de">German</option>
-      <option value="es">Spanish</option>
-      <option value="it">Italian</option>
-      <option value="nl">Dutch</option>
-      <option value="ar">Arabic</option>
-    </select>
-  </div>
-  <button id="theme-toggle">🌙</button>
-  <header id="hero" class="landing-section">
-    <video autoplay muted loop playsinline id="hero-video">
-      <source src="https://www.pexels.com/download/video/8391324/" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <div class="hero-content">
-      <h1 id="hero-title">Apps Localization</h1>
-      <p class="subtitle" id="hero-subtitle">Effortlessly translate and customize images for global audiences.</p>
-      <p class="video-error" id="video-error">Video failed to load. Displaying fallback image.</p>
-      <a href="/">
-        <button class="btn">Get Started</button>
-      </a>
+<body class="theme-dark">
+<button id="theme-toggle">☀️</button>
+
+<!-- Landing Page -->
+<div id="landing-page">
+    <nav class="navbar">
+        <div class="navbar-brand">SQL Nurse</div>
+        <div class="navbar-nav">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#testimonials">Testimonials</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+            <a href="#" id="nav-login">Login</a>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <h1>Revolutionize Your Database Management</h1>
+        <p>SQL Nurse is an all-in-one platform that simplifies database interaction, query generation, table management, and data visualization with an intuitive interface.</p>
+        <button class="cta-button" id="get-started-btn">Get Started Free</button>
+    </section>
+
+    <section class="section" id="features">
+        <h2>Powerful Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Smart Query Generation</h3>
+                <p>Ask questions in plain English and get accurate SQL queries generated automatically.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Data Visualization</h3>
+                <p>Transform your query results into beautiful charts and graphs with a single click.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Multi-Database Support</h3>
+                <p>Connect to SQLite, MySQL, PostgreSQL and more with seamless integration.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Real-time Management</h3>
+                <p>Add, edit, and delete table rows directly through our intuitive interface.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Secure & Private</h3>
+                <p>Your data stays secure with enterprise-grade encryption and privacy controls.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI-Powered Insights</h3>
+                <p>Get intelligent suggestions and insights based on your database structure.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="how-it-works">
+        <h2>How It Works</h2>
+        <div class="how-it-works">
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Connect Your Database</h3>
+                    <p>Link your existing database or create a new one from scratch.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Ask Questions</h3>
+                    <p>Use natural language to query your data without writing SQL.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Get Results & Visualize</h3>
+                    <p>View query results and transform them into insightful visualizations.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Manage & Optimize</h3>
+                    <p>Easily manage your tables and optimize your database structure.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="testimonials">
+        <h2>What Our Users Say</h2>
+        <div class="testimonials-container">
+            <div class="testimonial">
+                <p class="testimonial-text">"SQL Nurse has transformed how our team interacts with databases. The natural language queries save us hours of work each week."</p>
+                <p class="testimonial-author">- Sarah Johnson, Data Analyst</p>
+            </div>
+            <div class="testimonial">
+                <p class="testimonial-text">"As a non-technical founder, I can now query our database without relying on developers. This tool is a game-changer!"</p>
+                <p class="testimonial-author">- Michael Chen, Startup Founder</p>
+            </div>
+            <div class="testimonial">
+                <p class="testimonial-text">"The visualization features are incredible. I can create professional charts in minutes that used to take me hours to code."</p>
+                <p class="testimonial-author">- Emily Rodriguez, Marketing Director</p>
+            </div>
+            <div class="testimonial">
+                <p class="testimonial-text">"Even as an experienced SQL developer, I use SQL Nurse for quick queries and data exploration. It's surprisingly accurate."</p>
+                <p class="testimonial-author">- David Kim, Senior Developer</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="pricing">
+        <h2>Simple, Transparent Pricing</h2>
+        <div class="pricing-container">
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <div class="price">$0<span class="price-period">/month</span></div>
+                <ul class="pricing-features">
+                    <li>Connect 1 Database</li>
+                    <li>Basic Query Generation</li>
+                    <li>Limited Visualizations</li>
+                    <li>Community Support</li>
+                </ul>
+                <button class="cta-button" onclick="showAuthModal('signup')">Get Started</button>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Standard</h3>
+                <div class="price">$15<span class="price-period">/month</span></div>
+                <ul class="pricing-features">
+                    <li>Connect 5 Databases</li>
+                    <li>Advanced Query Generation</li>
+                    <li>Enhanced Visualizations</li>
+                    <li>Row Management</li>
+                    <li>Priority Support</li>
+                </ul>
+                <button class="cta-button" onclick="showAuthModal('signup')">Try Free for 14 Days</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Premium</h3>
+                <div class="price">$25<span class="price-period">/month</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited Databases</li>
+                    <li>AI-Powered Insights</li>
+                    <li>Advanced Visualizations</li>
+                    <li>Full Management Features</li>
+                    <li>Dedicated Support</li>
+                </ul>
+                <button class="cta-button" onclick="showAuthModal('signup')">Try Free for 14 Days</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="faq">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    What databases does SQL Nurse support?
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    SQL Nurse currently supports SQLite, MySQL, and PostgreSQL. We're continuously working to add support for more database systems.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Is my data secure?
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes, security is our top priority. We use industry-standard encryption for all data transfers and storage. Your database credentials are never stored in plain text.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Can I cancel my subscription anytime?
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    Absolutely! You can cancel your subscription at any time. If you cancel, you'll continue to have access to your paid features until the end of your billing period.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Do you offer team plans?
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    Currently, we offer individual plans only. However, we're actively developing team collaboration features and expect to launch team plans in the near future.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    How accurate is the natural language query generation?
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    Our AI model has been trained on thousands of database schemas and queries, achieving over 90% accuracy for common query types. For complex queries, we provide the generated SQL for you to review and edit if needed.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section final-cta">
+        <h2>Ready to Transform Your Database Workflow?</h2>
+        <p>Join thousands of users who have simplified their database management with SQL Nurse.</p>
+        <button class="cta-button" id="final-cta-btn">Start Your Free Trial</button>
+    </section>
+</div>
+
+<!-- Auth Modal -->
+<div class="auth-modal" id="auth-modal">
+    <div class="auth-container">
+        <button class="close-auth" onclick="closeAuthModal()">&times;</button>
+        <h2>Welcome to SQL Nurse</h2>
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+            <button class="auth-tab" onclick="switchAuthTab('signup')">Sign Up</button>
+        </div>
+        
+        <div id="login-form" class="auth-form active">
+            <input type="email" id="login-email" placeholder="Email" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <button onclick="login()">Login</button>
+            <p class="auth-error" id="login-error"></p>
+            <div class="oauth-buttons">
+                <a href="{{ url_for('google_login') }}" class="oauth-btn google">
+                    <img src="https://www.google.com/favicon.ico" alt="Google logo"> Login with Google
+                </a>
+                <a href="{{ url_for('github_login') }}" class="oauth-btn github">
+                    <img src="https://github.githubassets.com/favicons/favicon.png" alt="GitHub logo"> Login with GitHub
+                </a>
+            </div>
+        </div>
+        
+        <div id="signup-form" class="auth-form">
+            <input type="email" id="signup-email" placeholder="Email" required>
+            <input type="password" id="signup-password" placeholder="Password" required>
+            <button onclick="signup()">Sign Up</button>
+            <p class="auth-error" id="signup-error"></p>
+            <div class="oauth-buttons">
+                <a href="{{ url_for('google_login') }}" class="oauth-btn google">
+                    <img src="https://www.google.com/favicon.ico" alt="Google logo"> Sign up with Google
+                </a>
+                <a href="{{ url_for('github_login') }}" class="oauth-btn github">
+                    <img src="https://github.githubassets.com/favicons/favicon.png" alt="GitHub logo"> Sign up with GitHub
+                </a>
+            </div>
+        </div>
     </div>
-  </header>
-  <section id="features" class="landing-section">
-    <h2 id="features-title">Powerful Features</h2>
-    <p id="features-subtitle">Discover why Apps Localization is the ultimate tool for image translation.</p>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <h3 id="feature-1-title">Multi-Language Translation</h3>
-        <p id="feature-1-desc">Translate text in images to multiple languages with high accuracy.</p>
-      </div>
-      <div class="feature-card">
-        <h3 id="feature-2-title">Customizable Text Editing</h3>
-        <p id="feature-2-desc">Adjust font, size, color, and animations to match your brand.</p>
-      </div>
-      <div class="feature-card">
-        <h3 id="feature-3-title">Device-Optimized Resizing</h3>
-        <p id="feature-3-desc">Resize images for phones, tablets, desktops, and more.</p>
-      </div>
-      <div class="feature-card">
-        <h3 id="feature-4-title">Intuitive Interface</h3>
-        <p id="feature-4-desc">User-friendly design for seamless editing and translation.</p>
-      </div>
-      <div class="feature-card">
-        <h3 id="feature-5-title">High-Quality Output</h3>
-        <p id="feature-5-desc">Download crisp, professional images in your preferred format.</p>
-      </div>
-      <div class="feature-card">
-        <h3 id="feature-6-title">Real-Time Preview</h3>
-        <p id="feature-6-desc">Preview changes instantly to ensure perfect results.</p>
-      </div>
+</div>
+
+<!-- Original App (Hidden initially) -->
+<div id="app">
+    <header>
+        <h1>SQL Nurse</h1>
+        <p>Your Database Management and Visualization Tool</p>
+    </header>
+    <div class="tab">
+        <button class="tablinks" onclick="checkTabAccess('Databases')">Databases</button>
+        <button class="tablinks" onclick="checkTabAccess('Query')">Query</button>
+        <button class="tablinks" onclick="checkTabAccess('Manage')">Manage Rows</button>
+        <button class="tablinks" onclick="checkTabAccess('CreateDB')">Create DB</button>
+        <button class="tablinks" onclick="checkTabAccess('ConnectDB')">Connect DB</button>
+        <button class="tablinks" onclick="checkTabAccess('Visualization')">Visualization</button>
+        <button class="tablinks" onclick="openTab(event,'Subscriptions')">Subscriptions</button>
     </div>
-  </section>
-  <section id="how-to-use" class="landing-section">
-    <h2 id="how-to-title">How to Use</h2>
-    <p id="how-to-subtitle">Transform your images in just a few simple steps.</p>
-    <ul class="timeline">
-      <li id="step-1">Upload your image to the Apps Localization platform.</li>
-      <li id="step-2">Select the target language for translation.</li>
-      <li id="step-3">Choose the desired output resolution for your device.</li>
-      <li id="step-4">Customize text appearance with fonts, colors, and animations.</li>
-      <li id="step-5">Download your localized image instantly.</li>
-    </ul>
-  </section>
-  <section id="why-apps-localization" class="landing-section">
-    <h2 id="why-title">Why Apps Localization?</h2>
-    <p id="why-subtitle">Enhance your content creation with unmatched flexibility and efficiency.</p>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <h3 id="why-1-title">Global Reach</h3>
-        <p id="why-1-desc">Engage audiences worldwide with localized content.</p>
-      </div>
-      <div class="feature-card">
-        <h3 id="why-2-title">Time-Saving</h3>
-        <p id="why-2-desc">Automate translation and resizing tasks effortlessly.</p>
-      </div>
-      <div class="feature-card">
-        <h3 id="why-3-title">Brand Consistency</h3>
-        <p id="why-3-desc">Maintain your visual identity across languages.</p>
-      </div>
+    <div id="Databases" class="tabcontent">
+        <p>
+            If you want to make a demo, you can download the sample database file 
+            <a href="https://drive.google.com/drive/folders/1TM0L-pWEI_MsrPpEmHc4ojLhHnrgEd29?usp=sharing" target="_blank">
+                demo.db
+            </a> 
+            and connect to it from your computer.
+        </p>
+        <h2>Databases & Schema</h2>
+        <select id="db_select"></select>
+        <button onclick="loadSchema()">Load Schema</button>
+        <pre id="schema_view"></pre>
     </div>
-  </section>
-  <section id="tutorial" class="landing-section">
-    <h2 id="tutorial-title">Watch Our Tutorial</h2>
-    <p id="tutorial-subtitle">Learn how to use Apps Localization with our step-by-step Loom video.</p>
-    <div style="
-      position: relative;
-      width: 100%;
-      height: 80vh;
-      overflow: hidden;
-      border-radius: 12px;
-      max-width: 1200px;
-      margin: 0 auto;
-      background: black;
-    ">
-      <iframe
-        src="https://www.loom.com/embed/70c2d45cf8dc47e09f30b1296c24a399"
-        frameborder="0"
-        allowfullscreen
-        webkitallowfullscreen
-        mozallowfullscreen
-        style="
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 160%;
-          height: 160%;
-          transform: translate(-50%, -50%) scale(1.05);
-          object-fit: cover;
-          border: none;
-        "
-      ></iframe>
+    <div id="Query" class="tabcontent">
+        <h2>Ask a Question</h2>
+        <select id="db_query_select" onchange="loadDBDescription()"></select>
+        <pre id="db_description">Database description will appear here...</pre>
+        <textarea id="question" placeholder="Ask a question about the selected DB"></textarea>
+        <h3>Suggested Queries:</h3>
+        <div id="suggested_queries" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;"></div>
+        <button onclick="askQuery()">Run Query</button>
+        <h3>Generated SQL:</h3>
+        <pre id="sql_display"></pre>
+        <h3>Results:</h3>
+        <div id="results"></div>
     </div>
-  </section>
-  <section id="translation-preview" class="landing-section">
-    <h2 id="preview-title">Translation Preview</h2>
-    <p id="preview-subtitle">See your original image and all translations in one place</p>
-    <!-- <div class="translation-preview-container">
-      <div class="language-selector-preview">
-        <label for="preview-language">Preview Language:</label>
-        <select id="preview-language">
-          <option value="en">English</option>
-          <option value="fr">French</option>
-          <option value="de">German</option>
-          <option value="es">Spanish</option>
-          <option value="it">Italian</option>
-          <option value="nl">Dutch</option>
-          <option value="ar">Arabic</option>
+    <div id="Manage" class="tabcontent">
+        <h2>Manage Table Rows</h2>
+        <select id="db_manage_select" onchange="loadTables()"></select>
+        <select id="table_select" onchange="updateRowPlaceholder();loadTableRows()"></select>
+        <input type="text" id="add_row_values" placeholder="">
+        <button onclick="addRow()">Add Row</button>
+        <div id="table_editor"></div>
+    </div>
+    <div id="CreateDB" class="tabcontent">
+        <h2>Create New Database</h2>
+        <input type="text" id="new_db_name" placeholder="Database name">
+        <textarea id="db_prompt" rows="4" placeholder="Describe tables and columns, e.g., students(id,name,age); courses(id,name,credits)"></textarea>
+        <button onclick="createDB()">Create Database</button>
+        <pre id="create_db_result"></pre>
+    </div>
+    <div id="ConnectDB" class="tabcontent">
+        <h2>Connect Your Database</h2>
+        <select id="connect_db_type">
+            <option value="sqlite">SQLite</option>
+            <option value="mysql">MySQL</option>
+            <option value="postgresql">PostgreSQL</option>
         </select>
-      </div> -->
-      <div class="original-preview-section">
-        <h3 id="original-title">Original Content</h3>
-        <div class="preview-image-container">
-          <img src="/templates/9.png" alt="Original Content" id="original-preview"
-               onerror="this.style.display='none'; document.getElementById('original-placeholder').style.display='flex';">
-          <div class="image-placeholder-preview" id="original-placeholder" style="display: none;">
-            Original Image (9.png)
-          </div>
-          <div class="image-label-preview" id="original-label">Original Document (9.png)</div>
-        </div>
-      </div>
-      <div class="translations-preview-section">
-        <h3 id="translations-title">Translations</h3>
-        <div class="translations-grid-preview">
-          <div class="translation-card-preview">
-            <div class="translation-image-preview">
-              <img src="/templates/Dutch.png" alt="Dutch Translation"
-                   onerror="this.style.display='none'; document.getElementById('dutch-placeholder').style.display='flex';">
-              <div class="image-placeholder-preview" id="dutch-placeholder" style="display: none;">
-                Dutch.png
-              </div>
-            </div>
-            <div class="translation-info-preview">
-              <h4 class="translation-title-preview" id="translation-1-title">Dutch Translation</h4>
-              <p class="translation-desc-preview" id="translation-1-desc">This is the Dutch version of the original document with accurate translation and cultural adaptation.</p>
-              <span class="language-badge-preview" id="translation-1-badge">Nederlands</span>
-            </div>
-          </div>
-          <div class="translation-card-preview">
-            <div class="translation-image-preview">
-              <img src="/templates/French.png" alt="French Translation"
-                   onerror="this.style.display='none'; document.getElementById('french-placeholder').style.display='flex';">
-              <div class="image-placeholder-preview" id="french-placeholder" style="display: none;">
-                French.png
-              </div>
-            </div>
-            <div class="translation-info-preview">
-              <h4 class="translation-title-preview" id="translation-2-title">French Translation</h4>
-              <p class="translation-desc-preview" id="translation-2-desc">French translation maintaining the original meaning while adapting to French linguistic nuances.</p>
-              <span class="language-badge-preview" id="translation-2-badge">Français</span>
-            </div>
-          </div>
-          <div class="translation-card-preview">
-            <div class="translation-image-preview">
-              <img src="/templates/German.png" alt="German Translation"
-                   onerror="this.style.display='none'; document.getElementById('german-placeholder').style.display='flex';">
-              <div class="image-placeholder-preview" id="german-placeholder" style="display: none;">
-                German.png
-              </div>
-            </div>
-            <div class="translation-info-preview">
-              <h4 class="translation-title-preview" id="translation-3-title">German Translation</h4>
-              <p class="translation-desc-preview" id="translation-3-desc">Precise German translation with attention to technical terminology and formal language requirements.</p>
-              <span class="language-badge-preview" id="translation-3-badge">Deutsch</span>
-            </div>
-          </div>
-          <div class="translation-card-preview">
-            <div class="translation-image-preview">
-              <img src="/templates/Italian.png" alt="Italian Translation"
-                   onerror="this.style.display='none'; document.getElementById('italian-placeholder').style.display='flex';">
-              <div class="image-placeholder-preview" id="italian-placeholder" style="display: none;">
-                Italian.png
-              </div>
-            </div>
-            <div class="translation-info-preview">
-              <h4 class="translation-title-preview" id="translation-4-title">Italian Translation</h4>
-              <p class="translation-desc-preview" id="translation-4-desc">Italian translation with proper adaptation to the language's unique characteristics and cultural context.</p>
-              <span class="language-badge-preview" id="translation-4-badge">Italiano</span>
-            </div>
-          </div>
-          <div class="translation-card-preview">
-            <div class="translation-image-preview">
-              <img src="/templates/Spanish.png" alt="Spanish Translation"
-                   onerror="this.style.display='none'; document.getElementById('spanish-placeholder').style.display='flex';">
-              <div class="image-placeholder-preview" id="spanish-placeholder" style="display: none;">
-                Spanish.png
-              </div>
-            </div>
-            <div class="translation-info-preview">
-              <h4 class="translation-title-preview" id="translation-5-title">Spanish Translation</h4>
-              <p class="translation-desc-preview" id="translation-5-desc">Spanish translation with accurate localization and attention to regional linguistic variations.</p>
-              <span class="language-badge-preview" id="translation-5-badge">Español</span>
-            </div>
-          </div>
-          <!-- <div class="translation-card-preview">
-            <div class="translation-image-preview">
-              <img src="/templates/Arabic.png" alt="Arabic Translation"
-                   onerror="this.style.display='none'; document.getElementById('arabic-placeholder').style.display='flex';">
-              <div class="image-placeholder-preview" id="arabic-placeholder" style="display: none;">
-                Arabic.png
-              </div>
-            </div>
-            <div class="translation-info-preview">
-              <h4 class="translation-title-preview" id="translation-6-title">Arabic Translation</h4>
-              <p class="translation-desc-preview" id="translation-6-desc">Arabic translation with precise localization and cultural adaptation for Arabic-speaking audiences.</p>
-              <span class="language-badge-preview" id="translation-6-badge">العربية</span>
-            </div>
-          </div> -->
-        </div>
-      </div>
+        <input type="file" id="connect_db_file" accept=".db">
+        <input type="text" id="connect_host" placeholder="Host" style="display:none;">
+        <input type="text" id="connect_port" placeholder="Port" style="display:none;">
+        <input type="text" id="connect_database" placeholder="Database Name" style="display:none;">
+        <input type="text" id="connect_user" placeholder="Username" style="display:none;">
+        <input type="password" id="connect_password" placeholder="Password" style="display:none;">
+        <button onclick="connectDB()">Connect</button>
+        <pre id="connect_db_result"></pre>
     </div>
-  </section>
-  <section id="cta" class="landing-section">
-    <h2 id="cta-title">Ready to Localize Your Images?</h2>
-    <p id="cta-subtitle">Start creating multi-language content today with Apps Localization.</p>
-    <a href="/">
-      <button class="btn">Get Started Now</button>
-    </a>
-  </section>
-  <footer>
-    <p id="footer-text">&copy; 2023 Apps Localization. All rights reserved.</p>
-  </footer>
-  <script>
-    const body = document.body;
-    const themeToggle = document.getElementById('theme-toggle');
-    const languageSelect = document.getElementById('language-select');
-    const previewLanguage = document.getElementById('preview-language');
-    const heroVideo = document.getElementById('hero-video');
-    const videoError = document.getElementById('video-error');
-    const translations = {
-      en: {
-        heroTitle: "Apps Localization",
-        heroSubtitle: "Effortlessly translate and customize images for global audiences.",
-        featuresTitle: "Powerful Features",
-        featuresSubtitle: "Discover why Apps Localization is the ultimate tool for image translation.",
-        feature1Title: "Multi-Language Translation",
-        feature1Desc: "Translate text in images to multiple languages with high accuracy.",
-        feature2Title: "Customizable Text Editing",
-        feature2Desc: "Adjust font, size, color, and animations to match your brand.",
-        feature3Title: "Device-Optimized Resizing",
-        feature3Desc: "Resize images for phones, tablets, desktops, and more.",
-        feature4Title: "Intuitive Interface",
-        feature4Desc: "User-friendly design for seamless editing and translation.",
-        feature5Title: "High-Quality Output",
-        feature5Desc: "Download crisp, professional images in your preferred format.",
-        feature6Title: "Real-Time Preview",
-        feature6Desc: "Preview changes instantly to ensure perfect results.",
-        howToTitle: "How to Use",
-        howToSubtitle: "Transform your images in just a few simple steps.",
-        step1: "Upload your image to the Apps Localization platform.",
-        step2: "Select the target language for translation.",
-        step3: "Choose the desired output resolution for your device.",
-        step4: "Customize text appearance with fonts, colors, and animations.",
-        step5: "Download your localized image instantly.",
-        whyTitle: "Why Apps Localization?",
-        whySubtitle: "Enhance your content creation with unmatched flexibility and efficiency.",
-        why1Title: "Global Reach",
-        why1Desc: "Engage audiences worldwide with localized content.",
-        why2Title: "Time-Saving",
-        why2Desc: "Automate translation and resizing tasks effortlessly.",
-        why3Title: "Brand Consistency",
-        why3Desc: "Maintain your visual identity across languages.",
-        tutorialTitle: "Watch Our Tutorial",
-        tutorialSubtitle: "Learn how to use Apps Localization with our step-by-step Loom video.",
-        previewTitle: "Translation Preview",
-        previewSubtitle: "See your original image and all translations in one place",
-        originalTitle: "Original Content",
-        originalLabel: "Original Document (9.png)",
-        translationsTitle: "Translations",
-        translation1Title: "Dutch Translation",
-        translation1Desc: "This is the Dutch version of the original document with accurate translation and cultural adaptation.",
-        translation1Badge: "Nederlands",
-        translation2Title: "French Translation",
-        translation2Desc: "French translation maintaining the original meaning while adapting to French linguistic nuances.",
-        translation2Badge: "Français",
-        translation3Title: "German Translation",
-        translation3Desc: "Precise German translation with attention to technical terminology and formal language requirements.",
-        translation3Badge: "Deutsch",
-        translation4Title: "Italian Translation",
-        translation4Desc: "Italian translation with proper adaptation to the language's unique characteristics and cultural context.",
-        translation4Badge: "Italiano",
-        translation5Title: "Spanish Translation",
-        translation5Desc: "Spanish translation with accurate localization and attention to regional linguistic variations.",
-        translation5Badge: "Español",
-        translation6Title: "Arabic Translation",
-        translation6Desc: "Arabic translation with precise localization and cultural adaptation for Arabic-speaking audiences.",
-        translation6Badge: "العربية",
-        testimonialsTitle: "What Our Users Say",
-        testimonialsSubtitle: "Join thousands of satisfied users worldwide.",
-        testimonial1Text: "\"Apps Localization saved me hours of work. The translations are accurate and the interface is intuitive.\"",
-        testimonial1Author: "- Sarah Johnson, Marketing Director",
-        testimonial2Text: "\"As a global brand manager, this tool has been invaluable for our international campaigns.\"",
-        testimonial2Author: "- Michael Chen, Global Brand Manager",
-        testimonial3Text: "\"The ability to customize text appearance while maintaining translation accuracy is impressive.\"",
-        testimonial3Author: "- Elena Rodriguez, Content Creator",
-        ctaTitle: "Ready to Localize Your Images?",
-        ctaSubtitle: "Start creating multi-language content today with Apps Localization.",
-        footerText: "© 2023 Apps Localization. All rights reserved."
-      },
-      fr: {
-        heroTitle: "Localisation d'Apps",
-        heroSubtitle: "Traduisez et personnalisez facilement des images pour un public mondial.",
-        featuresTitle: "Fonctionnalités Puissantes",
-        featuresSubtitle: "Découvrez pourquoi Apps Localization est l'outil ultime pour la traduction d'images.",
-        feature1Title: "Traduction Multilingue",
-        feature1Desc: "Traduisez le texte dans les images en plusieurs langues avec une grande précision.",
-        feature2Title: "Édition de Texte Personnalisable",
-        feature2Desc: "Ajustez la police, la taille, la couleur et les animations pour correspondre à votre marque.",
-        feature3Title: "Redimensionnement Optimisé",
-        feature3Desc: "Redimensionnez les images pour les téléphones, tablettes, ordinateurs de bureau et plus encore.",
-        feature4Title: "Interface Intuitive",
-        feature4Desc: "Conception conviviale pour une édition et une traduction fluides.",
-        feature5Title: "Sortie de Haute Qualité",
-        feature5Desc: "Téléchargez des images nettes et professionnelles dans votre format préféré.",
-        feature6Title: "Aperçu en Temps Réel",
-        feature6Desc: "Prévisualisez les modifications instantanément pour garantir des résultats parfaits.",
-        howToTitle: "Comment Utiliser",
-        howToSubtitle: "Transformez vos images en quelques étapes simples.",
-        step1: "Téléchargez votre image sur la plateforme Apps Localization.",
-        step2: "Sélectionnez la langue cible pour la traduction.",
-        step3: "Choisissez la résolution de sortie souhaitée pour votre appareil.",
-        step4: "Personnalisez l'apparence du texte avec des polices, des couleurs et des animations.",
-        step5: "Téléchargez votre image localisée instantanément.",
-        whyTitle: "Pourquoi Apps Localization?",
-        whySubtitle: "Améliorez votre création de contenu avec une flexibilité et une efficacité inégalées.",
-        why1Title: "Portée Mondiale",
-        why1Desc: "Touche des audiences mondiales avec un contenu localisé.",
-        why2Title: "Gain de Temps",
-        why2Desc: "Automatisez les tâches de traduction et de redimensionnement sans effort.",
-        why3Title: "Cohérence de Marque",
-        why3Desc: "Maintenez votre identité visuelle dans toutes les langues.",
-        tutorialTitle: "Regardez Notre Tutoriel",
-        tutorialSubtitle: "Apprenez à utiliser Apps Localization avec notre vidéo Loom étape par étape.",
-        previewTitle: "Aperçu de Traduction",
-        previewSubtitle: "Voyez votre image originale et toutes les traductions en un seul endroit",
-        originalTitle: "Contenu Original",
-        originalLabel: "Document Original (9.png)",
-        translationsTitle: "Traductions",
-        translation1Title: "Traduction Néerlandaise",
-        translation1Desc: "Ceci est la version néerlandaise du document original avec une traduction précise et une adaptation culturelle.",
-        translation1Badge: "Nederlands",
-        translation2Title: "Traduction Française",
-        translation2Desc: "Traduction française conservant le sens original tout en s'adaptant aux nuances linguistiques françaises.",
-        translation2Badge: "Français",
-        translation3Title: "Traduction Allemande",
-        translation3Desc: "Traduction allemande précise avec attention à la terminologie technique et aux exigences linguistiques formelles.",
-        translation3Badge: "Deutsch",
-        translation4Title: "Traduction Italienne",
-        translation4Desc: "Traduction italienne avec adaptation appropriée aux caractéristiques uniques de la langue et au contexte culturel.",
-        translation4Badge: "Italiano",
-        translation5Title: "Traduction Espagnole",
-        translation5Desc: "Traduction espagnole avec localisation précise et attention aux variations linguistiques régionales.",
-        translation5Badge: "Español",
-        translation6Title: "Traduction Arabe",
-        translation6Desc: "Traduction arabe avec localisation précise et adaptation culturelle pour les publics arabophones.",
-        translation6Badge: "العربية",
-        testimonialsTitle: "Ce Que Disent Nos Utilisateurs",
-        testimonialsSubtitle: "Rejoignez des milliers d'utilisateurs satisfaits dans le monde entier.",
-        testimonial1Text: "\"Apps Localization m'a fait gagner des heures de travail. Les traductions sont précises et l'interface est intuitive.\"",
-        testimonial1Author: "- Sarah Johnson, Directrice Marketing",
-        testimonial2Text: "\"En tant que responsable de marque mondiale, cet outil a été inestimable pour nos campagnes internationales.\"",
-        testimonial2Author: "- Michael Chen, Responsable de Marque Mondiale",
-        testimonial3Text: "\"La capacité à personnaliser l'apparence du texte tout en maintenant la précision de la traduction est impressionnante.\"",
-        testimonial3Author: "- Elena Rodriguez, Créatrice de Contenu",
-        ctaTitle: "Prêt à Localiser Vos Images?",
-        ctaSubtitle: "Commencez à créer du contenu multilingue aujourd'hui avec Apps Localization.",
-        footerText: "© 2023 Apps Localization. Tous droits réservés."
-      },
-      de: {
-        heroTitle: "Apps Lokalisierung",
-        heroSubtitle: "Übersetzen und passen Sie Bilder mühelos für ein globales Publikum an.",
-        featuresTitle: "Leistungsstarke Funktionen",
-        featuresSubtitle: "Entdecken Sie, warum Apps Localization das ultimative Tool zur Bildübersetzung ist.",
-        feature1Title: "Mehrsprachige Übersetzung",
-        feature1Desc: "Übersetzen Sie Text in Bilder in mehreren Sprachen mit hoher Genauigkeit.",
-        feature2Title: "Anpassbare Textbearbeitung",
-        feature2Desc: "Passen Sie Schriftart, Größe, Farbe und Animationen an Ihre Marke an.",
-        feature3Title: "Geräteoptimierte Größenanpassung",
-        feature3Desc: "Passen Sie Bilder für Telefone, Tablets, Desktops und mehr an.",
-        feature4Title: "Intuitive Benutzeroberfläche",
-        feature4Desc: "Benutzerfreundliches Design für nahtloses Bearbeiten und Übersetzen.",
-        feature5Title: "Hohe Ausgabequalität",
-        feature5Desc: "Laden Sie knackige, professionelle Bilder in Ihrem bevorzugten Format herunter.",
-        feature6Title: "Echtzeit-Vorschau",
-        feature6Desc: "Vorschau der Änderungen sofort, um perfekte Ergebnisse zu gewährleisten.",
-        howToTitle: "So verwenden Sie es",
-        howToSubtitle: "Transformieren Sie Ihre Bilder in nur wenigen einfachen Schritten.",
-        step1: "Laden Sie Ihr Bild auf die Apps Localization-Plattform hoch.",
-        step2: "Wählen Sie die Zielsprache für die Übersetzung aus.",
-        step3: "Wählen Sie die gewünschte Ausgabeauflösung für Ihr Gerät.",
-        step4: "Passen Sie das Erscheinungsbild des Textes mit Schriftarten, Farben und Animationen an.",
-        step5: "Laden Sie Ihr lokalisiertes Bild sofort herunter.",
-        whyTitle: "Warum Apps Localization?",
-        whySubtitle: "Verbessern Sie Ihre Inhaltserstellung mit unübertroffener Flexibilität und Effizienz.",
-        why1Title: "Globale Reichweite",
-        why1Desc: "Erreichen Sie weltweites Publikum mit lokalisierten Inhalten.",
-        why2Title: "Zeitersparnis",
-        why2Desc: "Automatisieren Sie Übersetzungs- und Größenanpassungsaufgaben mühelos.",
-        why3Title: "Markenkonsistenz",
-        why3Desc: "Bewahren Sie Ihre visuelle Identität über alle Sprachen hinweg.",
-        tutorialTitle: "Sehen Sie sich unser Tutorial an",
-        tutorialSubtitle: "Erfahren Sie, wie Sie Apps Localization mit unserem Schritt-für-Schritt-Loom-Video verwenden.",
-        previewTitle: "Übersetzungsvorschau",
-        previewSubtitle: "Sehen Sie Ihr Originalbild und alle Übersetzungen an einem Ort",
-        originalTitle: "Originalinhalt",
-        originalLabel: "Originaldokument (9.png)",
-        translationsTitle: "Übersetzungen",
-        translation1Title: "Niederländische Übersetzung",
-        translation1Desc: "Dies ist die niederländische Version des Originaldokuments mit genauer Übersetzung und kultureller Anpassung.",
-        translation1Badge: "Nederlands",
-        translation2Title: "Französische Übersetzung",
-        translation2Desc: "Französische Übersetzung, die die ursprüngliche Bedeutung beibehält und sich an französische sprachliche Nuancen anpasst.",
-        translation2Badge: "Français",
-        translation3Title: "Deutsche Übersetzung",
-        translation3Desc: "Präzise deutsche Übersetzung mit besonderem Augenmerk auf technische Terminologie und formale Sprachanforderungen.",
-        translation3Badge: "Deutsch",
-        translation4Title: "Italienische Übersetzung",
-        translation4Desc: "Italienische Übersetzung mit korrekter Anpassung an die einzigartigen Merkmale der Sprache und den kulturellen Kontext.",
-        translation4Badge: "Italiano",
-        translation5Title: "Spanische Übersetzung",
-        translation5Desc: "Spanische Übersetzung mit genauer Lokalisierung und Berücksichtigung regionaler sprachlicher Variationen.",
-        translation5Badge: "Español",
-        translation6Title: "Arabische Übersetzung",
-        translation6Desc: "Arabische Übersetzung mit präziser Lokalisierung und kultureller Anpassung für arabischsprachige Zielgruppen.",
-        translation6Badge: "العربية",
-        testimonialsTitle: "Was unsere Benutzer sagen",
-        testimonialsSubtitle: "Schließen Sie sich Tausenden zufriedenen Benutzern weltweit an.",
-        testimonial1Text: "\"Apps Localization hat mir Stunden Arbeit erspart. Die Übersetzungen sind genau und die Benutzeroberfläche ist intuitiv.\"",
-        testimonial1Author: "- Sarah Johnson, Marketingdirektorin",
-        testimonial2Text: "\"Als globaler Markenmanager war dieses Tool für unsere internationalen Kampagnen von unschätzbarem Wert.\"",
-        testimonial2Author: "- Michael Chen, Globaler Markenmanager",
-        testimonial3Text: "\"Die Möglichkeit, das Erscheinungsbild des Textes anzupassen und gleichzeitig die Übersetzungsgenauigkeit beizubehalten, ist beeindruckend.\"",
-        testimonial3Author: "- Elena Rodriguez, Content Creator",
-        ctaTitle: "Bereit, Ihre Bilder zu lokalisieren?",
-        ctaSubtitle: "Beginnen Sie noch heute mit der Erstellung mehrsprachiger Inhalte mit Apps Localization.",
-        footerText: "© 2023 Apps Localization. Alle Rechte vorbehalten."
-      },
-      es: {
-        heroTitle: "Localización de Apps",
-        heroSubtitle: "Traduzca y personalice imágenes sin esfuerzo para audiencias globales.",
-        featuresTitle: "Características Potentes",
-        featuresSubtitle: "Descubra por qué Apps Localization es la herramienta definitiva para la traducción de imágenes.",
-        feature1Title: "Traducción Multilingüe",
-        feature1Desc: "Traduzca texto en imágenes a múltiples idiomas con alta precisión.",
-        feature2Title: "Edición de Texto Personalizable",
-        feature2Desc: "Ajuste fuente, tamaño, color y animaciones para que coincidan con su marca.",
-        feature3Title: "Redimensionamiento Optimizado",
-        feature3Desc: "Redimensione imágenes para teléfonos, tabletas, escritorios y más.",
-        feature4Title: "Interfaz Intuitiva",
-        feature4Desc: "Diseño fácil de usar para una edición y traducción sin problemas.",
-        feature5Title: "Salida de Alta Calidad",
-        feature5Desc: "Descargue imágenes nítidas y profesionales en su formato preferido.",
-        feature6Title: "Vista Previa en Tiempo Real",
-        feature6Desc: "Vea previsualizaciones de los cambios al instante para garantizar resultados perfectos.",
-        howToTitle: "Cómo Usar",
-        howToSubtitle: "Transforme sus imágenes en solo unos pocos pasos simples.",
-        step1: "Cargue su imagen a la plataforma Apps Localization.",
-        step2: "Seleccione el idioma de destino para la traducción.",
-        step3: "Elija la resolución de salida deseada para su dispositivo.",
-        step4: "Personalice la apariencia del texto con fuentes, colores y animaciones.",
-        step5: "Descargue su imagen localizada al instante.",
-        whyTitle: "¿Por qué Apps Localization?",
-        whySubtitle: "Mejore su creación de contenido con flexibilidad y eficiencia inigualables.",
-        why1Title: "Alcance Global",
-        why1Desc: "Involucre audiencias en todo el mundo con contenido localizado.",
-        why2Title: "Ahorro de Tiempo",
-        why2Desc: "Automatice tareas de traducción y redimensionamiento sin esfuerzo.",
-        why3Title: "Consistencia de Marca",
-        why3Desc: "Mantenga su identidad visual en todos los idiomas.",
-        tutorialTitle: "Vea Nuestro Tutorial",
-        tutorialSubtitle: "Aprenda a usar Apps Localization con nuestro video paso a paso de Loom.",
-        previewTitle: "Vista Previa de Traducción",
-        previewSubtitle: "Vea su imagen original y todas las traducciones en un solo lugar",
-        originalTitle: "Contenido Original",
-        originalLabel: "Documento Original (9.png)",
-        translationsTitle: "Traducciones",
-        translation1Title: "Traducción Holandesa",
-        translation1Desc: "Esta es la versión holandesa del documento original con traducción precisa y adaptación cultural.",
-        translation1Badge: "Nederlands",
-        translation2Title: "Traducción Francesa",
-        translation2Desc: "Traducción al francés que mantiene el significado original mientras se adapta a los matices lingüísticos franceses.",
-        translation2Badge: "Français",
-        translation3Title: "Traducción Alemana",
-        translation3Desc: "Traducción alemana precisa con atención a la terminología técnica y los requisitos formales del idioma.",
-        translation3Badge: "Deutsch",
-        translation4Title: "Traducción Italiana",
-        translation4Desc: "Traducción italiana con adaptación adecuada a las características únicas del idioma y al contexto cultural.",
-        translation4Badge: "Italiano",
-        translation5Title: "Traducción Española",
-        translation5Desc: "Traducción española con localización precisa y atención a las variaciones lingüísticas regionales.",
-        translation5Badge: "Español",
-        translation6Title: "Traducción Árabe",
-        translation6Desc: "Traducción árabe con localización precisa y adaptación cultural para audiencias de habla árabe.",
-        translation6Badge: "العربية",
-        testimonialsTitle: "Lo Que Dicen Nuestros Usuarios",
-        testimonialsSubtitle: "Únase a miles de usuarios satisfechos en todo el mundo.",
-        testimonial1Text: "\"Apps Localization me ahorró horas de trabajo. Las traducciones son precisas y la interfaz es intuitiva.\"",
-        testimonial1Author: "- Sarah Johnson, Directora de Marketing",
-        testimonial2Text: "\"Como gerente de marca global, esta herramienta ha sido invaluable para nuestras campañas internacionales.\"",
-        testimonial2Author: "- Michael Chen, Gerente de Marca Global",
-        testimonial3Text: "\"La capacidad de personalizar la apariencia del texto mientras se mantiene la precisión de la traducción es impresionante.\"",
-        testimonial3Author: "- Elena Rodriguez, Creadora de Contenido",
-        ctaTitle: "¿Listo para Localizar Sus Imágenes?",
-        ctaSubtitle: "Comience a crear contenido multilingüe hoy con Apps Localization.",
-        footerText: "© 2023 Apps Localization. Todos los derechos reservados."
-      },
-      it: {
-        heroTitle: "Localizzazione App",
-        heroSubtitle: "Traduci e personalizza facilmente le immagini per un pubblico globale.",
-        featuresTitle: "Funzionalità Potenti",
-        featuresSubtitle: "Scopri perché Apps Localization è lo strumento definitivo per la traduzione di immagini.",
-        feature1Title: "Traduzione Multilingue",
-        feature1Desc: "Traduci il testo nelle immagini in più lingue con alta precisione.",
-        feature2Title: "Modifica del Testo Personalizzabile",
-        feature2Desc: "Regola carattere, dimensione, colore e animazioni per abbinare il tuo brand.",
-        feature3Title: "Ridimensionamento Ottimizzato",
-        feature3Desc: "Ridimensiona le immagini per telefoni, tablet, desktop e altro.",
-        feature4Title: "Interfaccia Intuitiva",
-        feature4Desc: "Design user-friendly per editing e traduzione senza soluzione di continuità.",
-        feature5Title: "Output di Alta Qualità",
-        feature5Desc: "Scarica immagini nitide e professionali nel formato preferito.",
-        feature6Title: "Anteprima in Tempo Reale",
-        feature6Desc: "Anteprima delle modifiche all'istante per garantire risultati perfetti.",
-        howToTitle: "Come Usare",
-        howToSubtitle: "Trasforma le tue immagini in pochi semplici passaggi.",
-        step1: "Carica la tua immagine sulla piattaforma Apps Localization.",
-        step2: "Seleziona la lingua di destinazione per la traduzione.",
-        step3: "Scegli la risoluzione di output desiderata per il tuo dispositivo.",
-        step4: "Personalizza l'aspetto del testo con caratteri, colori e animazioni.",
-        step5: "Scarica la tua immagine localizzata all'istante.",
-        whyTitle: "Perché Apps Localization?",
-        whySubtitle: "Migliora la tua creazione di contenuti con flessibilità ed efficienza senza pari.",
-        why1Title: "Portata Globale",
-        why1Desc: "Coinvolgi un pubblico mondiale con contenuti localizzati.",
-        why2Title: "Risparmio di Tempo",
-        why2Desc: "Automatizza le attività di traduzione e ridimensionamento senza sforzo.",
-        why3Title: "Coerenza del Marchio",
-        why3Desc: "Mantieni la tua identità visiva in tutte le lingue.",
-        tutorialTitle: "Guarda il Nostro Tutorial",
-        tutorialSubtitle: "Scopri come utilizzare Apps Localization con il nostro video Loom passo dopo passo.",
-        previewTitle: "Anteprima Traduzione",
-        previewSubtitle: "Vedi la tua immagine originale e tutte le traduzioni in un unico posto",
-        originalTitle: "Contenuto Originale",
-        originalLabel: "Documento Originale (9.png)",
-        translationsTitle: "Traduzioni",
-        translation1Title: "Traduzione Olandese",
-        translation1Desc: "Questa è la versione olandese del documento originale con traduzione accurata e adattamento culturale.",
-        translation1Badge: "Nederlands",
-        translation2Title: "Traduzione Francese",
-        translation2Desc: "Traduzione francese che mantiene il significato originale adattandosi alle sfumature linguistiche francesi.",
-        translation2Badge: "Français",
-        translation3Title: "Traduzione Tedesca",
-        translation3Desc: "Traduzione tedesca precisa con attenzione alla terminologia tecnica e ai requisiti linguistici formali.",
-        translation3Badge: "Deutsch",
-        translation4Title: "Traduzione Italiana",
-        translation4Desc: "Traduzione italiana con adattamento appropriato alle caratteristiche uniche della lingua e al contesto culturale.",
-        translation4Badge: "Italiano",
-        translation5Title: "Traduzione Spagnola",
-        translation5Desc: "Traducción española con localización precisa y atención a las variaciones lingüísticas regionales.",
-        translation5Badge: "Español",
-        translation6Title: "Traduzione Araba",
-        translation6Desc: "Traduzione araba con localizzazione precisa e adattamento culturale per un pubblico di lingua araba.",
-        translation6Badge: "العربية",
-        testimonialsTitle: "Cosa Dicono i Nostri Utenti",
-        testimonialsSubtitle: "Unisciti a migliaia di utenti soddisfatti in tutto il mondo.",
-        testimonial1Text: "\"Apps Localization mi ha fatto risparmiare ore di lavoro. Le traduzioni sono accurate e l'interfaccia è intuitiva.\"",
-        testimonial1Author: "- Sarah Johnson, Direttore Marketing",
-        testimonial2Text: "\"Come brand manager globale, questo strumento è stato inestimabile per le nostre campagne internazionali.\"",
-        testimonial2Author: "- Michael Chen, Brand Manager Globale",
-        testimonial3Text: "\"La capacità di personalizzare l'aspetto del testo mantenendo l'accuratezza della traduzione è impressionante.\"",
-        testimonial3Author: "- Elena Rodriguez, Content Creator",
-        ctaTitle: "Pronto a Localizzare le Tue Immagini?",
-        ctaSubtitle: "Inizia a creare contenuti multilingue oggi con Apps Localization.",
-        footerText: "© 2023 Apps Localization. Tutti i diritti riservati."
-      },
-      nl: {
-        heroTitle: "Apps Localisatie",
-        heroSubtitle: "Vertaal en pas moeiteloos afbeeldingen aan voor een wereldwijd publiek.",
-        featuresTitle: "Krachtige Functies",
-        featuresSubtitle: "Ontdek waarom Apps Localization het ultieme hulpmiddel is voor beeldvertaling.",
-        feature1Title: "Meertalige Vertaling",
-        feature1Desc: "Vertaal tekst in afbeeldingen naar meerdere talen met hoge nauwkeurigheid.",
-        feature2Title: "Aanpasbare Tekstbewerking",
-        feature2Desc: "Pas lettertype, grootte, kleur en animaties aan om bij uw merk te passen.",
-        feature3Title: "Apparaat-geoptimaliseerd Formaat Aanpassen",
-        feature3Desc: "Pas afbeeldingen aan voor telefoons, tablets, desktops en meer.",
-        feature4Title: "Intuïtieve Interface",
-        feature4Desc: "Gebruikersvriendelijk ontwerp voor naadloos bewerken en vertalen.",
-        feature5Title: "Hoge Kwaliteit Uitvoer",
-        feature5Desc: "Download scherpe, professionele afbeeldingen in uw voorkeursformaat.",
-        feature6Title: "Realtime Voorbeeld",
-        feature6Desc: "Bekijk wijzigingen direct om perfecte resultaten te garanderen.",
-        howToTitle: "Hoe te Gebruiken",
-        howToSubtitle: "Transformeer uw afbeeldingen in slechts een paar eenvoudige stappen.",
-        step1: "Upload uw afbeelding naar het Apps Localization platform.",
-        step2: "Selecteer de doeltaal voor vertaling.",
-        step3: "Kies de gewenste uitvoerresolutie voor uw apparaat.",
-        step4: "Pas het uiterlijk van de tekst aan met lettertypen, kleuren en animaties.",
-        step5: "Download uw gelokaliseerde afbeelding direct.",
-        whyTitle: "Waarom Apps Localization?",
-        whySubtitle: "Verbeter uw contentcreatie met ongeëvenaarde flexibiliteit en efficiëntie.",
-        why1Title: "Wereldwijd Bereik",
-        why1Desc: "Bereik wereldwijde doelgroepen met gelokaliseerde content.",
-        why2Title: "Tijd Besparen",
-        why2Desc: "Automatiseer vertaal- en formaataanpassingstaken moeiteloos.",
-        why3Title: "Merkconsistentie",
-        why3Desc: "Behoud uw visuele identiteit in alle talen.",
-        tutorialTitle: "Bekijk Onze Tutorial",
-        tutorialSubtitle: "Leer hoe u Apps Localization gebruikt met onze stapsgewijze Loom-video.",
-        previewTitle: "Vertaling Voorbeeld",
-        previewSubtitle: "Bekijk uw originele afbeelding en alle vertalingen op één plek",
-        originalTitle: "Originele Inhoud",
-        originalLabel: "Origineel Document (9.png)",
-        translationsTitle: "Vertalingen",
-        translation1Title: "Nederlandse Vertaling",
-        translation1Desc: "Dit is de Nederlandse versie van het originele document met nauwkeurige vertaling en culturele aanpassing.",
-        translation1Badge: "Nederlands",
-        translation2Title: "Franse Vertaling",
-        translation2Desc: "Franse vertaling die de oorspronkelijke betekenis behoudt en zich aanpast aan Franse taalkundige nuances.",
-        translation2Badge: "Français",
-        translation3Title: "Duitse Vertaling",
-        translation3Desc: "Nauwkeurige Duitse vertaling met aandacht voor technische terminologie en formele taalvereisten.",
-        translation3Badge: "Deutsch",
-        translation4Title: "Italiaanse Vertaling",
-        translation4Desc: "Italiaanse vertaling met correcte aanpassing aan de unieke kenmerken van de taal en culturele context.",
-        translation4Badge: "Italiano",
-        translation5Title: "Spaanse Vertaling",
-        translation5Desc: "Spaanse vertaling met accurate lokalisatie en aandacht voor regionale taalkundige variaties.",
-        translation5Badge: "Español",
-        translation6Title: "Arabische Vertaling",
-        translation6Desc: "Arabische vertaling met nauwkeurige lokalisatie en culturele aanpassing voor een Arabischsprekend publiek.",
-        translation6Badge: "العربية",
-        testimonialsTitle: "Wat Onze Gebruikers Zeggen",
-        testimonialsSubtitle: "Sluit u aan bij duizenden tevreden gebruikers wereldwijd.",
-        testimonial1Text: "\"Apps Localization heeft me uren werk bespaard. De vertalingen zijn nauwkeurig en de interface is intuïtief.\"",
-        testimonial1Author: "- Sarah Johnson, Marketingdirecteur",
-        testimonial2Text: "\"Als wereldwijd brandmanager is deze tool van onschatbare waarde geweest voor onze internationale campagnes.\"",
-        testimonial2Author: "- Michael Chen, Wereldwijd Brand Manager",
-        testimonial3Text: "\"De mogelijkheid om het uiterlijk van tekst aan te passen en tegelijkertijd de vertalingsnauwkeurigheid te behouden is indrukwekkend.\"",
-        testimonial3Author: "- Elena Rodriguez, Content Creator",
-        ctaTitle: "Klaar om Uw Afbeeldingen te Lokaliseren?",
-        ctaSubtitle: "Begin vandaag nog met het maken van meertalige inhoud met Apps Localization.",
-        footerText: "© 2023 Apps Localization. Alle rechten voorbehouden."
-      },
-      ar: {
-        heroTitle: "توطين التطبيقات",
-        heroSubtitle: "ترجمة وتخصيص الصور بسهولة للجمهور العالمي.",
-        featuresTitle: "ميزات قوية",
-        featuresSubtitle: "اكتشف لماذا يعتبر توطين التطبيقات الأداة النهائية لترجمة الصور.",
-        feature1Title: "ترجمة متعددة اللغات",
-        feature1Desc: "ترجمة النصوص في الصور إلى لغات متعددة بدقة عالية.",
-        feature2Title: "تخصيص تحرير النصوص",
-        feature2Desc: "ضبط الخط والحجم واللون والرسوم المتحركة لتتناسب مع علامتك التجارية.",
-        feature3Title: "تغيير الحجم المحسن للأجهزة",
-        feature3Desc: "تغيير حجم الصور للهواتف والأجهزة اللوحية وأجهزة الكمبيوتر المكتبية وغيرها.",
-        feature4Title: "واجهة مستخدم بديهية",
-        feature4Desc: "تصميم سهل الاستخدام لتحرير وترجمة سلسة.",
-        feature5Title: "إخراج عالي الجودة",
-        feature5Desc: "تحميل صور واضحة واحترافية بالصيغة المفضلة لديك.",
-        feature6Title: "معاينة في الوقت الفعلي",
-        feature6Desc: "معاينة التغييرات فورًا لضمان نتائج مثالية.",
-        howToTitle: "كيفية الاستخدام",
-        howToSubtitle: "حول صورك في خطوات بسيطة قليلة.",
-        step1: "قم برفع صورتك إلى منصة توطين التطبيقات.",
-        step2: "اختر اللغة المستهدفة للترجمة.",
-        step3: "اختر دقة الإخراج المطلوبة لجهازك.",
-        step4: "خصص مظهر النص بالخطوط والألوان والرسوم المتحركة.",
-        step5: "قم بتحميل صورتك المترجمة فورًا.",
-        whyTitle: "لماذا توطين التطبيقات؟",
-        whySubtitle: "عزز إنشاء المحتوى الخاص بك بمرونة وكفاءة لا مثيل لهما.",
-        why1Title: "الوصول العالمي",
-        why1Desc: "اجذب الجماهير في جميع أنحاء العالم بمحتوى مترجم.",
-        why2Title: "توفير الوقت",
-        why2Desc: "أتمتة مهام الترجمة وتغيير الحجم بسهولة.",
-        why3Title: "اتساق العلامة التجارية",
-        why3Desc: "حافظ على هويتك البصرية عبر جميع اللغات.",
-        tutorialTitle: "شاهد برنامجنا التعليمي",
-        tutorialSubtitle: "تعلم كيفية استخدام توطين التطبيقات مع فيديو Loom خطوة بخطوة.",
-        previewTitle: "معاينة الترجمة",
-        previewSubtitle: "شاهد صورتك الأصلية وجميع الترجمات في مكان واحد",
-        originalTitle: "المحتوى الأصلي",
-        originalLabel: "الوثيقة الأصلية (9.png)",
-        translationsTitle: "الترجمات",
-        translation1Title: "الترجمة الهولندية",
-        translation1Desc: "هذه هي النسخة الهولندية من الوثيقة الأصلية مع ترجمة دقيقة وتكيف ثقافي.",
-        translation1Badge: "Nederlands",
-        translation2Title: "الترجمة الفرنسية",
-        translation2Desc: "ترجمة فرنسية تحافظ على المعنى الأصلي مع التكيف مع الفروق اللغوية الفرنسية.",
-        translation2Badge: "Français",
-        translation3Title: "الترجمة الألمانية",
-        translation3Desc: "ترجمة ألمانية دقيقة مع التركيز على المصطلحات التقنية ومتطلبات اللغة الرسمية.",
-        translation3Badge: "Deutsch",
-        translation4Title: "الترجمة الإيطالية",
-        translation4Desc: "ترجمة إيطالية مع تكيف مناسب للخصائص الفريدة للغة والسياق الثقافي.",
-        translation4Badge: "Italiano",
-        translation5Title: "الترجمة الإسبانية",
-        translation5Desc: "ترجمة إسبانية مع توطين دقيق واهتمام بالتغيرات اللغوية الإقليمية.",
-        translation5Badge: "Español",
-        translation6Title: "الترجمة العربية",
-        translation6Desc: "ترجمة عربية مع توطين دقيق وتكيف ثقافي للجمهور الناطق بالعربية.",
-        translation6Badge: "العربية",
-        testimonialsTitle: "ماذا يقول مستخدمونا",
-        testimonialsSubtitle: "انضم إلى آلاف المستخدمين الراضين في جميع أنحاء العالم.",
-        testimonial1Text: "\"لقد وفر لي توطين التطبيقات ساعات من العمل. الترجمات دقيقة والواجهة بديهية.\"",
-        testimonial1Author: "- سارة جونسون، مديرة التسويق",
-        testimonial2Text: "\"كمدير علامة تجارية عالمية، كانت هذه الأداة لا تقدر بثمن لحملاتنا الدولية.\"",
-        testimonial2Author: "- مايكل تشن، مدير العلامة التجارية العالمية",
-        testimonial3Text: "\"القدرة على تخصيص مظهر النص مع الحفاظ على دقة الترجمة مذهلة.\"",
-        testimonial3Author: "- إيلينا رودريغيز، مبدعة المحتوى",
-        ctaTitle: "هل أنت جاهز لتوطين صورك؟",
-        ctaSubtitle: "ابدأ في إنشاء محتوى متعدد اللغات اليوم مع توطين التطبيقات.",
-        footerText: "© 2023 توطين التطبيقات. جميع الحقوق محفوظة."
-      }
+    <div id="Visualization" class="tabcontent">
+        <h2>Data Visualization</h2>
+        <select id="viz_db_select"></select>
+        <textarea id="viz_prompt" placeholder="e.g., Show a bar chart of students per course"></textarea>
+        <button onclick="generateVisualization()">Generate Chart</button>
+        <h3>Generated SQL:</h3>
+        <pre id="viz_sql"></pre>
+        <h3>Chart:</h3>
+        <canvas id="viz_chart" style="max-width:100%;height:400px;"></canvas>
+        <h3>Summary:</h3>
+        <p id="viz_summary"></p>
+    </div>
+    <div id="Subscriptions" class="tabcontent">
+        <h2>Choose a Plan</h2>
+        <div id="subs_info">Loading plans...</div>
+        <div class="subscriptions" id="subscriptions_container"></div>
+        <p style="margin-top:14px;color:var(--text-secondary);">All plans are monthly recurring. Billing handled by Stripe (test mode).</p>
+    </div>
+</div>
+
+<div id="overlay"></div>
+<div id="popup">
+    <p id="popup-message"></p>
+    <button onclick="goToSubscriptions()">Subscribe Now</button>
+    <button onclick="closePopup()">Close</button>
+</div>
+
+<script>
+// Landing page functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+    
+    // FAQ accordion
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+            item.classList.toggle('active');
+        });
+    });
+    
+    // Get Started buttons
+    document.getElementById('get-started-btn').addEventListener('click', showAuthModal);
+    document.getElementById('final-cta-btn').addEventListener('click', showAuthModal);
+    document.getElementById('nav-login').addEventListener('click', function(e) {
+        e.preventDefault();
+        showAuthModal('login');
+    });
+});
+
+// Auth modal functionality
+function showAuthModal(defaultTab = 'signup') {
+    document.getElementById('auth-modal').style.display = 'flex';
+    switchAuthTab(defaultTab);
+}
+
+function closeAuthModal() {
+    document.getElementById('auth-modal').style.display = 'none';
+    document.getElementById('login-error').style.display = 'none';
+    document.getElementById('signup-error').style.display = 'none';
+}
+
+function switchAuthTab(tab) {
+    // Update tabs
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+    
+    document.querySelector(`.auth-tab[onclick="switchAuthTab('${tab}')"]`).classList.add('active');
+    document.getElementById(`${tab}-form`).classList.add('active');
+    
+    // Clear errors
+    document.getElementById('login-error').style.display = 'none';
+    document.getElementById('signup-error').style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', function(e) {
+    if (e.target === document.getElementById('auth-modal')) {
+        closeAuthModal();
+    }
+});
+
+// Existing app functionality (unchanged)
+let userTier = 'free';
+async function checkLogin() {
+    try {
+        const resp = await fetch("/user_info", {credentials: 'include'});
+        const data = await resp.json();
+        if (data.error) {
+            document.getElementById('landing-page').style.display = 'block';
+            document.getElementById('app').style.display = 'none';
+        } else {
+            userTier = data.tier;
+            document.getElementById('landing-page').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            loadDatabases();
+            document.querySelectorAll('.tablinks')[0].click();
+        }
+    } catch (err) {
+        document.getElementById('auth-message').innerText = 'Error checking login status: ' + err;
+    }
+}
+checkLogin();
+
+async function signup() {
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const error = document.getElementById('signup-error');
+
+    if (!email || !password) {
+        error.textContent = 'Email and password are required';
+        error.style.display = 'block';
+        return;
+    }
+
+    try {
+        const response = await fetch('/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+            credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            error.textContent = data.error;
+            error.style.display = 'block';
+        } else {
+            error.style.color = '#66ff66';
+            error.textContent = data.message || 'Signup successful!';
+            error.style.display = 'block';
+
+            setTimeout(() => {
+                closeAuthModal();
+                document.getElementById('landing-page').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                userTier = data.tier;
+                loadDatabases();
+                document.querySelectorAll('.tablinks')[0].click();
+            }, 1500);
+        }
+    } catch (err) {
+        error.textContent = 'An error occurred. Please try again.';
+        error.style.display = 'block';
+    }
+}
+
+async function login() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const error = document.getElementById('login-error');
+    
+    if (!email || !password) {
+        error.textContent = 'Email and password are required';
+        error.style.display = 'block';
+        return;
+    }
+    
+    try {
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+            credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (data.error) {
+            error.textContent = data.error;
+            error.style.display = 'block';
+        } else {
+            closeAuthModal();
+            document.getElementById('landing-page').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            userTier = data.tier;
+            loadDatabases();
+            document.querySelectorAll('.tablinks')[0].click();
+        }
+    } catch (err) {
+        error.textContent = 'An error occurred. Please try again.';
+        error.style.display = 'block';
+    }
+}
+
+function checkTabAccess(tabName) {
+    const accessRules = {
+        'Databases': ['free', 'basic', 'standard', 'premium'],
+        'Query': ['standard', 'premium'],
+        'Manage': ['basic', 'standard', 'premium'],
+        'CreateDB': ['free', 'basic', 'standard', 'premium'],
+        'ConnectDB': ['free', 'basic', 'standard', 'premium'],
+        'Visualization': ['premium'],
+        'Subscriptions': ['free', 'basic', 'standard', 'premium']
     };
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      body.classList.remove("light");
-      body.classList.add("dark");
-      themeToggle.textContent = "☀️";
+    if (!accessRules[tabName].includes(userTier)) {
+        showPopup(`You are on the ${userTier} tier and cannot access the ${tabName} feature. Please subscribe to a higher tier.`);
+        return;
+    }
+    openTab({currentTarget: document.querySelector(`button[onclick*="${tabName}"]`)}, tabName);
+}
+
+function showPopup(message) {
+    document.getElementById('popup-message').innerText = message;
+    document.getElementById('popup').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+}
+
+function closePopup() {
+    document.getElementById('popup').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+}
+
+function goToSubscriptions() {
+    closePopup();
+    openTab({currentTarget: document.querySelector(`button[onclick*='Subscriptions']`)}, 'Subscriptions');
+}
+
+document.getElementById('theme-toggle').addEventListener('click', () => {
+    if (document.body.classList.contains('theme-dark')) {
+        document.body.classList.remove('theme-dark');
+        document.body.classList.add('theme-light');
+        document.getElementById('theme-toggle').innerHTML = '🌙';
     } else {
-      body.classList.remove("dark");
-      body.classList.add("light");
-      themeToggle.textContent = "🌙";
+        document.body.classList.remove('theme-light');
+        document.body.classList.add('theme-dark');
+        document.getElementById('theme-toggle').innerHTML = '☀️';
     }
-    themeToggle.addEventListener("click", () => {
-      if (body.classList.contains("light")) {
-        body.classList.replace("light", "dark");
-        localStorage.setItem("theme", "dark");
-        themeToggle.textContent = "☀️";
-      } else {
-        body.classList.replace("dark", "light");
-        localStorage.setItem("theme", "light");
-        themeToggle.textContent = "🌙";
-      }
+});
+
+function openTab(evt, tabName) {
+    var i, tabcontent = document.getElementsByClassName("tabcontent"), tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tabcontent.length; i++) tabcontent[i].style.display = "none";
+    for (i = 0; i < tablinks.length; i++) tablinks[i].className = tablinks[i].className.replace(" active", "");
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+document.getElementById("connect_db_type").addEventListener("change", function() {
+    const type = this.value;
+    document.getElementById("connect_db_file").style.display = type === "sqlite" ? "block" : "none";
+    ["connect_host", "connect_port", "connect_database", "connect_user", "connect_password"].forEach(id => {
+        document.getElementById(id).style.display = type !== "sqlite" ? "block" : "none";
     });
-    heroVideo.addEventListener('error', (e) => {
-      console.error('Failed to load hero video:', e);
-      heroVideo.style.display = 'none';
-      videoError.style.display = 'block';
-    });
-    heroVideo.addEventListener('loadeddata', () => {
-      console.log('Hero video loaded successfully');
-      videoError.style.display = 'none';
-    });
-    function updateWebsiteContent(lang) {
-      const data = translations[lang];
-      document.documentElement.lang = lang;
-      document.getElementById('hero-title').textContent = data.heroTitle;
-      document.getElementById('hero-subtitle').textContent = data.heroSubtitle;
-      document.getElementById('features-title').textContent = data.featuresTitle;
-      document.getElementById('features-subtitle').textContent = data.featuresSubtitle;
-      document.getElementById('feature-1-title').textContent = data.feature1Title;
-      document.getElementById('feature-1-desc').textContent = data.feature1Desc;
-      document.getElementById('feature-2-title').textContent = data.feature2Title;
-      document.getElementById('feature-2-desc').textContent = data.feature2Desc;
-      document.getElementById('feature-3-title').textContent = data.feature3Title;
-      document.getElementById('feature-3-desc').textContent = data.feature3Desc;
-      document.getElementById('feature-4-title').textContent = data.feature4Title;
-      document.getElementById('feature-4-desc').textContent = data.feature4Desc;
-      document.getElementById('feature-5-title').textContent = data.feature5Title;
-            document.getElementById('feature-5-desc').textContent = data.feature5Desc;
-      document.getElementById('feature-6-title').textContent = data.feature6Title;
-      document.getElementById('feature-6-desc').textContent = data.feature6Desc;
-      document.getElementById('how-to-title').textContent = data.howToTitle;
-      document.getElementById('how-to-subtitle').textContent = data.howToSubtitle;
-      document.getElementById('step-1').textContent = data.step1;
-      document.getElementById('step-2').textContent = data.step2;
-      document.getElementById('step-3').textContent = data.step3;
-      document.getElementById('step-4').textContent = data.step4;
-      document.getElementById('step-5').textContent = data.step5;
-      document.getElementById('why-title').textContent = data.whyTitle;
-      document.getElementById('why-subtitle').textContent = data.whySubtitle;
-      document.getElementById('why-1-title').textContent = data.why1Title;
-      document.getElementById('why-1-desc').textContent = data.why1Desc;
-      document.getElementById('why-2-title').textContent = data.why2Title;
-      document.getElementById('why-2-desc').textContent = data.why2Desc;
-      document.getElementById('why-3-title').textContent = data.why3Title;
-      document.getElementById('why-3-desc').textContent = data.why3Desc;
-      document.getElementById('tutorial-title').textContent = data.tutorialTitle;
-      document.getElementById('tutorial-subtitle').textContent = data.tutorialSubtitle;
-      document.getElementById('preview-title').textContent = data.previewTitle;
-      document.getElementById('preview-subtitle').textContent = data.previewSubtitle;
-      document.getElementById('original-title').textContent = data.originalTitle;
-      document.getElementById('original-label').textContent = data.originalLabel;
-      document.getElementById('translations-title').textContent = data.translationsTitle;
-      document.getElementById('translation-1-title').textContent = data.translation1Title;
-      document.getElementById('translation-1-desc').textContent = data.translation1Desc;
-      document.getElementById('translation-1-badge').textContent = data.translation1Badge;
-      document.getElementById('translation-2-title').textContent = data.translation2Title;
-      document.getElementById('translation-2-desc').textContent = data.translation2Desc;
-      document.getElementById('translation-2-badge').textContent = data.translation2Badge;
-      document.getElementById('translation-3-title').textContent = data.translation3Title;
-      document.getElementById('translation-3-desc').textContent = data.translation3Desc;
-      document.getElementById('translation-3-badge').textContent = data.translation3Badge;
-      document.getElementById('translation-4-title').textContent = data.translation4Title;
-      document.getElementById('translation-4-desc').textContent = data.translation4Desc;
-      document.getElementById('translation-4-badge').textContent = data.translation4Badge;
-      document.getElementById('translation-5-title').textContent = data.translation5Title;
-      document.getElementById('translation-5-desc').textContent = data.translation5Desc;
-      document.getElementById('translation-5-badge').textContent = data.translation5Badge;
-      document.getElementById('translation-6-title').textContent = data.translation6Title;
-      document.getElementById('translation-6-desc').textContent = data.translation6Desc;
-      document.getElementById('translation-6-badge').textContent = data.translation6Badge;
-      document.getElementById('cta-title').textContent = data.ctaTitle;
-      document.getElementById('cta-subtitle').textContent = data.ctaSubtitle;
-      document.getElementById('footer-text').textContent = data.footerText;
+});
+
+async function connectDB() {
+    const type = document.getElementById("connect_db_type").value;
+    if (type === "sqlite") {
+        const fileInput = document.getElementById("connect_db_file");
+        if (!fileInput.files.length) {
+            alert("Please select a .db file");
+            return;
+        }
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+        try {
+            const resp = await fetch("/upload_db", {
+                method: "POST",
+                body: formData,
+                credentials: 'include'
+            });
+            const data = await resp.json();
+            document.getElementById("connect_db_result").innerText = data.error ? data.error : JSON.stringify(data.schema, null, 2);
+            if (!data.error) {
+                alert("Database uploaded successfully!");
+                loadDatabases();
+            }
+        } catch (err) {
+            document.getElementById("connect_db_result").innerText = "Error uploading database: " + err;
+        }
+    } else {
+        const payload = {
+            db_type: type,
+            host: document.getElementById("connect_host").value,
+            port: document.getElementById("connect_port").value,
+            database: document.getElementById("connect_database").value,
+            db_name: document.getElementById("connect_database").value,
+            user: document.getElementById("connect_user").value,
+            password: document.getElementById("connect_password").value
+        };
+        try {
+            const resp = await fetch("/connect_db", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(payload),
+                credentials: 'include'
+            });
+            const data = await resp.json();
+            document.getElementById("connect_db_result").innerText = data.error ? data.error : JSON.stringify(data.schema, null, 2);
+            if (!data.error) {
+                alert("Database connected successfully!");
+                loadDatabases();
+            }
+        } catch (err) {
+            document.getElementById("connect_db_result").innerText = "Error connecting database: " + err;
+        }
     }
-    // Language selection event listeners
-    languageSelect.addEventListener('change', (e) => {
-      updateWebsiteContent(e.target.value);
+}
+
+async function loadDatabases() {
+    const resp = await fetch("/public_databases", {credentials: 'include'});
+    const data = await resp.json();
+    if (data.error) return;
+    ["db_select", "db_query_select", "db_manage_select", "viz_db_select"].forEach(id => {
+        const sel = document.getElementById(id);
+        sel.innerHTML = "";
+        data.databases.forEach(db => {
+            let o = document.createElement("option");
+            o.value = db;
+            o.text = db;
+            sel.appendChild(o);
+        });
     });
-    previewLanguage.addEventListener('change', (e) => {
-      updateWebsiteContent(e.target.value);
-      languageSelect.value = e.target.value;
+    loadTables();
+}
+
+async function loadSchema() {
+    const db = document.getElementById("db_select").value;
+    const resp = await fetch("/schema", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({db_name: db}), credentials: 'include'});
+    const data = await resp.json();
+    document.getElementById("schema_view").innerText = data.error ? data.error : JSON.stringify(data.schema, null, 2);
+}
+
+async function loadDBDescription() {
+    const db = document.getElementById("db_query_select").value;
+    if (!db) return;
+    const resp = await fetch("/db_description", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({db_name: db}), credentials: 'include'});
+    const data = await resp.json();
+    document.getElementById("db_description").innerText = data.error ? data.error : data.description;
+
+    // Load suggested queries
+    const s_resp = await fetch("/suggested_queries", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({db_name: db}), credentials: 'include'});
+    const s_data = await s_resp.json();
+    const sug_div = document.getElementById("suggested_queries");
+    sug_div.innerHTML = '';
+    if (s_data.error) {
+        return;
+    }
+    s_data.queries.forEach(q => {
+        const btn = document.createElement("button");
+        btn.innerText = q;
+        btn.style.flex = "1 1 auto";
+        btn.style.maxWidth = "30%";
+        btn.onclick = () => { document.getElementById("question").value = q; };
+        sug_div.appendChild(btn);
     });
-    // Initialize with English
-    updateWebsiteContent('en');
-  </script>
+}
+
+async function askQuery() {
+    if (!['standard', 'premium'].includes(userTier)) {
+        showPopup('You are on the ' + userTier + ' tier and cannot access the Query feature. Please subscribe to a higher tier.');
+        return;
+    }
+    const db = document.getElementById("db_query_select").value;
+    const question = document.getElementById("question").value;
+    const resp = await fetch("/ask", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({db_name: db, question}), credentials: 'include'});
+    const data = await resp.json();
+    if (data.error) {
+        alert(data.error);
+        return;
+    }
+    document.getElementById("sql_display").innerText = data.sql;
+    const div = document.getElementById("results");
+    if (data.result.error) {
+        div.innerText = data.result.error;
+        return;
+    }
+    let html = "<table><thead><tr>";
+    data.result.columns.forEach(c => html += `<th>${c}</th>`);
+    html += "</tr></thead><tbody>";
+    data.result.rows.forEach(r => {
+        html += "<tr>";
+        data.result.columns.forEach(c => html += `<td>${r[c]}</td>`);
+        html += "</tr>";
+    });
+    html += "</tbody></table>";
+    div.innerHTML = html;
+}
+
+async function createDB() {
+    if (!['free', 'basic', 'standard', 'premium'].includes(userTier)) {
+        showPopup('You are on the ' + userTier + ' tier and cannot access the Create DB feature. Please subscribe to a higher tier.');
+        return;
+    }
+    const db_name = document.getElementById("new_db_name").value;
+    const prompt = document.getElementById("db_prompt").value;
+    if (!db_name || !prompt) {
+        alert("Provide database name and prompt");
+        return;
+    }
+    const resp = await fetch("/create_db", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({db_name, prompt}), credentials: 'include'});
+    const data = await resp.json();
+    document.getElementById("create_db_result").innerText = data.error ? data.error : "Database Created!\n" + data.sql_schema;
+    loadDatabases();
+}
+
+async function loadTables() {
+    const db = document.getElementById("db_manage_select").value;
+    const resp = await fetch("/schema", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({db_name: db}), credentials: 'include'});
+    const data = await resp.json();
+    const sel = document.getElementById("table_select");
+    sel.innerHTML = '';
+    if (data.schema) {
+        Object.keys(data.schema).forEach(t => {
+            let o = document.createElement("option");
+            o.value = t;
+            o.text = t;
+            o.selected = true;
+            sel.appendChild(o);
+        });
+    }
+    updateRowPlaceholder();
+    loadTableRows();
+}
+
+function updateRowPlaceholder() {
+    const db = document.getElementById("db_manage_select").value;
+    const table = document.getElementById("table_select").value;
+    if (!db || !table) return;
+    fetch("/schema", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({db_name: db}),
+        credentials: 'include'
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.schema && data.schema[table.toLowerCase()]) {
+            document.getElementById("add_row_values").placeholder =
+                "Write all values according to number of columns separated by commas e.g if cols are id, name and age then add like 1,abc,22";
+        }
+    });
+}
+
+async function loadTableRows() {
+    if (!['basic', 'standard', 'premium'].includes(userTier)) {
+        showPopup('You are on the ' + userTier + ' tier and cannot access the Manage Rows feature. Please subscribe to a higher tier.');
+        return;
+    }
+    const db = document.getElementById("db_manage_select").value;
+    const table = document.getElementById("table_select").value;
+    const resp = await fetch("/ask", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({db_name: db, question: `SELECT * FROM ${table}`}),
+        credentials: 'include'
+    });
+    const data = await resp.json();
+    const div = document.getElementById("table_editor");
+    if (data.result.error) {
+        div.innerText = data.result.error;
+        return;
+    }
+    let html = "<table><thead><tr>";
+    data.result.columns.forEach(c => html += `<th>${c}</th>`);
+    html += "<th>Actions</th></tr></thead><tbody>";
+    const keyCol = data.result.columns[0];
+    data.result.rows.forEach(r => {
+        html += "<tr>";
+        data.result.columns.forEach(c => html += `<td>${r[c]}</td>`);
+        html += `<td><button onclick='deleteRow("${db}","${table}","${keyCol}=${r[keyCol]}")'>Delete</button></td>`;
+        html += "</tr>";
+    });
+    html += "</tbody></table>";
+    div.innerHTML = html;
+}
+
+async function addRow() {
+    if (!['basic', 'standard', 'premium'].includes(userTier)) {
+        showPopup('You are on the ' + userTier + ' tier and cannot access the Manage Rows feature. Please subscribe to a higher tier.');
+        return;
+    }
+    const db = document.getElementById("db_manage_select").value;
+    const table = document.getElementById("table_select").value;
+    const values = document.getElementById("add_row_values").value;
+    const resp = await fetch("/add_row", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({db_name: db, table, values}), credentials: 'include'});
+    const data = await resp.json();
+    if (data.error) {
+        alert(data.error);
+        return;
+    }
+    alert("Row added!");
+    loadTableRows();
+}
+
+async function deleteRow(db, table, condition) {
+    if (!['basic', 'standard', 'premium'].includes(userTier)) {
+        showPopup('You are on the ' + userTier + ' tier and cannot access the Manage Rows feature. Please subscribe to a higher tier.');
+        return;
+    }
+    const resp = await fetch("/delete_row", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({db_name: db, table, condition}), credentials: 'include'});
+    const data = await resp.json();
+    if (data.error) {
+        alert(data.error);
+        return;
+    }
+    alert("Row deleted!");
+    loadTableRows();
+}
+
+let vizChart;
+async function generateVisualization() {
+    if (userTier !== 'premium') {
+        showPopup('You are on the ' + userTier + ' tier and cannot access the Visualization feature. Please subscribe to the Premium tier.');
+        return;
+    }
+    const db = document.getElementById("viz_db_select").value;
+    const prompt = document.getElementById("viz_prompt").value;
+    if (!db || !prompt) {
+        alert("Select DB and enter a prompt");
+        return;
+    }
+    const resp = await fetch("/visualize", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({db_name: db, prompt}),
+        credentials: 'include'
+    });
+    const data = await resp.json();
+    if (data.error) {
+        alert(data.error);
+        return;
+    }
+    document.getElementById("viz_sql").innerText = data.sql;
+    document.getElementById("viz_summary").innerText = data.summary;
+    const cols = data.columns;
+    const rows = data.rows;
+    if (cols.length < 2) {
+        alert("Need at least two columns for a chart");
+        return;
+    }
+    const labels = rows.map(r => r[cols[0]]);
+    const values = rows.map(r => Number(r[cols[1]]) || 0);
+    const isLight = document.body.classList.contains('theme-light');
+    if (vizChart) vizChart.destroy();
+    const ctx = document.getElementById("viz_chart").getContext("2d");
+    vizChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: cols[1],
+                data: values,
+                backgroundColor: isLight ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)',
+                borderColor: isLight ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true, labels: {color: isLight ? '#333333' : '#e0e0e0'} },
+                title: { display: true, text: prompt, color: isLight ? '#333333' : '#e0e0e0', font: {size: 18} }
+            },
+            scales: {
+                x: { ticks: {color: isLight ? '#333333' : '#e0e0e0'} },
+                y: { ticks: {color: isLight ? '#333333' : '#e0e0e0'}, beginAtZero: true }
+            }
+        }
+    });
+}
+
+let stripePublishableKey = "";
+async function loadStripeConfig() {
+    try {
+        const r = await fetch("/stripe_config", {credentials: 'include'});
+        const data = await r.json();
+        stripePublishableKey = data.publishableKey || "";
+        const plans = data.plans || {
+            basic: {nickname: "Basic", amount_cents: 1000},
+            standard: {nickname: "Standard", amount_cents: 1500},
+            premium: {nickname: "Premium", amount_cents: 2500}
+        };
+        const container = document.getElementById("subscriptions_container");
+        container.innerHTML = "";
+        Object.keys(plans).forEach(key => {
+            const p = plans[key];
+            const priceUSD = (p.amount_cents / 100).toFixed(2);
+            const div = document.createElement("div");
+            div.className = "card";
+            div.innerHTML = `<h3>${p.nickname}</h3>
+                             <p>$${priceUSD} / month</p>
+                             <p>Recurring monthly subscription.</p>
+                             <button onclick="startCheckout('${key}')">Subscribe to ${p.nickname}</button>`;
+            container.appendChild(div);
+        });
+        document.getElementById("subs_info").innerText = "Stripe test checkout (monthly subscriptions)";
+    } catch (err) {
+        document.getElementById("subs_info").innerText = "Failed to load Stripe config: " + err;
+    }
+}
+loadStripeConfig();
+
+async function startCheckout(plan) {
+    try {
+        const resp = await fetch("/create-checkout-session", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({plan}),
+            credentials: 'include'
+        });
+        const data = await resp.json();
+        if (data.error) {
+            alert("Error creating checkout session: " + data.error);
+            return;
+        }
+        if (data.url) {
+            window.location = data.url;
+            return;
+        }
+        if (data.id && stripePublishableKey) {
+            const stripe = Stripe(stripePublishableKey);
+            const {error} = await stripe.redirectToCheckout({sessionId: data.id});
+            if (error) alert(error.message);
+            return;
+        }
+        alert("Could not initialize checkout");
+    } catch (err) {
+        alert("Error: " + err);
+    }
+}
+</script>
 </body>
 </html>
-
