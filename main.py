@@ -17,7 +17,7 @@ import secrets
 from authlib.integrations.flask_client import OAuth
 from flask_session import Session
 from authlib.common.errors import AuthlibBaseError
-
+from flask import send_from_directory
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
