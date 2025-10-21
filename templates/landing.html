@@ -29,7 +29,7 @@
     }
 
     body.light {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       color: #111;
     }
 
@@ -77,11 +77,10 @@
 
     .btn {
       display: inline-block;
-      border: 1px solid black;
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      border: none;
+      background: linear-gradient(135deg, #4a6ee0 0%, #6a11cb 100%);
       color: #fff;
       padding: clamp(0.7rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
-      
       border-radius: clamp(6px, 1.5vw, 8px);
       font-size: clamp(0.9rem, 2.5vw, 1rem);
       font-weight: 600;
@@ -89,6 +88,7 @@
       text-transform: uppercase;
       cursor: pointer;
       transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .btn:hover {
@@ -112,6 +112,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
 
     body.dark #hero {
@@ -133,12 +134,15 @@
       position: absolute;
       inset: 0;
       z-index: 0;
+      background: rgba(0,0,0,0.4);
     }
 
     .hero-content {
       position: relative;
       z-index: 1;
       text-align: center;
+      max-width: 800px;
+      padding: 2rem;
     }
 
     #hero h1, #hero p {
@@ -152,34 +156,42 @@
       font-size: clamp(0.8rem, 2vw, 0.9rem);
       margin-top: 0.5rem;
     }
-#tutorial{
-background-color: transparent;
-}
-    #features, #testimonials, #why-apps-localization, #functionality {
+
+    #tutorial{
+      background-color: transparent;
+    }
+
+    #features, #testimonials, #why-apps-localization, #functionality, #translation-preview {
       background: rgba(255,255,255,0.95);
       box-shadow: 0 12px 28px rgba(0,0,0,0.12);
       padding: clamp(2rem, 5vw, 3rem);
+      margin: 2rem 0;
+      border-radius: 20px;
     }
 
-    body.dark #features, body.dark #testimonials, body.dark #why-apps-localization, body.dark #tutorial, body.dark #functionality {
+    body.dark #features, body.dark #testimonials, body.dark #why-apps-localization, body.dark #tutorial, body.dark #functionality, body.dark #translation-preview {
       background: rgba(30,32,44,0.95);
       box-shadow: 0 12px 28px rgba(0,0,0,0.6);
     }
 
-.feature-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 🔹 Always 3 columns */
-  gap: clamp(1rem, 3vw, 2rem);
-  margin-top: clamp(1.5rem, 4vw, 2.5rem);
-}
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: clamp(1rem, 3vw, 2rem);
+      margin-top: clamp(1.5rem, 4vw, 2.5rem);
+    }
 
-.feature-card {
-  background: rgba(255,255,255,0.8);
-  border-radius: clamp(6px, 1.5vw, 8px);
-  padding: clamp(1rem, 3vw, 1.5rem);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
+    .feature-card {
+      background: rgba(255,255,255,0.8);
+      border-radius: clamp(6px, 1.5vw, 8px);
+      padding: clamp(1rem, 3vw, 1.5rem);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
 
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
 
     body.dark .feature-card {
       background: rgba(36,38,54,0.8);
@@ -297,7 +309,6 @@ background-color: transparent;
     body.dark .testimonial-card {
       background: rgba(36,38,54,0.8);
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      /* color: rgba(36,38,54,0.8) ; */
     }
 
     .avatar {
@@ -448,7 +459,7 @@ background-color: transparent;
     .download-btn {
       display: inline-block;
       margin: clamp(1rem, 3vw, 2rem) clamp(0.5rem, 1vw, 1rem) 0 0;
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      background: linear-gradient(135deg, #4a6ee0 0%, #6a11cb 100%);
       color: #fff;
       padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1rem, 2.5vw, 1.6rem);
       border: none;
@@ -630,7 +641,7 @@ background-color: transparent;
     #controls button {
       width: 100%;
       padding: clamp(0.2rem, 1vw, 0.3rem);
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      background: linear-gradient(135deg, #4a6ee0 0%, #6a11cb 100%);
       color: #fff;
       border: none;
       border-radius: clamp(4px, 1vw, 6px);
@@ -638,16 +649,26 @@ background-color: transparent;
       cursor: pointer;
       transition: transform 0.15s, box-shadow 0.15s;
     }
-.testimonial-card p:nth-of-type(1) {
-  color: rgba(0, 0, 0, 0.75); /* testimonial text */
-  font-style: italic;
-}
+    
+    .testimonial-card p:nth-of-type(1) {
+      color: rgba(0, 0, 0, 0.75); /* testimonial text */
+      font-style: italic;
+    }
 
-.testimonial-card p:nth-of-type(2) {
-  color: rgba(0, 0, 0, 0.5); /* author line */
-  font-weight: 600;
-  margin-top: 0.5rem;
-}
+    .testimonial-card p:nth-of-type(2) {
+      color: rgba(0, 0, 0, 0.5); /* author line */
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+    
+    body.dark .testimonial-card p:nth-of-type(1) {
+      color: rgba(255, 255, 255, 0.75);
+    }
+    
+    body.dark .testimonial-card p:nth-of-type(2) {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
     body.dark #controls button {
       background: linear-gradient(135deg, #1a2a3d, #2c5364);
       border: 1px solid #444;
@@ -656,6 +677,175 @@ background-color: transparent;
     #controls button:hover {
       transform: translateY(-1px);
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    /* Translation Preview Styles */
+    .translation-preview-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .language-selector-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+      gap: 1rem;
+    }
+
+    .language-selector-preview label {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .language-selector-preview select {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    body.dark .language-selector-preview select {
+      background: #2a2d3a;
+      color: #e0e0e0;
+      border: 1px solid #555;
+    }
+
+    .original-preview-section {
+      margin-bottom: 3rem;
+    }
+
+    .preview-image-container {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .preview-image-container img {
+      width: 100%;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .preview-image-container:hover img {
+      transform: scale(1.03);
+    }
+
+    .image-placeholder-preview {
+      width: 100%;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #4a6ee0;
+      font-weight: 600;
+      font-size: 1.1rem;
+      border-radius: 15px;
+    }
+
+    body.dark .image-placeholder-preview {
+      background: linear-gradient(135deg, #1a2a3d, #2c5364);
+      color: #e0e0e0;
+    }
+
+    .image-label-preview {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 15px;
+      font-size: 1.2rem;
+    }
+
+    .translations-grid-preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+    }
+
+    .translation-card-preview {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      border: 1px solid #f0f0f0;
+    }
+
+    .translation-card-preview:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    body.dark .translation-card-preview {
+      background: rgba(36,38,54,0.8);
+      border: 1px solid #444;
+    }
+
+    .translation-image-preview {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      background-color: #f8f9fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body.dark .translation-image-preview {
+      background-color: #2a2d3a;
+    }
+
+    .translation-image-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .translation-card-preview:hover .translation-image-preview img {
+      transform: scale(1.1);
+    }
+
+    .translation-info-preview {
+      padding: 20px;
+    }
+
+    .translation-title-preview {
+      font-size: 1.2rem;
+      color: #333;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    body.dark .translation-title-preview {
+      color: #f0f0f0;
+    }
+
+    .translation-desc-preview {
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    body.dark .translation-desc-preview {
+      color: #e0e0e0;
+    }
+
+    .language-badge-preview {
+      display: inline-block;
+      background: linear-gradient(to right, #4a6ee0, #6a11cb);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-top: 10px;
     }
 
     @keyframes bounce {
@@ -674,6 +864,14 @@ background-color: transparent;
       #controls {
         grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
       }
+      
+      .translations-grid-preview {
+        grid-template-columns: 1fr;
+      }
+      
+      .language-selector-preview {
+        flex-direction: column;
+      }
     }
 
     @media (max-width: 480px) {
@@ -681,119 +879,6 @@ background-color: transparent;
         grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
       }
     }
-    .language-preview-container {
-  margin-top: clamp(1.5rem, 4vw, 2.5rem);
-  text-align: center;
-  width: 100%;
-  max-width: min(90vw, 800px);
-}
-
-.portrait-image img {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
-  border-radius: clamp(6px, 1.5vw, 8px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  margin-bottom: 1rem;
-}
-
-body.dark .portrait-image img {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-}
-
-.language-options {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  gap: clamp(0.5rem, 2vw, 1rem);
-  margin: 1rem 0;
-}
-
-.language-option {
-  padding: clamp(0.5rem, 1.5vw, 0.8rem);
-  background: rgba(255,255,255,0.8);
-  border-radius: clamp(4px, 1vw, 6px);
-  cursor: pointer;
-  font-size: clamp(0.9rem, 2.5vw, 1rem);
-  font-weight: 600;
-  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
-}
-
-body.dark .language-option {
-  background: rgba(36,38,54,0.8);
-  color: #e6e6e6;
-}
-
-.language-option:hover {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  color: #fff;
-}
-
-body.dark .language-option:hover {
-  background: linear-gradient(135deg, #1a2a3d, #2c5364);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-}
-
-.preview-image {
-  display: none;
-  margin-top: 1rem;
-}
-
-.preview-image.active {
-  display: block;
-}
-
-.preview-image img {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
-  border-radius: clamp(6px, 1.5vw, 8px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-body.dark .preview-image img {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-}
-
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
-  z-index: 10000;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal.active {
-  display: flex;
-}
-
-.modal img {
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: clamp(6px, 1.5vw, 8px);
-}
-
-.modal-close {
-  position: absolute;
-  top: clamp(10px, 2vw, 20px);
-  right: clamp(10px, 2vw, 20px);
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  color: #fff;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.modal-close:hover {
-  transform: scale(1.2);
-}
   </style>
 </head>
 <body class="light">
@@ -808,11 +893,10 @@ body.dark .preview-image img {
       <h1>Apps Localization</h1>
       <p class="subtitle">Effortlessly translate and customize images for global audiences.</p>
       <p class="video-error" id="video-error">Video failed to load. Displaying fallback image.</p>
-<a href="/">
+      <a href="/">
   <button class="btn">Get Started</button>
 </a>
-
-
+ton>
     </div>
   </header>
 
@@ -881,135 +965,285 @@ body.dark .preview-image img {
   <section id="tutorial" class="landing-section">
     <h2>Watch Our Tutorial</h2>
     <p>Learn how to use Apps Localization with our step-by-step Loom video.</p>
-<div style="
-  position: relative;
-  width: 100%;
-  height: 80vh;
-  overflow: hidden;
-  border-radius: 12px;
-  max-width: 1200px;
-  margin: 0 auto;
-  background: black;
-">
-  <iframe 
-    src="https://www.loom.com/embed/70c2d45cf8dc47e09f30b1296c24a399"
-    frameborder="0"
-    allowfullscreen
-    webkitallowfullscreen
-    mozallowfullscreen
-    style="
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 160%;
-      height: 160%;
-      transform: translate(-50%, -50%) scale(1.05);
-      object-fit: cover;
-      border: none;
-    "
-  ></iframe>
-</div>
+    <div style="
+      position: relative;
+      width: 100%;
+      height: 80vh;
+      overflow: hidden;
+      border-radius: 12px;
+      max-width: 1200px;
+      margin: 0 auto;
+      background: black;
+    ">
+      <iframe 
+        src="https://www.loom.com/embed/70c2d45cf8dc47e09f30b1296c24a399"
+        frameborder="0"
+        allowfullscreen
+        webkitallowfullscreen
+        mozallowfullscreen
+        style="
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 160%;
+          height: 160%;
+          transform: translate(-50%, -50%) scale(1.05);
+          object-fit: cover;
+          border: none;
+        "
+      ></iframe>
+    </div>
+  </section>
 
+  <!-- Translation Preview Section -->
+  <section id="translation-preview" class="landing-section">
+    <h2>Translation Preview</h2>
+    <p>See your original image and all translations in one place</p>
+    
+    <div class="translation-preview-container">
+      <!-- Language Selector -->
+      <div class="language-selector-preview">
+        <label for="preview-language">Preview Language:</label>
+        <select id="preview-language">
+          <option value="en">English</option>
+          <option value="nl">Dutch</option>
+          <option value="de">German</option>
+          <option value="it">Italian</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+        </select>
+      </div>
 
+      <!-- Original Image -->
+      <div class="original-preview-section">
+        <h3 id="original-title">Original Content</h3>
+        <div class="preview-image-container">
+          <img src="9.png" alt="Original Content" id="original-preview" 
+               onerror="this.style.display='none'; document.getElementById('original-placeholder').style.display='flex';">
+          <div class="image-placeholder-preview" id="original-placeholder" style="display: none;">
+            Original Image (9.png)
+          </div>
+          <div class="image-label-preview" id="original-label">Original Document (9.png)</div>
+        </div>
+      </div>
 
-</div>
+      <!-- Translations Grid -->
+      <div class="translations-preview-section">
+        <h3 id="translations-title">Translations</h3>
+        <div class="translations-grid-preview">
+          <!-- Dutch Translation -->
+          <div class="translation-card-preview">
+            <div class="translation-image-preview">
+              <img src="Dutch.png" alt="Dutch Translation" 
+                   onerror="this.style.display='none'; document.getElementById('dutch-placeholder').style.display='flex';">
+              <div class="image-placeholder-preview" id="dutch-placeholder" style="display: none;">
+                Dutch.png
+              </div>
+            </div>
+            <div class="translation-info-preview">
+              <h4 class="translation-title-preview" id="translation-1-title">Dutch Translation</h4>
+              <p class="translation-desc-preview" id="translation-1-desc">This is the Dutch version of the original document with accurate translation and cultural adaptation.</p>
+              <span class="language-badge-preview" id="translation-1-badge">Nederlands</span>
+            </div>
+          </div>
 
-<div class="language-preview-container" 
-     style="display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: white; min-height: 100vh; text-align: center;">
+          <!-- French Translation -->
+          <div class="translation-card-preview">
+            <div class="translation-image-preview">
+              <img src="French.png" alt="French Translation" 
+                   onerror="this.style.display='none'; document.getElementById('french-placeholder').style.display='flex';">
+              <div class="image-placeholder-preview" id="french-placeholder" style="display: none;">
+                French.png
+              </div>
+            </div>
+            <div class="translation-info-preview">
+              <h4 class="translation-title-preview" id="translation-2-title">French Translation</h4>
+              <p class="translation-desc-preview" id="translation-2-desc">French translation maintaining the original meaning while adapting to French linguistic nuances.</p>
+              <span class="language-badge-preview" id="translation-2-badge">Français</span>
+            </div>
+          </div>
 
-  <!-- Portrait Image -->
-  <div class="portrait-image" style="margin-bottom: 15px;">
-    <img src="9.png" alt="Portrait Image" id="portrait-img"
-         style="width: 120px; height: auto; border-radius: 10px;">
-  </div>
+          <!-- German Translation -->
+          <div class="translation-card-preview">
+            <div class="translation-image-preview">
+              <img src="German.png" alt="German Translation" 
+                   onerror="this.style.display='none'; document.getElementById('german-placeholder').style.display='flex';">
+              <div class="image-placeholder-preview" id="german-placeholder" style="display: none;">
+                German.png
+              </div>
+            </div>
+            <div class="translation-info-preview">
+              <h4 class="translation-title-preview" id="translation-3-title">German Translation</h4>
+              <p class="translation-desc-preview" id="translation-3-desc">Precise German translation with attention to technical terminology and formal language requirements.</p>
+              <span class="language-badge-preview" id="translation-3-badge">Deutsch</span>
+            </div>
+          </div>
 
-  <!-- Heading -->
-  <h3 style="margin-bottom: 15px;">Preview Translations</h3>
+          <!-- Italian Translation -->
+          <div class="translation-card-preview">
+            <div class="translation-image-preview">
+              <img src="Italian.png" alt="Italian Translation" 
+                   onerror="this.style.display='none'; document.getElementById('italian-placeholder').style.display='flex';">
+              <div class="image-placeholder-preview" id="italian-placeholder" style="display: none;">
+                Italian.png
+              </div>
+            </div>
+            <div class="translation-info-preview">
+              <h4 class="translation-title-preview" id="translation-4-title">Italian Translation</h4>
+              <p class="translation-desc-preview" id="translation-4-desc">Italian translation with proper adaptation to the language's unique characteristics and cultural context.</p>
+              <span class="language-badge-preview" id="translation-4-badge">Italiano</span>
+            </div>
+          </div>
 
-  <!-- Language Options -->
-  <ul class="language-options"
-      style="list-style: none; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-    <li class="language-option" data-img="French.png" style="cursor: pointer;">French</li>
-    <li class="language-option" data-img="German.png" style="cursor: pointer;">German</li>
-    <li class="language-option" data-img="Dutch.png" style="cursor: pointer;">Dutch</li>
-    <li class="language-option" data-img="Italian.png" style="cursor: pointer;">Italian</li>
-    <li class="language-option" data-img="Spanish.png" style="cursor: pointer;">Spanish</li>
-  </ul>
+          <!-- Spanish Translation -->
+          <div class="translation-card-preview">
+            <div class="translation-image-preview">
+              <img src="Spanish.png" alt="Spanish Translation" 
+                   onerror="this.style.display='none'; document.getElementById('spanish-placeholder').style.display='flex';">
+              <div class="image-placeholder-preview" id="spanish-placeholder" style="display: none;">
+                Spanish.png
+              </div>
+            </div>
+            <div class="translation-info-preview">
+              <h4 class="translation-title-preview" id="translation-5-title">Spanish Translation</h4>
+              <p class="translation-desc-preview" id="translation-5-desc">Spanish translation with accurate localization and attention to regional linguistic variations.</p>
+              <span class="language-badge-preview" id="translation-5-badge">Español</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- Preview Image -->
-  <div class="preview-image" id="preview-image" style="margin-top: 20px;">
-    <img src="" alt="Language Preview" id="preview-img"
-         style="max-width: 100%; border-radius: 10px; display: none;">
-  </div>
-
-  <!-- Modal -->
-  <div class="modal" id="image-modal"
-       style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-              background: rgba(0,0,0,0.7); align-items: center; justify-content: center;">
-    <span class="modal-close" style="cursor: pointer; position: absolute; top: 20px; right: 30px; color: white; font-size: 30px;">&times;</span>
-    <img src="" alt="Full-size Preview" id="modal-img" style="max-width: 80%; border-radius: 10px;">
-  </div>
-</div>
+  <section id="testimonials" class="landing-section">
+    <h2>What Our Users Say</h2>
+    <p>Join thousands of satisfied users worldwide.</p>
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="avatar">
+        <p>"Apps Localization saved me hours of work. The translations are accurate and the interface is intuitive."</p>
+        <p>- Sarah Johnson, Marketing Director</p>
+      </div>
+      <div class="testimonial-card">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="avatar">
+        <p>"As a global brand manager, this tool has been invaluable for our international campaigns."</p>
+        <p>- Michael Chen, Global Brand Manager</p>
+      </div>
+      <div class="testimonial-card">
+        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User" class="avatar">
+        <p>"The ability to customize text appearance while maintaining translation accuracy is impressive."</p>
+        <p>- Elena Rodriguez, Content Creator</p>
+      </div>
+    </div>
+  </section>
 
   <section id="cta" class="landing-section">
     <h2>Ready to Localize Your Images?</h2>
     <p>Start creating multi-language content today with Apps Localization.</p>
-<button 
-  class="btn" 
-  id="cta-get-started" 
-  aria-label="Get Started with Apps Localization Now"
-  onclick="window.location.href='/'"
->
-  Get Started Now
-</button>
+    <a href="/">
+  <button class="btn">Get Started</button>
+</a>
+
   </section>
 
+  <!-- Functionality Section (Hidden by default) -->
+  <section id="functionality">
+    <div class="card">
+      <h1>Translate & Customize Your Image</h1>
+      <p class="subtitle">Upload an image, translate text, and customize the appearance</p>
+      
+      <form id="translate-form">
+        <label for="image">Upload Image:</label>
+        <input type="file" id="image" accept="image/*" required>
+        
+        <label for="language">Target Language:</label>
+        <select id="language" required>
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+          <option value="it">Italian</option>
+          <option value="pt">Portuguese</option>
+          <option value="nl">Dutch</option>
+          <option value="ru">Russian</option>
+          <option value="ja">Japanese</option>
+          <option value="zh">Chinese</option>
+          <option value="ar">Arabic</option>
+        </select>
+        
+        <label for="resolution">Output Resolution:</label>
+        <select id="resolution" required>
+          <option value="phone">Phone (1080x1920)</option>
+          <option value="tablet">Tablet (1536x2048)</option>
+          <option value="desktop">Desktop (1920x1080)</option>
+          <option value="custom">Custom Size</option>
+        </select>
+        
+        <button type="submit">Process Image</button>
+      </form>
+      
+      <div id="result" class="result" style="display: none;">
+        <p class="success-msg" id="success-msg"></p>
+        <p class="error-msg" id="error-msg" style="display: none;"></p>
+        
+        <div id="controls">
+          <div>
+            <label for="fontFamily">Font:</label>
+            <select id="fontFamily">
+              <option value="Arial">Arial</option>
+              <option value="Helvetica">Helvetica</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Verdana">Verdana</option>
+            </select>
+          </div>
+          
+          <div>
+            <label for="fontSize">Size:</label>
+            <input type="number" id="fontSize" min="8" max="72" value="20">
+          </div>
+          
+          <div>
+            <label for="fill">Color:</label>
+            <input type="color" id="fill" value="#000000">
+          </div>
+          
+          <div>
+            <label for="textAlign">Align:</label>
+            <select id="textAlign">
+              <option value="left">Left</option>
+              <option value="center">Center</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
+          
+          <div>
+            <button id="addText">Add Text</button>
+          </div>
+          
+          <div>
+            <button id="removeText">Remove Text</button>
+          </div>
+        </div>
+        
+        <canvas id="canvas"></canvas>
+        
+        <a href="#" class="download-btn" id="download">Download Image</a>
+        <button class="btn" id="back-to-home">Back to Home</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="processing-overlay">
+    <div class="spinner"></div>
+    <p>Processing your image...</p>
+  </div>
+
+  <footer>
+    <p>&copy; 2023 Apps Localization. All rights reserved.</p>
+  </footer>
 
   <script>
-    // Language preview functionality
-const languageOptions = document.querySelectorAll('.language-option');
-const previewImage = document.getElementById('preview-image');
-const previewImg = document.getElementById('preview-img');
-const modal = document.getElementById('image-modal');
-const modalImg = document.getElementById('modal-img');
-const modalClose = document.querySelector('.modal-close');
-
-languageOptions.forEach(option => {
-  // Hover to show preview
-  option.addEventListener('mouseover', () => {
-    const imgSrc = option.dataset.img;
-    previewImg.src = imgSrc;
-    previewImage.classList.add('active');
-  });
-
-  // Hide preview when not hovering
-  option.addEventListener('mouseout', () => {
-    previewImage.classList.remove('active');
-    previewImg.src = '';
-  });
-
-  // Click to open modal
-  option.addEventListener('click', () => {
-    const imgSrc = option.dataset.img;
-    modalImg.src = imgSrc;
-    modal.classList.add('active');
-  });
-});
-
-// Close modal
-modalClose.addEventListener('click', () => {
-  modal.classList.remove('active');
-  modalImg.src = '';
-});
-
-// Close modal when clicking outside the image
-modal.addEventListener('click', (e) => {
-  if (e.target === modal) {
-    modal.classList.remove('active');
-    modalImg.src = '';
-  }
-});
     const body = document.body;
     const themeToggle = document.getElementById('theme-toggle');
     const getStartedButtons = document.querySelectorAll('#hero-get-started, #cta-get-started');
@@ -1018,9 +1252,146 @@ modal.addEventListener('click', (e) => {
     const landingSections = document.querySelectorAll('.landing-section');
     const heroVideo = document.getElementById('hero-video');
     const videoError = document.getElementById('video-error');
+    const previewLanguage = document.getElementById('preview-language');
     let canvas = null;
     let texts = [];
     let scale = 1;
+
+    // Language data for translation preview
+    const translations = {
+      en: {
+        mainTitle: "Translation Preview",
+        subtitle: "Original content and its translations in multiple languages",
+        originalTitle: "Original Content",
+        originalLabel: "Original Document (9.png)",
+        translationsTitle: "Translations",
+        translation1Title: "Dutch Translation",
+        translation1Desc: "This is the Dutch version of the original document with accurate translation and cultural adaptation.",
+        translation1Badge: "Nederlands",
+        translation2Title: "French Translation",
+        translation2Desc: "French translation maintaining the original meaning while adapting to French linguistic nuances.",
+        translation2Badge: "Français",
+        translation3Title: "German Translation",
+        translation3Desc: "Precise German translation with attention to technical terminology and formal language requirements.",
+        translation3Badge: "Deutsch",
+        translation4Title: "Italian Translation",
+        translation4Desc: "Italian translation with proper adaptation to the language's unique characteristics and cultural context.",
+        translation4Badge: "Italiano",
+        translation5Title: "Spanish Translation",
+        translation5Desc: "Spanish translation with accurate localization and attention to regional linguistic variations.",
+        translation5Badge: "Español"
+      },
+      nl: {
+        mainTitle: "Vertaling Voorbeeld",
+        subtitle: "Originele inhoud en zijn vertalingen in meerdere talen",
+        originalTitle: "Originele Inhoud",
+        originalLabel: "Origineel Document (9.png)",
+        translationsTitle: "Vertalingen",
+        translation1Title: "Nederlandse Vertaling",
+        translation1Desc: "Dit is de Nederlandse versie van het originele document met nauwkeurige vertaling en culturele aanpassing.",
+        translation1Badge: "Nederlands",
+        translation2Title: "Franse Vertaling",
+        translation2Desc: "Franse vertaling die de oorspronkelijke betekenis behoudt en zich aanpast aan Franse taalkundige nuances.",
+        translation2Badge: "Français",
+        translation3Title: "Duitse Vertaling",
+        translation3Desc: "Nauwkeurige Duitse vertaling met aandacht voor technische terminologie en formele taalvereisten.",
+        translation3Badge: "Deutsch",
+        translation4Title: "Italiaanse Vertaling",
+        translation4Desc: "Italiaanse vertaling met correcte aanpassing aan de unieke kenmerken van de taal en culturele context.",
+        translation4Badge: "Italiano",
+        translation5Title: "Spaanse Vertaling",
+        translation5Desc: "Spaanse vertaling met accurate lokalisatie en aandacht voor regionale taalkundige variaties.",
+        translation5Badge: "Español"
+      },
+      de: {
+        mainTitle: "Übersetzungsvorschau",
+        subtitle: "Originalinhalt und seine Übersetzungen in mehreren Sprachen",
+        originalTitle: "Originalinhalt",
+        originalLabel: "Originaldokument (9.png)",
+        translationsTitle: "Übersetzungen",
+        translation1Title: "Niederländische Übersetzung",
+        translation1Desc: "Dies ist die niederländische Version des Originaldokuments mit genauer Übersetzung und kultureller Anpassung.",
+        translation1Badge: "Nederlands",
+        translation2Title: "Französische Übersetzung",
+        translation2Desc: "Französische Übersetzung, die die ursprüngliche Bedeutung beibehält und sich an französische sprachliche Nuancen anpasst.",
+        translation2Badge: "Français",
+        translation3Title: "Deutsche Übersetzung",
+        translation3Desc: "Präzise deutsche Übersetzung mit besonderem Augenmerk auf technische Terminologie und formale Sprachanforderungen.",
+        translation3Badge: "Deutsch",
+        translation4Title: "Italienische Übersetzung",
+        translation4Desc: "Italienische Übersetzung mit korrekter Anpassung an die einzigartigen Merkmale der Sprache und den kulturellen Kontext.",
+        translation4Badge: "Italiano",
+        translation5Title: "Spanische Übersetzung",
+        translation5Desc: "Spanische Übersetzung mit genauer Lokalisierung und Berücksichtigung regionaler sprachlicher Variationen.",
+        translation5Badge: "Español"
+      },
+      it: {
+        mainTitle: "Anteprima Traduzione",
+        subtitle: "Contenuto originale e le sue traduzioni in più lingue",
+        originalTitle: "Contenuto Originale",
+        originalLabel: "Documento Originale (9.png)",
+        translationsTitle: "Traduzioni",
+        translation1Title: "Traduzione Olandese",
+        translation1Desc: "Questa è la versione olandese del documento originale con traduzione accurata e adattamento culturale.",
+        translation1Badge: "Nederlands",
+        translation2Title: "Traduzione Francese",
+        translation2Desc: "Traduzione francese che mantiene il significato originale adattandosi alle sfumature linguistiche francesi.",
+        translation2Badge: "Français",
+        translation3Title: "Traduzione Tedesca",
+        translation3Desc: "Traduzione tedesca precisa con attenzione alla terminologia tecnica e ai requisiti linguistici formali.",
+        translation3Badge: "Deutsch",
+        translation4Title: "Traduzione Italiana",
+        translation4Desc: "Traduzione italiana con adattamento appropriato alle caratteristiche uniche della lingua e al contesto culturale.",
+        translation4Badge: "Italiano",
+        translation5Title: "Traduzione Spagnola",
+        translation5Desc: "Traduzione spagnola con localizzazione accurata e attenzione alle variazioni linguistiche regionali.",
+        translation5Badge: "Español"
+      },
+      fr: {
+        mainTitle: "Aperçu de Traduction",
+        subtitle: "Contenu original et ses traductions en plusieurs langues",
+        originalTitle: "Contenu Original",
+        originalLabel: "Document Original (9.png)",
+        translationsTitle: "Traductions",
+        translation1Title: "Traduction Néerlandaise",
+        translation1Desc: "Ceci est la version néerlandaise du document original avec une traduction précise et une adaptation culturelle.",
+        translation1Badge: "Nederlands",
+        translation2Title: "Traduction Française",
+        translation2Desc: "Traduction française conservant le sens original tout en s'adaptant aux nuances linguistiques françaises.",
+        translation2Badge: "Français",
+        translation3Title: "Traduction Allemande",
+        translation3Desc: "Traduction allemande précise avec attention à la terminologie technique et aux exigences linguistiques formelles.",
+        translation3Badge: "Deutsch",
+        translation4Title: "Traduction Italienne",
+        translation4Desc: "Traduction italienne avec adaptation appropriée aux caractéristiques uniques de la langue et au contexte culturel.",
+        translation4Badge: "Italiano",
+        translation5Title: "Traduction Espagnole",
+        translation5Desc: "Traduction espagnole avec localisation précise et attention aux variations linguistiques régionales.",
+        translation5Badge: "Español"
+      },
+      es: {
+        mainTitle: "Vista Previa de Traducción",
+        subtitle: "Contenido original y sus traducciones en múltiples idiomas",
+        originalTitle: "Contenido Original",
+        originalLabel: "Documento Original (9.png)",
+        translationsTitle: "Traducciones",
+        translation1Title: "Traducción Holandesa",
+        translation1Desc: "Esta es la versión holandesa del documento original con traducción precisa y adaptación cultural.",
+        translation1Badge: "Nederlands",
+        translation2Title: "Traducción Francesa",
+        translation2Desc: "Traducción al francés que mantiene el significado original mientras se adapta a los matices lingüísticos franceses.",
+        translation2Badge: "Français",
+        translation3Title: "Traducción Alemana",
+        translation3Desc: "Traducción alemana precisa con atención a la terminología técnica y los requisitos formales del idioma.",
+        translation3Badge: "Deutsch",
+        translation4Title: "Traducción Italiana",
+        translation4Desc: "Traducción italiana con adaptación adecuada a las características únicas del idioma y al contexto cultural.",
+        translation4Badge: "Italiano",
+        translation5Title: "Traducción Española",
+        translation5Desc: "Traducción española con localización precisa y atención a las variaciones lingüísticas regionales.",
+        translation5Badge: "Español"
+      }
+    };
 
     // Theme toggle
     const savedTheme = localStorage.getItem("theme");
@@ -1072,6 +1443,34 @@ modal.addEventListener('click', (e) => {
       landingSections.forEach(section => section.style.display = 'block');
       functionalitySection.classList.remove('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Update translation preview content based on selected language
+    function updatePreviewContent(lang) {
+      const data = translations[lang];
+      
+      document.getElementById('original-title').textContent = data.originalTitle;
+      document.getElementById('original-label').textContent = data.originalLabel;
+      document.getElementById('translations-title').textContent = data.translationsTitle;
+      document.getElementById('translation-1-title').textContent = data.translation1Title;
+      document.getElementById('translation-1-desc').textContent = data.translation1Desc;
+      document.getElementById('translation-1-badge').textContent = data.translation1Badge;
+      document.getElementById('translation-2-title').textContent = data.translation2Title;
+      document.getElementById('translation-2-desc').textContent = data.translation2Desc;
+      document.getElementById('translation-2-badge').textContent = data.translation2Badge;
+      document.getElementById('translation-3-title').textContent = data.translation3Title;
+      document.getElementById('translation-3-desc').textContent = data.translation3Desc;
+      document.getElementById('translation-3-badge').textContent = data.translation3Badge;
+      document.getElementById('translation-4-title').textContent = data.translation4Title;
+      document.getElementById('translation-4-desc').textContent = data.translation4Desc;
+      document.getElementById('translation-4-badge').textContent = data.translation4Badge;
+      document.getElementById('translation-5-title').textContent = data.translation5Title;
+      document.getElementById('translation-5-desc').textContent = data.translation5Desc;
+      document.getElementById('translation-5-badge').textContent = data.translation5Badge;
+    }
+
+    previewLanguage.addEventListener('change', (e) => {
+      updatePreviewContent(e.target.value);
     });
 
     // Mock translation function (replace with actual API call in production)
@@ -1207,28 +1606,12 @@ modal.addEventListener('click', (e) => {
         document.getElementById('fontFamily').value = activeObject.fontFamily || 'Arial';
         document.getElementById('fontSize').value = Math.round(activeObject.fontSize / scale) || 20;
         document.getElementById('fill').value = rgbToHex(activeObject.fill) || '#000000';
-        document.getElementById('stroke').value = rgbToHex(activeObject.stroke) || '#000000';
-        document.getElementById('strokeWidth').value = activeObject.strokeWidth || 0;
-        document.getElementById('lineHeight').value = activeObject.lineHeight || 1.2;
-        document.getElementById('textBackgroundColor').value = rgbToHex(activeObject.textBackgroundColor) || '#ffffff';
         document.getElementById('textAlign').value = activeObject.textAlign || 'left';
-        document.getElementById('animation').value = activeObject.animation || 'none';
-        document.getElementById('opacity').value = activeObject.opacity || 1;
-        document.getElementById('fontWeight').value = activeObject.fontWeight === 'bold' ? 'bold' : (activeObject.fontWeight || 'normal');
-        document.getElementById('italic').textContent = activeObject.fontStyle === 'italic' ? 'No Italic' : 'Italic';
       } else {
         document.getElementById('fontFamily').value = 'Arial';
         document.getElementById('fontSize').value = 20;
         document.getElementById('fill').value = '#000000';
-        document.getElementById('stroke').value = '#000000';
-        document.getElementById('strokeWidth').value = 0;
-        document.getElementById('lineHeight').value = 1.2;
-        document.getElementById('textBackgroundColor').value = '#ffffff';
         document.getElementById('textAlign').value = 'left';
-        document.getElementById('animation').value = 'none';
-        document.getElementById('opacity').value = 1;
-        document.getElementById('fontWeight').value = 'normal';
-        document.getElementById('italic').textContent = 'Italic';
       }
     }
 
@@ -1236,54 +1619,6 @@ modal.addEventListener('click', (e) => {
       if (!rgb || rgb.startsWith('#')) return rgb || '#000000';
       const [r, g, b] = rgb.match(/\d+/g)?.map(Number) || [0, 0, 0];
       return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
-    }
-
-    function applyAnimation(obj, animation) {
-      if (!obj) return;
-      obj.animation = animation;
-      if (animation === 'none') {
-        obj.set('animation', null);
-        obj.canvas.renderAll();
-      } else {
-        function animate() {
-          if (obj.animation === 'bounce') {
-            obj.animate('top', obj.top - 10, {
-              duration: 400,
-              onChange: canvas.renderAll.bind(canvas),
-              onComplete: function() {
-                obj.animate('top', obj.top + 10, {
-                  duration: 400,
-                  onChange: canvas.renderAll.bind(canvas),
-                  onComplete: animate
-                });
-              }
-            });
-          } else if (obj.animation === 'pulse') {
-            obj.animate('scaleX', 1.05, {
-              duration: 500,
-              onChange: canvas.renderAll.bind(canvas),
-              onComplete: function() {
-                obj.animate('scaleX', 1, {
-                  duration: 500,
-                  onChange: canvas.renderAll.bind(canvas),
-                  onComplete: animate
-                });
-              }
-            });
-            obj.animate('scaleY', 1.05, {
-              duration: 500,
-              onChange: canvas.renderAll.bind(canvas),
-              onComplete: function() {
-                obj.animate('scaleY', 1, {
-                  duration: 500,
-                  onChange: canvas.renderAll.bind(canvas)
-                });
-              }
-            });
-          }
-        }
-        animate();
-      }
     }
 
     document.getElementById('fontFamily').addEventListener('change', (e) => {
@@ -1313,83 +1648,11 @@ modal.addEventListener('click', (e) => {
       }
     });
 
-    document.getElementById('stroke').addEventListener('input', (e) => {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        activeObject.set('stroke', e.target.value);
-        activeObject.set('dirty', true);
-        canvas.requestRenderAll();
-      }
-    });
-
-    document.getElementById('strokeWidth').addEventListener('input', (e) => {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        activeObject.set('strokeWidth', parseFloat(e.target.value));
-        activeObject.set('dirty', true);
-        canvas.requestRenderAll();
-      }
-    });
-
-    document.getElementById('lineHeight').addEventListener('input', (e) => {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        activeObject.set('lineHeight', parseFloat(e.target.value));
-        activeObject.set('dirty', true);
-        canvas.requestRenderAll();
-      }
-    });
-
-    document.getElementById('textBackgroundColor').addEventListener('input', (e) => {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        activeObject.set('textBackgroundColor', e.target.value);
-        activeObject.set('dirty', true);
-        canvas.requestRenderAll();
-      }
-    });
-
     document.getElementById('textAlign').addEventListener('change', (e) => {
       const activeObject = canvas?.getActiveObject();
       if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
         activeObject.set('textAlign', e.target.value);
         activeObject.set('dirty', true);
-        canvas.requestRenderAll();
-      }
-    });
-
-    document.getElementById('animation').addEventListener('change', (e) => {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        applyAnimation(activeObject, e.target.value);
-      }
-    });
-
-    document.getElementById('opacity').addEventListener('input', (e) => {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        activeObject.set('opacity', parseFloat(e.target.value));
-        activeObject.set('dirty', true);
-        canvas.requestRenderAll();
-      }
-    });
-
-    document.getElementById('fontWeight').addEventListener('change', (e) => {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        activeObject.set('fontWeight', e.target.value);
-        activeObject.set('dirty', true);
-        canvas.requestRenderAll();
-      }
-    });
-
-    document.getElementById('italic').addEventListener('click', () => {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        const newStyle = activeObject.fontStyle === 'italic' ? 'normal' : 'italic';
-        activeObject.set('fontStyle', newStyle);
-        activeObject.set('dirty', true);
-        document.getElementById('italic').textContent = newStyle === 'italic' ? 'No Italic' : 'Italic';
         canvas.requestRenderAll();
       }
     });
@@ -1405,12 +1668,6 @@ modal.addEventListener('click', (e) => {
         textAlign: 'left',
         lineHeight: 1.2,
         width: 200 * scale,
-        stroke: null,
-        strokeWidth: 0,
-        textBackgroundColor: '',
-        opacity: 1,
-        fontWeight: 'normal',
-        fontStyle: 'normal',
         selectable: true,
         editable: true
       });
@@ -1424,13 +1681,7 @@ modal.addEventListener('click', (e) => {
         fill: '#000000',
         textAlign: 'left',
         lineHeight: 1.2,
-        width: 200,
-        stroke: null,
-        strokeWidth: 0,
-        textBackgroundColor: '',
-        opacity: 1,
-        fontWeight: 'normal',
-        fontStyle: 'normal'
+        width: 200
       });
       canvas.setActiveObject(newText);
       updateControls();
@@ -1452,23 +1703,8 @@ modal.addEventListener('click', (e) => {
       if (!canvas) return;
       document.getElementById('processing-overlay').style.display = 'flex';
 
-      const animatedObjects = canvas.getObjects().filter(obj => obj.animation && obj.animation !== 'none');
-      const savedStates = animatedObjects.map(obj => {
-        const anim = obj.animation;
-        const state = { top: obj.top, scaleX: obj.scaleX, scaleY: obj.scaleY };
-        obj.set({ animation: 'none' });
-        return { obj, state, anim };
-      });
-      canvas.renderAll();
-
       const multiplier = 2;
       const dataURL = canvas.toDataURL({ format: 'png', multiplier: multiplier });
-
-      savedStates.forEach(({ obj, state, anim }) => {
-        obj.set(state);
-        applyAnimation(obj, anim);
-      });
-      canvas.renderAll();
 
       const link = document.createElement('a');
       link.download = 'translated_image.png';
@@ -1484,7 +1720,4 @@ modal.addEventListener('click', (e) => {
     });
   </script>
 </body>
-
 </html>
-
-
