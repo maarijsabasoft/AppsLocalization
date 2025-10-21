@@ -9,7 +9,6 @@
   <meta name="robots" content="index, follow" />
   <title>Apps Localization - Image Translation & Editing</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
   <style>
     * { box-sizing: border-box; }
     html, body {
@@ -161,7 +160,7 @@
       background-color: transparent;
     }
 
-    #features, #testimonials, #why-apps-localization, #functionality, #translation-preview {
+    #features, #testimonials, #why-apps-localization, #translation-preview {
       background: rgba(255,255,255,0.95);
       box-shadow: 0 12px 28px rgba(0,0,0,0.12);
       padding: clamp(2rem, 5vw, 3rem);
@@ -169,7 +168,7 @@
       border-radius: 20px;
     }
 
-    body.dark #features, body.dark #testimonials, body.dark #why-apps-localization, body.dark #tutorial, body.dark #functionality, body.dark #translation-preview {
+    body.dark #features, body.dark #testimonials, body.dark #why-apps-localization, body.dark #tutorial, body.dark #translation-preview {
       background: rgba(30,32,44,0.95);
       box-shadow: 0 12px 28px rgba(0,0,0,0.6);
     }
@@ -366,317 +365,32 @@
       box-shadow: 0 8px 18px rgba(0,0,0,0.4);
     }
 
-    /* Functionality Section Styles */
-    #functionality {
-      display: none;
-      width: 100%;
-      max-width: min(90vw, 720px);
-      animation: fadein 0.6s ease;
-    }
-
-    #functionality.active {
-      display: block;
-    }
-
-    .card {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(6px);
-      border-radius: clamp(0.8rem, 2vw, 1.2rem);
-      padding: clamp(1.5rem, 4vw, 2.8rem);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
-      transition: background 0.4s ease, color 0.4s ease, box-shadow 0.3s ease;
-    }
-
-    body.dark .card {
-      background: rgba(30, 32, 44, 0.95);
-      color: #e6e6e6;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.6);
-    }
-
-    body.dark .card h1,
-    body.dark .card .subtitle,
-    body.dark .card label {
-      color: #f0f0f0;
-    }
-
-    #functionality .subtitle {
-      text-align: center;
-      color: #555;
-      font-size: clamp(0.9rem, 3vw, 1.2rem);
-      margin: 0.5rem 0 clamp(1rem, 3vw, 2.2rem);
-    }
-
-    body.dark #functionality .subtitle {
-      color: #f0f0f0;
-    }
-
-    #functionality label {
-      display: block;
-      margin: clamp(0.8rem, 2vw, 1.4rem) 0 0.5rem;
-      font-weight: 600;
-      color: #333;
-      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
-    }
-
-    body.dark #functionality label {
-      color: #f0f0f0;
-    }
-
-    #functionality select, #functionality input[type="file"], #functionality input[type="color"], #functionality input[type="number"] {
-      width: 100%;
-      padding: clamp(0.5rem, 2vw, 0.8rem) 1rem;
-      border: 1px solid #ccc;
-      border-radius: clamp(6px, 1.5vw, 10px);
-      font-size: clamp(0.85rem, 2.5vw, 1rem);
-      transition: border 0.2s, box-shadow 0.2s;
-    }
-
-    #functionality select:focus, #functionality input[type="file"]:focus, #functionality input[type="color"]:focus, #functionality input[type="number"]:focus {
-      outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 6px rgba(0,123,255,0.35);
-    }
-
-    body.dark #functionality select,
-    body.dark #functionality input[type="file"],
-    body.dark #functionality input[type="color"],
-    body.dark #functionality input[type="number"] {
-      background: #2a2d3a;
-      color: #e0e0e0;
-      border: 1px solid #555;
-    }
-
-    body.dark #functionality select:focus,
-    body.dark #functionality input[type="file"]:focus,
-    body.dark #functionality input[type="color"]:focus,
-    body.dark #functionality input[type="number"]:focus {
-      border-color: #00c6ff;
-      box-shadow: 0 0 6px rgba(0,198,255,0.35);
-    }
-
-    button[type="submit"],
-    .download-btn {
-      display: inline-block;
-      margin: clamp(1rem, 3vw, 2rem) clamp(0.5rem, 1vw, 1rem) 0 0;
-      background: linear-gradient(135deg, #4a6ee0 0%, #6a11cb 100%);
-      color: #fff;
-      padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1rem, 2.5vw, 1.6rem);
-      border: none;
-      border-radius: clamp(6px, 1.5vw, 10px);
-      font-size: clamp(0.8rem, 2.5vw, 0.95rem);
-      font-weight: 600;
-      cursor: pointer;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
-    }
-
-    button[type="submit"]:hover,
-    .download-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.18);
-    }
-
-    body.dark button[type="submit"],
-    body.dark .download-btn {
-      background: linear-gradient(135deg, #1a2a3d, #2c5364);
-      color: #f2f2f2;
-      border: 1px solid #444;
-    }
-
-    body.dark button[type="submit"]:hover,
-    body.dark .download-btn:hover {
-      box-shadow: 0 8px 18px rgba(0,0,0,0.5);
-    }
-
-    .result {
-      margin-top: clamp(1.5rem, 4vw, 2.5rem);
-      text-align: center;
-      background: rgba(250, 250, 250, 0.95);
-      border-radius: clamp(8px, 2vw, 14px);
-      padding: clamp(1rem, 3vw, 1.5rem);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-      color: #222;
-      transition: background 0.4s ease, color 0.4s ease;
-      width: 100%;
-      max-width: min(90vw, 720px);
-    }
-
-    body.dark .result {
-      background: rgba(36, 38, 54, 0.95);
-      color: #f0f0f0;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
-    }
-
-    #processing-overlay {
-      display: none;
+    /* Language Selector Styles */
+    #language-selector {
       position: fixed;
-      inset: 0;
-      background: rgba(255,255,255,0.95);
-      z-index: 9999;
-      justify-content: center;
+      top: clamp(10px, 2vw, 20px);
+      left: clamp(10px, 2vw, 20px);
+      z-index: 10000;
+      display: flex;
       align-items: center;
-      flex-direction: column;
-      font-size: clamp(0.9rem, 3vw, 1.2rem);
-      color: #333;
-      animation: fadeInOverlay 0.3s ease forwards;
+      background: rgba(0,0,0,0.6);
+      border-radius: 50px;
+      padding: 8px 15px;
+      color: white;
     }
 
-    .spinner {
-      border: 6px solid #eaeaea;
-      border-top: 6px solid #007bff;
-      border-right: 6px solid #00c6ff;
-      border-radius: 50%;
-      width: clamp(50px, 10vw, 70px);
-      height: clamp(50px, 10vw, 70px);
-      animation: spin 1s linear infinite;
-      margin-bottom: 1rem;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes fadeInOverlay {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    body.dark #processing-overlay {
-      background: rgba(20,22,30,0.92);
-      color: #e6e6e6;
-    }
-
-    body.dark .spinner {
-      border: 6px solid #2a2d3a;
-      border-top: 6px solid #00c6ff;
-      border-right: 6px solid #007bff;
-    }
-
-    .success-msg {
-      font-weight: 600;
-      color: #007bff;
-      font-size: clamp(0.9rem, 2.5vw, 1rem);
-    }
-
-    .error-msg {
-      font-weight: 600;
-      color: #ff6b6b;
-      font-size: clamp(0.9rem, 2.5vw, 1rem);
-    }
-
-    body.dark .success-msg {
-      color: #00c6ff;
-    }
-
-    body.dark .error-msg {
-      color: #ff6b6b;
-    }
-
-    canvas {
-      width: 100% !important;
-      height: auto !important;
-      max-width: min(90vw, 600px);
-      border-radius: clamp(6px, 1.5vw, 10px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      margin: clamp(0.5rem, 2vw, 1rem) auto 0;
-      display: block;
-    }
-
-    body.dark canvas {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    }
-
-    #controls {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: clamp(0.3rem, 1vw, 0.5rem);
-      margin: clamp(0.5rem, 2vw, 1rem) 0;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: clamp(6px, 1.5vw, 8px);
-      padding: clamp(0.3rem, 1vw, 0.5rem);
-      width: 100%;
-      max-width: min(90vw, 720px);
-      transition: background 0.4s ease;
-    }
-
-    body.dark #controls {
-      background: rgba(36, 38, 54, 0.95);
-    }
-
-    #controls label {
-      display: block;
-      margin-bottom: 0.2rem;
-      font-size: clamp(0.7rem, 2vw, 0.8rem);
-      color: #333;
-    }
-
-    body.dark #controls label {
-      color: #e0e0e0;
-    }
-
-    #controls select,
-    #controls input {
-      width: 100%;
-      padding: clamp(0.2rem, 1vw, 0.3rem);
-      margin-bottom: 0.3rem;
-      border: 1px solid #ccc;
-      border-radius: clamp(4px, 1vw, 6px);
-      font-size: clamp(0.7rem, 2vw, 0.8rem);
-    }
-
-    body.dark #controls select,
-    body.dark input[type="file"],
-    body.dark input[type="color"],
-    body.dark input[type="number"] {
-      background: #2a2d3a;
-      color: #e0e0e0;
-      border: 1px solid #555;
-    }
-
-    #controls button {
-      width: 100%;
-      padding: clamp(0.2rem, 1vw, 0.3rem);
-      background: linear-gradient(135deg, #4a6ee0 0%, #6a11cb 100%);
-      color: #fff;
+    #language-selector select {
+      background: transparent;
       border: none;
-      border-radius: clamp(4px, 1vw, 6px);
-      font-size: clamp(0.7rem, 2vw, 0.8rem);
+      color: white;
+      font-size: 0.9rem;
+      margin-left: 8px;
       cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-    
-    .testimonial-card p:nth-of-type(1) {
-      color: rgba(0, 0, 0, 0.75); /* testimonial text */
-      font-style: italic;
     }
 
-    .testimonial-card p:nth-of-type(2) {
-      color: rgba(0, 0, 0, 0.5); /* author line */
-      font-weight: 600;
-      margin-top: 0.5rem;
-    }
-    
-    body.dark .testimonial-card p:nth-of-type(1) {
-      color: rgba(255, 255, 255, 0.75);
-    }
-    
-    body.dark .testimonial-card p:nth-of-type(2) {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    body.dark #controls button {
-      background: linear-gradient(135deg, #1a2a3d, #2c5364);
-      border: 1px solid #444;
-    }
-
-    #controls button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    #language-selector select option {
+      background: #333;
+      color: white;
     }
 
     /* Translation Preview Styles */
@@ -717,7 +431,7 @@
 
     .preview-image-container {
       position: relative;
-      max-width: 800px;
+      max-width: 600px;
       margin: 0 auto;
       border-radius: 15px;
       overflow: hidden;
@@ -736,7 +450,7 @@
 
     .image-placeholder-preview {
       width: 100%;
-      height: 300px;
+      height: 400px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -790,7 +504,7 @@
 
     .translation-image-preview {
       width: 100%;
-      height: 200px;
+      height: 400px;
       overflow: hidden;
       background-color: #f8f9fa;
       display: flex;
@@ -847,24 +561,27 @@
       font-size: 0.8rem;
       margin-top: 10px;
     }
-
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-10px); }
-      60% { transform: translateY(-5px); }
+    
+    .testimonial-card p:nth-of-type(1) {
+      color: rgba(0, 0, 0, 0.75); /* testimonial text */
+      font-style: italic;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+    .testimonial-card p:nth-of-type(2) {
+      color: rgba(0, 0, 0, 0.5); /* author line */
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+    
+    body.dark .testimonial-card p:nth-of-type(1) {
+      color: rgba(255, 255, 255, 0.75);
+    }
+    
+    body.dark .testimonial-card p:nth-of-type(2) {
+      color: rgba(255, 255, 255, 0.5);
     }
 
     @media (max-width: 768px) {
-      #controls {
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-      }
-      
       .translations-grid-preview {
         grid-template-columns: 1fr;
       }
@@ -872,16 +589,30 @@
       .language-selector-preview {
         flex-direction: column;
       }
-    }
-
-    @media (max-width: 480px) {
-      #controls {
-        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      
+      #language-selector {
+        top: 60px;
+      }
+      
+      .translation-image-preview {
+        height: 300px;
       }
     }
   </style>
 </head>
 <body class="light">
+  <div id="language-selector">
+    <span>🌐</span>
+    <select id="language-select">
+      <option value="en">English</option>
+      <option value="fr">French</option>
+      <option value="de">German</option>
+      <option value="es">Spanish</option>
+      <option value="it">Italian</option>
+      <option value="nl">Dutch</option>
+    </select>
+  </div>
+
   <button id="theme-toggle">🌙</button>
 
   <header id="hero" class="landing-section">
@@ -890,81 +621,80 @@
       Your browser does not support the video tag.
     </video>
     <div class="hero-content">
-      <h1>Apps Localization</h1>
-      <p class="subtitle">Effortlessly translate and customize images for global audiences.</p>
+      <h1 id="hero-title">Apps Localization</h1>
+      <p class="subtitle" id="hero-subtitle">Effortlessly translate and customize images for global audiences.</p>
       <p class="video-error" id="video-error">Video failed to load. Displaying fallback image.</p>
       <a href="/">
-  <button class="btn">Get Started</button>
-</a>
-ton>
+        <button class="btn">Get Started</button>
+      </a>
     </div>
   </header>
 
   <section id="features" class="landing-section">
-    <h2>Powerful Features</h2>
-    <p>Discover why Apps Localization is the ultimate tool for image translation.</p>
+    <h2 id="features-title">Powerful Features</h2>
+    <p id="features-subtitle">Discover why Apps Localization is the ultimate tool for image translation.</p>
     <div class="feature-grid">
       <div class="feature-card">
-        <h3>Multi-Language Translation</h3>
-        <p>Translate text in images to multiple languages with high accuracy.</p>
+        <h3 id="feature-1-title">Multi-Language Translation</h3>
+        <p id="feature-1-desc">Translate text in images to multiple languages with high accuracy.</p>
       </div>
       <div class="feature-card">
-        <h3>Customizable Text Editing</h3>
-        <p>Adjust font, size, color, and animations to match your brand.</p>
+        <h3 id="feature-2-title">Customizable Text Editing</h3>
+        <p id="feature-2-desc">Adjust font, size, color, and animations to match your brand.</p>
       </div>
       <div class="feature-card">
-        <h3>Device-Optimized Resizing</h3>
-        <p>Resize images for phones, tablets, desktops, and more.</p>
+        <h3 id="feature-3-title">Device-Optimized Resizing</h3>
+        <p id="feature-3-desc">Resize images for phones, tablets, desktops, and more.</p>
       </div>
       <div class="feature-card">
-        <h3>Intuitive Interface</h3>
-        <p>User-friendly design for seamless editing and translation.</p>
+        <h3 id="feature-4-title">Intuitive Interface</h3>
+        <p id="feature-4-desc">User-friendly design for seamless editing and translation.</p>
       </div>
       <div class="feature-card">
-        <h3>High-Quality Output</h3>
-        <p>Download crisp, professional images in your preferred format.</p>
+        <h3 id="feature-5-title">High-Quality Output</h3>
+        <p id="feature-5-desc">Download crisp, professional images in your preferred format.</p>
       </div>
       <div class="feature-card">
-        <h3>Real-Time Preview</h3>
-        <p>Preview changes instantly to ensure perfect results.</p>
+        <h3 id="feature-6-title">Real-Time Preview</h3>
+        <p id="feature-6-desc">Preview changes instantly to ensure perfect results.</p>
       </div>
     </div>
   </section>
 
   <section id="how-to-use" class="landing-section">
-    <h2>How to Use</h2>
-    <p>Transform your images in just a few simple steps.</p>
+    <h2 id="how-to-title">How to Use</h2>
+    <p id="how-to-subtitle">Transform your images in just a few simple steps.</p>
     <ul class="timeline">
-      <li>Upload your image to the Apps Localization platform.</li>
-      <li>Select the target language for translation.</li>
-      <li>Choose the desired output resolution for your device.</li>
-      <li>Customize text appearance with fonts, colors, and animations.</li>
-      <li>Download your localized image instantly.</li>
+      <li id="step-1">Upload your image to the Apps Localization platform.</li>
+      <li id="step-2">Select the target language for translation.</li>
+      <li id="step-3">Choose the desired output resolution for your device.</li>
+      <li id="step-4">Customize text appearance with fonts, colors, and animations.</li>
+      <li id="step-5">Download your localized image instantly.</li>
     </ul>
   </section>
 
   <section id="why-apps-localization" class="landing-section">
-    <h2>Why Apps Localization?</h2>
-    <p>Enhance your content creation with unmatched flexibility and efficiency.</p>
+    <h2 id="why-title">Why Apps Localization?</h2>
+    <p id="why-subtitle">Enhance your content creation with unmatched flexibility and efficiency.</p>
     <div class="feature-grid">
       <div class="feature-card">
-        <h3>Global Reach</h3>
-        <p>Engage audiences worldwide with localized content.</p>
+        <h3 id="why-1-title">Global Reach</h3>
+        <p id="why-1-desc">Engage audiences worldwide with localized content.</p>
       </div>
       <div class="feature-card">
-        <h3>Time-Saving</h3>
-        <p>Automate translation and resizing tasks effortlessly.</p>
+        <h3 id="why-2-title">Time-Saving</h3>
+        <p id="why-2-desc">Automate translation and resizing tasks effortlessly.</p>
       </div>
       <div class="feature-card">
-        <h3>Brand Consistency</h3>
-        <p>Maintain your visual identity across languages.</p>
+        <h3 id="why-3-title">Brand Consistency</h3>
+        <p id="why-3-desc">Maintain your visual identity across languages.</p>
       </div>
     </div>
   </section>
 
   <section id="tutorial" class="landing-section">
-    <h2>Watch Our Tutorial</h2>
-    <p>Learn how to use Apps Localization with our step-by-step Loom video.</p>
+    <h2 id="tutorial-title">Watch Our Tutorial</h2>
+    <p id="tutorial-subtitle">Learn how to use Apps Localization with our step-by-step Loom video.</p>
     <div style="
       position: relative;
       width: 100%;
@@ -997,8 +727,8 @@ ton>
 
   <!-- Translation Preview Section -->
   <section id="translation-preview" class="landing-section">
-    <h2>Translation Preview</h2>
-    <p>See your original image and all translations in one place</p>
+    <h2 id="preview-title">Translation Preview</h2>
+    <p id="preview-subtitle">See your original image and all translations in one place</p>
     
     <div class="translation-preview-container">
       <!-- Language Selector -->
@@ -1006,11 +736,11 @@ ton>
         <label for="preview-language">Preview Language:</label>
         <select id="preview-language">
           <option value="en">English</option>
-          <option value="nl">Dutch</option>
-          <option value="de">German</option>
-          <option value="it">Italian</option>
           <option value="fr">French</option>
+          <option value="de">German</option>
           <option value="es">Spanish</option>
+          <option value="it">Italian</option>
+          <option value="nl">Dutch</option>
         </select>
       </div>
 
@@ -1116,152 +846,96 @@ ton>
   </section>
 
   <section id="testimonials" class="landing-section">
-    <h2>What Our Users Say</h2>
-    <p>Join thousands of satisfied users worldwide.</p>
+    <h2 id="testimonials-title">What Our Users Say</h2>
+    <p id="testimonials-subtitle">Join thousands of satisfied users worldwide.</p>
     <div class="testimonial-grid">
       <div class="testimonial-card">
         <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="avatar">
-        <p>"Apps Localization saved me hours of work. The translations are accurate and the interface is intuitive."</p>
-        <p>- Sarah Johnson, Marketing Director</p>
+        <p id="testimonial-1-text">"Apps Localization saved me hours of work. The translations are accurate and the interface is intuitive."</p>
+        <p id="testimonial-1-author">- Sarah Johnson, Marketing Director</p>
       </div>
       <div class="testimonial-card">
         <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="avatar">
-        <p>"As a global brand manager, this tool has been invaluable for our international campaigns."</p>
-        <p>- Michael Chen, Global Brand Manager</p>
+        <p id="testimonial-2-text">"As a global brand manager, this tool has been invaluable for our international campaigns."</p>
+        <p id="testimonial-2-author">- Michael Chen, Global Brand Manager</p>
       </div>
       <div class="testimonial-card">
         <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User" class="avatar">
-        <p>"The ability to customize text appearance while maintaining translation accuracy is impressive."</p>
-        <p>- Elena Rodriguez, Content Creator</p>
+        <p id="testimonial-3-text">"The ability to customize text appearance while maintaining translation accuracy is impressive."</p>
+        <p id="testimonial-3-author">- Elena Rodriguez, Content Creator</p>
       </div>
     </div>
   </section>
 
   <section id="cta" class="landing-section">
-    <h2>Ready to Localize Your Images?</h2>
-    <p>Start creating multi-language content today with Apps Localization.</p>
+    <h2 id="cta-title">Ready to Localize Your Images?</h2>
+    <p id="cta-subtitle">Start creating multi-language content today with Apps Localization.</p>
     <a href="/">
-  <button class="btn">Get Started</button>
-</a>
-
+      <button class="btn">Get Started Now</button>
+    </a>
   </section>
-
-  <!-- Functionality Section (Hidden by default) -->
-  <section id="functionality">
-    <div class="card">
-      <h1>Translate & Customize Your Image</h1>
-      <p class="subtitle">Upload an image, translate text, and customize the appearance</p>
-      
-      <form id="translate-form">
-        <label for="image">Upload Image:</label>
-        <input type="file" id="image" accept="image/*" required>
-        
-        <label for="language">Target Language:</label>
-        <select id="language" required>
-          <option value="en">English</option>
-          <option value="es">Spanish</option>
-          <option value="fr">French</option>
-          <option value="de">German</option>
-          <option value="it">Italian</option>
-          <option value="pt">Portuguese</option>
-          <option value="nl">Dutch</option>
-          <option value="ru">Russian</option>
-          <option value="ja">Japanese</option>
-          <option value="zh">Chinese</option>
-          <option value="ar">Arabic</option>
-        </select>
-        
-        <label for="resolution">Output Resolution:</label>
-        <select id="resolution" required>
-          <option value="phone">Phone (1080x1920)</option>
-          <option value="tablet">Tablet (1536x2048)</option>
-          <option value="desktop">Desktop (1920x1080)</option>
-          <option value="custom">Custom Size</option>
-        </select>
-        
-        <button type="submit">Process Image</button>
-      </form>
-      
-      <div id="result" class="result" style="display: none;">
-        <p class="success-msg" id="success-msg"></p>
-        <p class="error-msg" id="error-msg" style="display: none;"></p>
-        
-        <div id="controls">
-          <div>
-            <label for="fontFamily">Font:</label>
-            <select id="fontFamily">
-              <option value="Arial">Arial</option>
-              <option value="Helvetica">Helvetica</option>
-              <option value="Times New Roman">Times New Roman</option>
-              <option value="Georgia">Georgia</option>
-              <option value="Verdana">Verdana</option>
-            </select>
-          </div>
-          
-          <div>
-            <label for="fontSize">Size:</label>
-            <input type="number" id="fontSize" min="8" max="72" value="20">
-          </div>
-          
-          <div>
-            <label for="fill">Color:</label>
-            <input type="color" id="fill" value="#000000">
-          </div>
-          
-          <div>
-            <label for="textAlign">Align:</label>
-            <select id="textAlign">
-              <option value="left">Left</option>
-              <option value="center">Center</option>
-              <option value="right">Right</option>
-            </select>
-          </div>
-          
-          <div>
-            <button id="addText">Add Text</button>
-          </div>
-          
-          <div>
-            <button id="removeText">Remove Text</button>
-          </div>
-        </div>
-        
-        <canvas id="canvas"></canvas>
-        
-        <a href="#" class="download-btn" id="download">Download Image</a>
-        <button class="btn" id="back-to-home">Back to Home</button>
-      </div>
-    </div>
-  </section>
-
-  <div id="processing-overlay">
-    <div class="spinner"></div>
-    <p>Processing your image...</p>
-  </div>
 
   <footer>
-    <p>&copy; 2023 Apps Localization. All rights reserved.</p>
+    <p id="footer-text">&copy; 2023 Apps Localization. All rights reserved.</p>
   </footer>
 
   <script>
     const body = document.body;
     const themeToggle = document.getElementById('theme-toggle');
-    const getStartedButtons = document.querySelectorAll('#hero-get-started, #cta-get-started');
-    const backToHomeButton = document.getElementById('back-to-home');
-    const functionalitySection = document.getElementById('functionality');
-    const landingSections = document.querySelectorAll('.landing-section');
+    const languageSelect = document.getElementById('language-select');
+    const previewLanguage = document.getElementById('preview-language');
     const heroVideo = document.getElementById('hero-video');
     const videoError = document.getElementById('video-error');
-    const previewLanguage = document.getElementById('preview-language');
-    let canvas = null;
-    let texts = [];
-    let scale = 1;
 
-    // Language data for translation preview
+    // Language data for the entire website
     const translations = {
       en: {
-        mainTitle: "Translation Preview",
-        subtitle: "Original content and its translations in multiple languages",
+        // Hero Section
+        heroTitle: "Apps Localization",
+        heroSubtitle: "Effortlessly translate and customize images for global audiences.",
+        
+        // Features Section
+        featuresTitle: "Powerful Features",
+        featuresSubtitle: "Discover why Apps Localization is the ultimate tool for image translation.",
+        feature1Title: "Multi-Language Translation",
+        feature1Desc: "Translate text in images to multiple languages with high accuracy.",
+        feature2Title: "Customizable Text Editing",
+        feature2Desc: "Adjust font, size, color, and animations to match your brand.",
+        feature3Title: "Device-Optimized Resizing",
+        feature3Desc: "Resize images for phones, tablets, desktops, and more.",
+        feature4Title: "Intuitive Interface",
+        feature4Desc: "User-friendly design for seamless editing and translation.",
+        feature5Title: "High-Quality Output",
+        feature5Desc: "Download crisp, professional images in your preferred format.",
+        feature6Title: "Real-Time Preview",
+        feature6Desc: "Preview changes instantly to ensure perfect results.",
+        
+        // How-to Section
+        howToTitle: "How to Use",
+        howToSubtitle: "Transform your images in just a few simple steps.",
+        step1: "Upload your image to the Apps Localization platform.",
+        step2: "Select the target language for translation.",
+        step3: "Choose the desired output resolution for your device.",
+        step4: "Customize text appearance with fonts, colors, and animations.",
+        step5: "Download your localized image instantly.",
+        
+        // Why Section
+        whyTitle: "Why Apps Localization?",
+        whySubtitle: "Enhance your content creation with unmatched flexibility and efficiency.",
+        why1Title: "Global Reach",
+        why1Desc: "Engage audiences worldwide with localized content.",
+        why2Title: "Time-Saving",
+        why2Desc: "Automate translation and resizing tasks effortlessly.",
+        why3Title: "Brand Consistency",
+        why3Desc: "Maintain your visual identity across languages.",
+        
+        // Tutorial Section
+        tutorialTitle: "Watch Our Tutorial",
+        tutorialSubtitle: "Learn how to use Apps Localization with our step-by-step Loom video.",
+        
+        // Translation Preview Section
+        previewTitle: "Translation Preview",
+        previewSubtitle: "See your original image and all translations in one place",
         originalTitle: "Original Content",
         originalLabel: "Original Document (9.png)",
         translationsTitle: "Translations",
@@ -1279,77 +953,61 @@ ton>
         translation4Badge: "Italiano",
         translation5Title: "Spanish Translation",
         translation5Desc: "Spanish translation with accurate localization and attention to regional linguistic variations.",
-        translation5Badge: "Español"
-      },
-      nl: {
-        mainTitle: "Vertaling Voorbeeld",
-        subtitle: "Originele inhoud en zijn vertalingen in meerdere talen",
-        originalTitle: "Originele Inhoud",
-        originalLabel: "Origineel Document (9.png)",
-        translationsTitle: "Vertalingen",
-        translation1Title: "Nederlandse Vertaling",
-        translation1Desc: "Dit is de Nederlandse versie van het originele document met nauwkeurige vertaling en culturele aanpassing.",
-        translation1Badge: "Nederlands",
-        translation2Title: "Franse Vertaling",
-        translation2Desc: "Franse vertaling die de oorspronkelijke betekenis behoudt en zich aanpast aan Franse taalkundige nuances.",
-        translation2Badge: "Français",
-        translation3Title: "Duitse Vertaling",
-        translation3Desc: "Nauwkeurige Duitse vertaling met aandacht voor technische terminologie en formele taalvereisten.",
-        translation3Badge: "Deutsch",
-        translation4Title: "Italiaanse Vertaling",
-        translation4Desc: "Italiaanse vertaling met correcte aanpassing aan de unieke kenmerken van de taal en culturele context.",
-        translation4Badge: "Italiano",
-        translation5Title: "Spaanse Vertaling",
-        translation5Desc: "Spaanse vertaling met accurate lokalisatie en aandacht voor regionale taalkundige variaties.",
-        translation5Badge: "Español"
-      },
-      de: {
-        mainTitle: "Übersetzungsvorschau",
-        subtitle: "Originalinhalt und seine Übersetzungen in mehreren Sprachen",
-        originalTitle: "Originalinhalt",
-        originalLabel: "Originaldokument (9.png)",
-        translationsTitle: "Übersetzungen",
-        translation1Title: "Niederländische Übersetzung",
-        translation1Desc: "Dies ist die niederländische Version des Originaldokuments mit genauer Übersetzung und kultureller Anpassung.",
-        translation1Badge: "Nederlands",
-        translation2Title: "Französische Übersetzung",
-        translation2Desc: "Französische Übersetzung, die die ursprüngliche Bedeutung beibehält und sich an französische sprachliche Nuancen anpasst.",
-        translation2Badge: "Français",
-        translation3Title: "Deutsche Übersetzung",
-        translation3Desc: "Präzise deutsche Übersetzung mit besonderem Augenmerk auf technische Terminologie und formale Sprachanforderungen.",
-        translation3Badge: "Deutsch",
-        translation4Title: "Italienische Übersetzung",
-        translation4Desc: "Italienische Übersetzung mit korrekter Anpassung an die einzigartigen Merkmale der Sprache und den kulturellen Kontext.",
-        translation4Badge: "Italiano",
-        translation5Title: "Spanische Übersetzung",
-        translation5Desc: "Spanische Übersetzung mit genauer Lokalisierung und Berücksichtigung regionaler sprachlicher Variationen.",
-        translation5Badge: "Español"
-      },
-      it: {
-        mainTitle: "Anteprima Traduzione",
-        subtitle: "Contenuto originale e le sue traduzioni in più lingue",
-        originalTitle: "Contenuto Originale",
-        originalLabel: "Documento Originale (9.png)",
-        translationsTitle: "Traduzioni",
-        translation1Title: "Traduzione Olandese",
-        translation1Desc: "Questa è la versione olandese del documento originale con traduzione accurata e adattamento culturale.",
-        translation1Badge: "Nederlands",
-        translation2Title: "Traduzione Francese",
-        translation2Desc: "Traduzione francese che mantiene il significato originale adattandosi alle sfumature linguistiche francesi.",
-        translation2Badge: "Français",
-        translation3Title: "Traduzione Tedesca",
-        translation3Desc: "Traduzione tedesca precisa con attenzione alla terminologia tecnica e ai requisiti linguistici formali.",
-        translation3Badge: "Deutsch",
-        translation4Title: "Traduzione Italiana",
-        translation4Desc: "Traduzione italiana con adattamento appropriato alle caratteristiche uniche della lingua e al contesto culturale.",
-        translation4Badge: "Italiano",
-        translation5Title: "Traduzione Spagnola",
-        translation5Desc: "Traduzione spagnola con localizzazione accurata e attenzione alle variazioni linguistiche regionali.",
-        translation5Badge: "Español"
+        translation5Badge: "Español",
+        
+        // Testimonials Section
+        testimonialsTitle: "What Our Users Say",
+        testimonialsSubtitle: "Join thousands of satisfied users worldwide.",
+        testimonial1Text: "\"Apps Localization saved me hours of work. The translations are accurate and the interface is intuitive.\"",
+        testimonial1Author: "- Sarah Johnson, Marketing Director",
+        testimonial2Text: "\"As a global brand manager, this tool has been invaluable for our international campaigns.\"",
+        testimonial2Author: "- Michael Chen, Global Brand Manager",
+        testimonial3Text: "\"The ability to customize text appearance while maintaining translation accuracy is impressive.\"",
+        testimonial3Author: "- Elena Rodriguez, Content Creator",
+        
+        // CTA Section
+        ctaTitle: "Ready to Localize Your Images?",
+        ctaSubtitle: "Start creating multi-language content today with Apps Localization.",
+        
+        // Footer
+        footerText: "© 2023 Apps Localization. All rights reserved."
       },
       fr: {
-        mainTitle: "Aperçu de Traduction",
-        subtitle: "Contenu original et ses traductions en plusieurs langues",
+        heroTitle: "Localisation d'Apps",
+        heroSubtitle: "Traduisez et personnalisez facilement des images pour un public mondial.",
+        featuresTitle: "Fonctionnalités Puissantes",
+        featuresSubtitle: "Découvrez pourquoi Apps Localization est l'outil ultime pour la traduction d'images.",
+        feature1Title: "Traduction Multilingue",
+        feature1Desc: "Traduisez le texte dans les images en plusieurs langues avec une grande précision.",
+        feature2Title: "Édition de Texte Personnalisable",
+        feature2Desc: "Ajustez la police, la taille, la couleur et les animations pour correspondre à votre marque.",
+        feature3Title: "Redimensionnement Optimisé",
+        feature3Desc: "Redimensionnez les images pour les téléphones, tablettes, ordinateurs de bureau et plus encore.",
+        feature4Title: "Interface Intuitive",
+        feature4Desc: "Conception conviviale pour une édition et une traduction fluides.",
+        feature5Title: "Sortie de Haute Qualité",
+        feature5Desc: "Téléchargez des images nettes et professionnelles dans votre format préféré.",
+        feature6Title: "Aperçu en Temps Réel",
+        feature6Desc: "Prévisualisez les modifications instantanément pour garantir des résultats parfaits.",
+        howToTitle: "Comment Utiliser",
+        howToSubtitle: "Transformez vos images en quelques étapes simples.",
+        step1: "Téléchargez votre image sur la plateforme Apps Localization.",
+        step2: "Sélectionnez la langue cible pour la traduction.",
+        step3: "Choisissez la résolution de sortie souhaitée pour votre appareil.",
+        step4: "Personnalisez l'apparence du texte avec des polices, des couleurs et des animations.",
+        step5: "Téléchargez votre image localisée instantanément.",
+        whyTitle: "Pourquoi Apps Localization?",
+        whySubtitle: "Améliorez votre création de contenu avec une flexibilité et une efficacité inégalées.",
+        why1Title: "Portée Mondiale",
+        why1Desc: "Touche des audiences mondiales avec un contenu localisé.",
+        why2Title: "Gain de Temps",
+        why2Desc: "Automatisez les tâches de traduction et de redimensionnement sans effort.",
+        why3Title: "Cohérence de Marque",
+        why3Desc: "Maintenez votre identité visuelle dans toutes les langues.",
+        tutorialTitle: "Regardez Notre Tutoriel",
+        tutorialSubtitle: "Apprenez à utiliser Apps Localization avec notre vidéo Loom étape par étape.",
+        previewTitle: "Aperçu de Traduction",
+        previewSubtitle: "Voyez votre image originale et toutes les traductions en un seul endroit",
         originalTitle: "Contenu Original",
         originalLabel: "Document Original (9.png)",
         translationsTitle: "Traductions",
@@ -1367,11 +1025,121 @@ ton>
         translation4Badge: "Italiano",
         translation5Title: "Traduction Espagnole",
         translation5Desc: "Traduction espagnole avec localisation précise et attention aux variations linguistiques régionales.",
-        translation5Badge: "Español"
+        translation5Badge: "Español",
+        testimonialsTitle: "Ce Que Disent Nos Utilisateurs",
+        testimonialsSubtitle: "Rejoignez des milliers d'utilisateurs satisfaits dans le monde entier.",
+        testimonial1Text: "\"Apps Localization m'a fait gagner des heures de travail. Les traductions sont précises et l'interface est intuitive.\"",
+        testimonial1Author: "- Sarah Johnson, Directrice Marketing",
+        testimonial2Text: "\"En tant que responsable de marque mondiale, cet outil a été inestimable pour nos campagnes internationales.\"",
+        testimonial2Author: "- Michael Chen, Responsable de Marque Mondiale",
+        testimonial3Text: "\"La capacité à personnaliser l'apparence du texte tout en maintenant la précision de la traduction est impressionnante.\"",
+        testimonial3Author: "- Elena Rodriguez, Créatrice de Contenu",
+        ctaTitle: "Prêt à Localiser Vos Images?",
+        ctaSubtitle: "Commencez à créer du contenu multilingue aujourd'hui avec Apps Localization.",
+        footerText: "© 2023 Apps Localization. Tous droits réservés."
+      },
+      de: {
+        heroTitle: "Apps Lokalisierung",
+        heroSubtitle: "Übersetzen und passen Sie Bilder mühelos für ein globales Publikum an.",
+        featuresTitle: "Leistungsstarke Funktionen",
+        featuresSubtitle: "Entdecken Sie, warum Apps Localization das ultimative Tool zur Bildübersetzung ist.",
+        feature1Title: "Mehrsprachige Übersetzung",
+        feature1Desc: "Übersetzen Sie Text in Bilder in mehreren Sprachen mit hoher Genauigkeit.",
+        feature2Title: "Anpassbare Textbearbeitung",
+        feature2Desc: "Passen Sie Schriftart, Größe, Farbe und Animationen an Ihre Marke an.",
+        feature3Title: "Geräteoptimierte Größenanpassung",
+        feature3Desc: "Passen Sie Bilder für Telefone, Tablets, Desktops und mehr an.",
+        feature4Title: "Intuitive Benutzeroberfläche",
+        feature4Desc: "Benutzerfreundliches Design für nahtloses Bearbeiten und Übersetzen.",
+        feature5Title: "Hohe Ausgabequalität",
+        feature5Desc: "Laden Sie knackige, professionelle Bilder in Ihrem bevorzugten Format herunter.",
+        feature6Title: "Echtzeit-Vorschau",
+        feature6Desc: "Vorschau der Änderungen sofort, um perfekte Ergebnisse zu gewährleisten.",
+        howToTitle: "So verwenden Sie es",
+        howToSubtitle: "Transformieren Sie Ihre Bilder in nur wenigen einfachen Schritten.",
+        step1: "Laden Sie Ihr Bild auf die Apps Localization-Plattform hoch.",
+        step2: "Wählen Sie die Zielsprache für die Übersetzung aus.",
+        step3: "Wählen Sie die gewünschte Ausgabeauflösung für Ihr Gerät.",
+        step4: "Passen Sie das Erscheinungsbild des Textes mit Schriftarten, Farben und Animationen an.",
+        step5: "Laden Sie Ihr lokalisiertes Bild sofort herunter.",
+        whyTitle: "Warum Apps Localization?",
+        whySubtitle: "Verbessern Sie Ihre Inhaltserstellung mit unübertroffener Flexibilität und Effizienz.",
+        why1Title: "Globale Reichweite",
+        why1Desc: "Erreichen Sie weltweites Publikum mit lokalisierten Inhalten.",
+        why2Title: "Zeitersparnis",
+        why2Desc: "Automatisieren Sie Übersetzungs- und Größenanpassungsaufgaben mühelos.",
+        why3Title: "Markenkonsistenz",
+        why3Desc: "Bewahren Sie Ihre visuelle Identität über alle Sprachen hinweg.",
+        tutorialTitle: "Sehen Sie sich unser Tutorial an",
+        tutorialSubtitle: "Erfahren Sie, wie Sie Apps Localization mit unserem Schritt-für-Schritt-Loom-Video verwenden.",
+        previewTitle: "Übersetzungsvorschau",
+        previewSubtitle: "Sehen Sie Ihr Originalbild und alle Übersetzungen an einem Ort",
+        originalTitle: "Originalinhalt",
+        originalLabel: "Originaldokument (9.png)",
+        translationsTitle: "Übersetzungen",
+        translation1Title: "Niederländische Übersetzung",
+        translation1Desc: "Dies ist die niederländische Version des Originaldokuments mit genauer Übersetzung und kultureller Anpassung.",
+        translation1Badge: "Nederlands",
+        translation2Title: "Französische Übersetzung",
+        translation2Desc: "Französische Übersetzung, die die ursprüngliche Bedeutung beibehält und sich an französische sprachliche Nuancen anpasst.",
+        translation2Badge: "Français",
+        translation3Title: "Deutsche Übersetzung",
+        translation3Desc: "Präzise deutsche Übersetzung mit besonderem Augenmerk auf technische Terminologie und formale Sprachanforderungen.",
+        translation3Badge: "Deutsch",
+        translation4Title: "Italienische Übersetzung",
+        translation4Desc: "Italienische Übersetzung mit korrekter Anpassung an die einzigartigen Merkmale der Sprache und den kulturellen Kontext.",
+        translation4Badge: "Italiano",
+        translation5Title: "Spanische Übersetzung",
+        translation5Desc: "Spanische Übersetzung mit genauer Lokalisierung und Berücksichtigung regionaler sprachlicher Variationen.",
+        translation5Badge: "Español",
+        testimonialsTitle: "Was unsere Benutzer sagen",
+        testimonialsSubtitle: "Schließen Sie sich Tausenden zufriedenen Benutzern weltweit an.",
+        testimonial1Text: "\"Apps Localization hat mir Stunden Arbeit erspart. Die Übersetzungen sind genau und die Benutzeroberfläche ist intuitiv.\"",
+        testimonial1Author: "- Sarah Johnson, Marketingdirektorin",
+        testimonial2Text: "\"Als globaler Markenmanager war dieses Tool für unsere internationalen Kampagnen von unschätzbarem Wert.\"",
+        testimonial2Author: "- Michael Chen, Globaler Markenmanager",
+        testimonial3Text: "\"Die Möglichkeit, das Erscheinungsbild des Textes anzupassen und gleichzeitig die Übersetzungsgenauigkeit beizubehalten, ist beeindruckend.\"",
+        testimonial3Author: "- Elena Rodriguez, Content Creator",
+        ctaTitle: "Bereit, Ihre Bilder zu lokalisieren?",
+        ctaSubtitle: "Beginnen Sie noch heute mit der Erstellung mehrsprachiger Inhalte mit Apps Localization.",
+        footerText: "© 2023 Apps Localization. Alle Rechte vorbehalten."
       },
       es: {
-        mainTitle: "Vista Previa de Traducción",
-        subtitle: "Contenido original y sus traducciones en múltiples idiomas",
+        heroTitle: "Localización de Apps",
+        heroSubtitle: "Traduzca y personalice imágenes sin esfuerzo para audiencias globales.",
+        featuresTitle: "Características Potentes",
+        featuresSubtitle: "Descubra por qué Apps Localization es la herramienta definitiva para la traducción de imágenes.",
+        feature1Title: "Traducción Multilingüe",
+        feature1Desc: "Traduzca texto en imágenes a múltiples idiomas con alta precisión.",
+        feature2Title: "Edición de Texto Personalizable",
+        feature2Desc: "Ajuste fuente, tamaño, color y animaciones para que coincidan con su marca.",
+        feature3Title: "Redimensionamiento Optimizado",
+        feature3Desc: "Redimensione imágenes para teléfonos, tabletas, escritorios y más.",
+        feature4Title: "Interfaz Intuitiva",
+        feature4Desc: "Diseño fácil de usar para una edición y traducción sin problemas.",
+        feature5Title: "Salida de Alta Calidad",
+        feature5Desc: "Descargue imágenes nítidas y profesionales en su formato preferido.",
+        feature6Title: "Vista Previa en Tiempo Real",
+        feature6Desc: "Vea previsualizaciones de los cambios al instante para garantizar resultados perfectos.",
+        howToTitle: "Cómo Usar",
+        howToSubtitle: "Transforme sus imágenes en solo unos pocos pasos simples.",
+        step1: "Cargue su imagen a la plataforma Apps Localization.",
+        step2: "Seleccione el idioma de destino para la traducción.",
+        step3: "Elija la resolución de salida deseada para su dispositivo.",
+        step4: "Personalice la apariencia del texto con fuentes, colores y animaciones.",
+        step5: "Descargue su imagen localizada al instante.",
+        whyTitle: "¿Por qué Apps Localization?",
+        whySubtitle: "Mejore su creación de contenido con flexibilidad y eficiencia inigualables.",
+        why1Title: "Alcance Global",
+        why1Desc: "Involucre audiencias en todo el mundo con contenido localizado.",
+        why2Title: "Ahorro de Tiempo",
+        why2Desc: "Automatice tareas de traducción y redimensionamiento sin esfuerzo.",
+        why3Title: "Consistencia de Marca",
+        why3Desc: "Mantenga su identidad visual en todos los idiomas.",
+        tutorialTitle: "Vea Nuestro Tutorial",
+        tutorialSubtitle: "Aprenda a usar Apps Localization con nuestro video paso a paso de Loom.",
+        previewTitle: "Vista Previa de Traducción",
+        previewSubtitle: "Vea su imagen original y todas las traducciones en un solo lugar",
         originalTitle: "Contenido Original",
         originalLabel: "Documento Original (9.png)",
         translationsTitle: "Traducciones",
@@ -1389,7 +1157,150 @@ ton>
         translation4Badge: "Italiano",
         translation5Title: "Traducción Española",
         translation5Desc: "Traducción española con localización precisa y atención a las variaciones lingüísticas regionales.",
-        translation5Badge: "Español"
+        translation5Badge: "Español",
+        testimonialsTitle: "Lo Que Dicen Nuestros Usuarios",
+        testimonialsSubtitle: "Únase a miles de usuarios satisfechos en todo el mundo.",
+        testimonial1Text: "\"Apps Localization me ahorró horas de trabajo. Las traducciones son precisas y la interfaz es intuitiva.\"",
+        testimonial1Author: "- Sarah Johnson, Directora de Marketing",
+        testimonial2Text: "\"Como gerente de marca global, esta herramienta ha sido invaluable para nuestras campañas internacionales.\"",
+        testimonial2Author: "- Michael Chen, Gerente de Marca Global",
+        testimonial3Text: "\"La capacidad de personalizar la apariencia del texto mientras se mantiene la precisión de la traducción es impresionante.\"",
+        testimonial3Author: "- Elena Rodriguez, Creadora de Contenido",
+        ctaTitle: "¿Listo para Localizar Sus Imágenes?",
+        ctaSubtitle: "Comience a crear contenido multilingüe hoy con Apps Localization.",
+        footerText: "© 2023 Apps Localization. Todos los derechos reservados."
+      },
+      it: {
+        heroTitle: "Localizzazione App",
+        heroSubtitle: "Traduci e personalizza facilmente le immagini per un pubblico globale.",
+        featuresTitle: "Funzionalità Potenti",
+        featuresSubtitle: "Scopri perché Apps Localization è lo strumento definitivo per la traduzione di immagini.",
+        feature1Title: "Traduzione Multilingue",
+        feature1Desc: "Traduci il testo nelle immagini in più lingue con alta precisione.",
+        feature2Title: "Modifica del Testo Personalizzabile",
+        feature2Desc: "Regola carattere, dimensione, colore e animazioni per abbinare il tuo brand.",
+        feature3Title: "Ridimensionamento Ottimizzato",
+        feature3Desc: "Ridimensiona le immagini per telefoni, tablet, desktop e altro.",
+        feature4Title: "Interfaccia Intuitiva",
+        feature4Desc: "Design user-friendly per editing e traduzione senza soluzione di continuità.",
+        feature5Title: "Output di Alta Qualità",
+        feature5Desc: "Scarica immagini nitide e professionali nel formato preferito.",
+        feature6Title: "Anteprima in Tempo Reale",
+        feature6Desc: "Anteprima delle modifiche all'istante per garantire risultati perfetti.",
+        howToTitle: "Come Usare",
+        howToSubtitle: "Trasforma le tue immagini in pochi semplici passaggi.",
+        step1: "Carica la tua immagine sulla piattaforma Apps Localization.",
+        step2: "Seleziona la lingua di destinazione per la traduzione.",
+        step3: "Scegli la risoluzione di output desiderata per il tuo dispositivo.",
+        step4: "Personalizza l'aspetto del testo con caratteri, colori e animazioni.",
+        step5: "Scarica la tua immagine localizzata all'istante.",
+        whyTitle: "Perché Apps Localization?",
+        whySubtitle: "Migliora la tua creazione di contenuti con flessibilità ed efficienza senza pari.",
+        why1Title: "Portata Globale",
+        why1Desc: "Coinvolgi un pubblico mondiale con contenuti localizzati.",
+        why2Title: "Risparmio di Tempo",
+        why2Desc: "Automatizza le attività di traduzione e ridimensionamento senza sforzo.",
+        why3Title: "Coerenza del Marchio",
+        why3Desc: "Mantieni la tua identità visiva in tutte le lingue.",
+        tutorialTitle: "Guarda il Nostro Tutorial",
+        tutorialSubtitle: "Scopri come utilizzare Apps Localization con il nostro video Loom passo dopo passo.",
+        previewTitle: "Anteprima Traduzione",
+        previewSubtitle: "Vedi la tua immagine originale e tutte le traduzioni in un unico posto",
+        originalTitle: "Contenuto Originale",
+        originalLabel: "Documento Originale (9.png)",
+        translationsTitle: "Traduzioni",
+        translation1Title: "Traduzione Olandese",
+        translation1Desc: "Questa è la versione olandese del documento originale con traduzione accurata e adattamento culturale.",
+        translation1Badge: "Nederlands",
+        translation2Title: "Traduzione Francese",
+        translation2Desc: "Traduzione francese che mantiene il significato originale adattandosi alle sfumature linguistiche francesi.",
+        translation2Badge: "Français",
+        translation3Title: "Traduzione Tedesca",
+        translation3Desc: "Traduzione tedesca precisa con attenzione alla terminologia tecnica e ai requisiti linguistici formali.",
+        translation3Badge: "Deutsch",
+        translation4Title: "Traduzione Italiana",
+        translation4Desc: "Traduzione italiana con adattamento appropriato alle caratteristiche uniche della lingua e al contesto culturale.",
+        translation4Badge: "Italiano",
+        translation5Title: "Traduzione Spagnola",
+        translation5Desc: "Traduzione spagnola con localizzazione accurata e attenzione alle variazioni linguistiche regionali.",
+        translation5Badge: "Español",
+        testimonialsTitle: "Cosa Dicono i Nostri Utenti",
+        testimonialsSubtitle: "Unisciti a migliaia di utenti soddisfatti in tutto il mondo.",
+        testimonial1Text: "\"Apps Localization mi ha fatto risparmiare ore di lavoro. Le traduzioni sono accurate e l'interfaccia è intuitiva.\"",
+        testimonial1Author: "- Sarah Johnson, Direttore Marketing",
+        testimonial2Text: "\"Come brand manager globale, questo strumento è stato inestimabile per le nostre campagne internazionali.\"",
+        testimonial2Author: "- Michael Chen, Brand Manager Globale",
+        testimonial3Text: "\"La capacità di personalizzare l'aspetto del testo mantenendo l'accuratezza della traduzione è impressionante.\"",
+        testimonial3Author: "- Elena Rodriguez, Content Creator",
+        ctaTitle: "Pronto a Localizzare le Tue Immagini?",
+        ctaSubtitle: "Inizia a creare contenuti multilingue oggi con Apps Localization.",
+        footerText: "© 2023 Apps Localization. Tutti i diritti riservati."
+      },
+      nl: {
+        heroTitle: "Apps Localisatie",
+        heroSubtitle: "Vertaal en pas moeiteloos afbeeldingen aan voor een wereldwijd publiek.",
+        featuresTitle: "Krachtige Functies",
+        featuresSubtitle: "Ontdek waarom Apps Localization het ultieme hulpmiddel is voor beeldvertaling.",
+        feature1Title: "Meertalige Vertaling",
+        feature1Desc: "Vertaal tekst in afbeeldingen naar meerdere talen met hoge nauwkeurigheid.",
+        feature2Title: "Aanpasbare Tekstbewerking",
+        feature2Desc: "Pas lettertype, grootte, kleur en animaties aan om bij uw merk te passen.",
+        feature3Title: "Apparaat-geoptimaliseerd Formaat Aanpassen",
+        feature3Desc: "Pas afbeeldingen aan voor telefoons, tablets, desktops en meer.",
+        feature4Title: "Intuïtieve Interface",
+        feature4Desc: "Gebruikersvriendelijk ontwerp voor naadloos bewerken en vertalen.",
+        feature5Title: "Hoge Kwaliteit Uitvoer",
+        feature5Desc: "Download scherpe, professionele afbeeldingen in uw voorkeursformaat.",
+        feature6Title: "Realtime Voorbeeld",
+        feature6Desc: "Bekijk wijzigingen direct om perfecte resultaten te garanderen.",
+        howToTitle: "Hoe te Gebruiken",
+        howToSubtitle: "Transformeer uw afbeeldingen in slechts een paar eenvoudige stappen.",
+        step1: "Upload uw afbeelding naar het Apps Localization platform.",
+        step2: "Selecteer de doeltaal voor vertaling.",
+        step3: "Kies de gewenste uitvoerresolutie voor uw apparaat.",
+        step4: "Pas het uiterlijk van de tekst aan met lettertypen, kleuren en animaties.",
+        step5: "Download uw gelokaliseerde afbeelding direct.",
+        whyTitle: "Waarom Apps Localization?",
+        whySubtitle: "Verbeter uw contentcreatie met ongeëvenaarde flexibiliteit en efficiëntie.",
+        why1Title: "Wereldwijd Bereik",
+        why1Desc: "Bereik wereldwijde doelgroepen met gelokaliseerde content.",
+        why2Title: "Tijd Besparen",
+        why2Desc: "Automatiseer vertaal- en formaataanpassingstaken moeiteloos.",
+        why3Title: "Merkconsistentie",
+        why3Desc: "Behoud uw visuele identiteit in alle talen.",
+        tutorialTitle: "Bekijk Onze Tutorial",
+        tutorialSubtitle: "Leer hoe u Apps Localization gebruikt met onze stapsgewijze Loom-video.",
+        previewTitle: "Vertaling Voorbeeld",
+        previewSubtitle: "Bekijk uw originele afbeelding en alle vertalingen op één plek",
+        originalTitle: "Originele Inhoud",
+        originalLabel: "Origineel Document (9.png)",
+        translationsTitle: "Vertalingen",
+        translation1Title: "Nederlandse Vertaling",
+        translation1Desc: "Dit is de Nederlandse versie van het originele document met nauwkeurige vertaling en culturele aanpassing.",
+        translation1Badge: "Nederlands",
+        translation2Title: "Franse Vertaling",
+        translation2Desc: "Franse vertaling die de oorspronkelijke betekenis behoudt en zich aanpast aan Franse taalkundige nuances.",
+        translation2Badge: "Français",
+        translation3Title: "Duitse Vertaling",
+        translation3Desc: "Nauwkeurige Duitse vertaling met aandacht voor technische terminologie en formele taalvereisten.",
+        translation3Badge: "Deutsch",
+        translation4Title: "Italiaanse Vertaling",
+        translation4Desc: "Italiaanse vertaling met correcte aanpassing aan de unieke kenmerken van de taal en culturele context.",
+        translation4Badge: "Italiano",
+        translation5Title: "Spaanse Vertaling",
+        translation5Desc: "Spaanse vertaling met accurate lokalisatie en aandacht voor regionale taalkundige variaties.",
+        translation5Badge: "Español",
+        testimonialsTitle: "Wat Onze Gebruikers Zeggen",
+        testimonialsSubtitle: "Sluit u aan bij duizenden tevreden gebruikers wereldwijd.",
+        testimonial1Text: "\"Apps Localization heeft me uren werk bespaard. De vertalingen zijn nauwkeurig en de interface is intuïtief.\"",
+        testimonial1Author: "- Sarah Johnson, Marketingdirecteur",
+        testimonial2Text: "\"Als wereldwijd brandmanager is deze tool van onschatbare waarde geweest voor onze internationale campagnes.\"",
+        testimonial2Author: "- Michael Chen, Wereldwijd Brand Manager",
+        testimonial3Text: "\"De mogelijkheid om het uiterlijk van tekst aan te passen en tegelijkertijd de vertalingsnauwkeurigheid te behouden is indrukwekkend.\"",
+        testimonial3Author: "- Elena Rodriguez, Content Creator",
+        ctaTitle: "Klaar om Uw Afbeeldingen te Lokaliseren?",
+        ctaSubtitle: "Begin vandaag nog met het maken van meertalige inhoud met Apps Localization.",
+        footerText: "© 2023 Apps Localization. Alle rechten voorbehouden."
       }
     };
 
@@ -1430,25 +1341,51 @@ ton>
       videoError.style.display = 'none';
     });
 
-    // Toggle functionality section
-    getStartedButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        landingSections.forEach(section => section.style.display = 'none');
-        functionalitySection.classList.add('active');
-        functionalitySection.scrollIntoView({ behavior: 'smooth' });
-      });
-    });
-
-    backToHomeButton.addEventListener('click', () => {
-      landingSections.forEach(section => section.style.display = 'block');
-      functionalitySection.classList.remove('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // Update translation preview content based on selected language
-    function updatePreviewContent(lang) {
+    // Update website content based on selected language
+    function updateWebsiteContent(lang) {
       const data = translations[lang];
       
+      // Update all text content
+      document.getElementById('hero-title').textContent = data.heroTitle;
+      document.getElementById('hero-subtitle').textContent = data.heroSubtitle;
+      
+      document.getElementById('features-title').textContent = data.featuresTitle;
+      document.getElementById('features-subtitle').textContent = data.featuresSubtitle;
+      document.getElementById('feature-1-title').textContent = data.feature1Title;
+      document.getElementById('feature-1-desc').textContent = data.feature1Desc;
+      document.getElementById('feature-2-title').textContent = data.feature2Title;
+      document.getElementById('feature-2-desc').textContent = data.feature2Desc;
+      document.getElementById('feature-3-title').textContent = data.feature3Title;
+      document.getElementById('feature-3-desc').textContent = data.feature3Desc;
+      document.getElementById('feature-4-title').textContent = data.feature4Title;
+      document.getElementById('feature-4-desc').textContent = data.feature4Desc;
+      document.getElementById('feature-5-title').textContent = data.feature5Title;
+      document.getElementById('feature-5-desc').textContent = data.feature5Desc;
+      document.getElementById('feature-6-title').textContent = data.feature6Title;
+      document.getElementById('feature-6-desc').textContent = data.feature6Desc;
+      
+      document.getElementById('how-to-title').textContent = data.howToTitle;
+      document.getElementById('how-to-subtitle').textContent = data.howToSubtitle;
+      document.getElementById('step-1').textContent = data.step1;
+      document.getElementById('step-2').textContent = data.step2;
+      document.getElementById('step-3').textContent = data.step3;
+      document.getElementById('step-4').textContent = data.step4;
+      document.getElementById('step-5').textContent = data.step5;
+      
+      document.getElementById('why-title').textContent = data.whyTitle;
+      document.getElementById('why-subtitle').textContent = data.whySubtitle;
+      document.getElementById('why-1-title').textContent = data.why1Title;
+      document.getElementById('why-1-desc').textContent = data.why1Desc;
+      document.getElementById('why-2-title').textContent = data.why2Title;
+      document.getElementById('why-2-desc').textContent = data.why2Desc;
+      document.getElementById('why-3-title').textContent = data.why3Title;
+      document.getElementById('why-3-desc').textContent = data.why3Desc;
+      
+      document.getElementById('tutorial-title').textContent = data.tutorialTitle;
+      document.getElementById('tutorial-subtitle').textContent = data.tutorialSubtitle;
+      
+      document.getElementById('preview-title').textContent = data.previewTitle;
+      document.getElementById('preview-subtitle').textContent = data.previewSubtitle;
       document.getElementById('original-title').textContent = data.originalTitle;
       document.getElementById('original-label').textContent = data.originalLabel;
       document.getElementById('translations-title').textContent = data.translationsTitle;
@@ -1467,257 +1404,35 @@ ton>
       document.getElementById('translation-5-title').textContent = data.translation5Title;
       document.getElementById('translation-5-desc').textContent = data.translation5Desc;
       document.getElementById('translation-5-badge').textContent = data.translation5Badge;
+      
+      document.getElementById('testimonials-title').textContent = data.testimonialsTitle;
+      document.getElementById('testimonials-subtitle').textContent = data.testimonialsSubtitle;
+      document.getElementById('testimonial-1-text').textContent = data.testimonial1Text;
+      document.getElementById('testimonial-1-author').textContent = data.testimonial1Author;
+      document.getElementById('testimonial-2-text').textContent = data.testimonial2Text;
+      document.getElementById('testimonial-2-author').textContent = data.testimonial2Author;
+      document.getElementById('testimonial-3-text').textContent = data.testimonial3Text;
+      document.getElementById('testimonial-3-author').textContent = data.testimonial3Author;
+      
+      document.getElementById('cta-title').textContent = data.ctaTitle;
+      document.getElementById('cta-subtitle').textContent = data.ctaSubtitle;
+      
+      document.getElementById('footer-text').textContent = data.footerText;
     }
+
+    // Language selection event listeners
+    languageSelect.addEventListener('change', (e) => {
+      updateWebsiteContent(e.target.value);
+    });
 
     previewLanguage.addEventListener('change', (e) => {
-      updatePreviewContent(e.target.value);
+      updateWebsiteContent(e.target.value);
+      // Also update the main language selector to match
+      languageSelect.value = e.target.value;
     });
 
-    // Mock translation function (replace with actual API call in production)
-    function mockTranslateText(text, targetLang) {
-      return `Translated to ${targetLang}: ${text}`;
-    }
-
-    // Form submission
-    document.getElementById('translate-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      document.getElementById('processing-overlay').style.display = 'flex';
-      document.getElementById('error-msg').style.display = 'none';
-
-      const form = e.target;
-      const fileInput = form.querySelector('#image');
-      const language = form.querySelector('#language').value;
-      const resolution = form.querySelector('#resolution').value;
-
-      if (!fileInput.files[0]) {
-        document.getElementById('processing-overlay').style.display = 'none';
-        document.getElementById('error-msg').textContent = 'Please upload an image.';
-        document.getElementById('error-msg').style.display = 'block';
-        return;
-      }
-
-      // Mock processing
-      setTimeout(() => {
-        initCanvas(fileInput.files[0], language, resolution);
-      }, 1000);
-    });
-
-    // Initialize Fabric.js canvas
-    function initCanvas(file, language, resolution) {
-      const fonts = ['Arial', 'Inter', 'Helvetica'];
-      const reader = new FileReader();
-      reader.onload = () => {
-        const img = new Image();
-        img.src = reader.result;
-        img.onload = () => {
-          const maxWidth = Math.min(window.innerWidth * 0.9, 600);
-          scale = Math.min(maxWidth / img.width, 1);
-          canvas = new fabric.Canvas('canvas', {
-            width: img.width * scale,
-            height: img.height * scale,
-            preserveObjectStacking: true
-          });
-          const fabricImg = new fabric.Image(img, {
-            scaleX: scale,
-            scaleY: scale,
-            selectable: false,
-            originX: 'left',
-            originY: 'top'
-          });
-          canvas.add(fabricImg);
-          canvas.sendToBack(fabricImg);
-
-          // Mock text detection and translation
-          texts = [
-            {
-              text: mockTranslateText('Sample Text', language),
-              left: 50,
-              top: 50,
-              fontFamily: 'Arial',
-              fontSize: 20,
-              fill: '#000000',
-              textAlign: 'left',
-              lineHeight: 1.2,
-              width: 200
-            }
-          ];
-
-          texts.forEach(text => {
-            const textObj = new fabric.Textbox(text.text, {
-              left: text.left * scale,
-              top: text.top * scale,
-              fontFamily: text.fontFamily,
-              fontSize: text.fontSize * scale,
-              fill: text.fill,
-              textAlign: text.textAlign,
-              lineHeight: text.lineHeight,
-              width: text.width * scale,
-              selectable: true,
-              editable: true
-            });
-            canvas.add(textObj);
-          });
-
-          canvas.on('selection:created', updateControls);
-          canvas.on('selection:updated', updateControls);
-          canvas.on('selection:cleared', updateControls);
-          canvas.on('object:modified', () => canvas.renderAll());
-
-          window.addEventListener('resize', () => {
-            const newMaxWidth = Math.min(window.innerWidth * 0.9, 600);
-            const newScale = Math.min(newMaxWidth / img.width, 1);
-            canvas.setDimensions({
-              width: img.width * newScale,
-              height: img.height * newScale
-            });
-            canvas.getObjects().forEach(obj => {
-              if (obj.type === 'image') {
-                obj.set({ scaleX: newScale, scaleY: newScale });
-              } else if (obj.type === 'textbox') {
-                obj.set({
-                  left: (obj.left / scale) * newScale,
-                  top: (obj.top / scale) * newScale,
-                  fontSize: (obj.fontSize / scale) * newScale,
-                  width: (obj.width / scale) * newScale
-                });
-              }
-            });
-            scale = newScale;
-            canvas.renderAll();
-          });
-
-          canvas.renderAll();
-          document.getElementById('success-msg').textContent = 'Image processed successfully!';
-          document.getElementById('result').style.display = 'block';
-          document.getElementById('processing-overlay').style.display = 'none';
-        };
-        img.onerror = () => {
-          document.getElementById('processing-overlay').style.display = 'none';
-          document.getElementById('error-msg').textContent = 'Error: Could not load the image. Please try again.';
-          document.getElementById('error-msg').style.display = 'block';
-        };
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function updateControls() {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        document.getElementById('fontFamily').value = activeObject.fontFamily || 'Arial';
-        document.getElementById('fontSize').value = Math.round(activeObject.fontSize / scale) || 20;
-        document.getElementById('fill').value = rgbToHex(activeObject.fill) || '#000000';
-        document.getElementById('textAlign').value = activeObject.textAlign || 'left';
-      } else {
-        document.getElementById('fontFamily').value = 'Arial';
-        document.getElementById('fontSize').value = 20;
-        document.getElementById('fill').value = '#000000';
-        document.getElementById('textAlign').value = 'left';
-      }
-    }
-
-    function rgbToHex(rgb) {
-      if (!rgb || rgb.startsWith('#')) return rgb || '#000000';
-      const [r, g, b] = rgb.match(/\d+/g)?.map(Number) || [0, 0, 0];
-      return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
-    }
-
-    document.getElementById('fontFamily').addEventListener('change', (e) => {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        activeObject.set('fontFamily', e.target.value);
-        activeObject.set('dirty', true);
-        canvas.requestRenderAll();
-      }
-    });
-
-    document.getElementById('fontSize').addEventListener('input', (e) => {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        activeObject.set('fontSize', parseInt(e.target.value) * scale);
-        activeObject.set('dirty', true);
-        canvas.requestRenderAll();
-      }
-    });
-
-    document.getElementById('fill').addEventListener('input', (e) => {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        activeObject.set('fill', e.target.value);
-        activeObject.set('dirty', true);
-        canvas.requestRenderAll();
-      }
-    });
-
-    document.getElementById('textAlign').addEventListener('change', (e) => {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        activeObject.set('textAlign', e.target.value);
-        activeObject.set('dirty', true);
-        canvas.requestRenderAll();
-      }
-    });
-
-    document.getElementById('addText').addEventListener('click', () => {
-      if (!canvas) return;
-      const newText = new fabric.Textbox('New Text', {
-        left: 50 * scale,
-        top: 50 * scale,
-        fontFamily: 'Arial',
-        fontSize: 20 * scale,
-        fill: '#000000',
-        textAlign: 'left',
-        lineHeight: 1.2,
-        width: 200 * scale,
-        selectable: true,
-        editable: true
-      });
-      canvas.add(newText);
-      texts.push({
-        text: 'New Text',
-        left: 50,
-        top: 50,
-        fontFamily: 'Arial',
-        fontSize: 20,
-        fill: '#000000',
-        textAlign: 'left',
-        lineHeight: 1.2,
-        width: 200
-      });
-      canvas.setActiveObject(newText);
-      updateControls();
-      canvas.renderAll();
-    });
-
-    document.getElementById('removeText').addEventListener('click', () => {
-      const activeObject = canvas?.getActiveObject();
-      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
-        canvas.remove(activeObject);
-        const index = texts.findIndex(t => t.text === activeObject.text && Math.round(t.left * scale) === Math.round(activeObject.left) && Math.round(t.top * scale) === Math.round(activeObject.top));
-        if (index > -1) texts.splice(index, 1);
-        updateControls();
-        canvas.renderAll();
-      }
-    });
-
-    function saveCanvas() {
-      if (!canvas) return;
-      document.getElementById('processing-overlay').style.display = 'flex';
-
-      const multiplier = 2;
-      const dataURL = canvas.toDataURL({ format: 'png', multiplier: multiplier });
-
-      const link = document.createElement('a');
-      link.download = 'translated_image.png';
-      link.href = dataURL;
-      link.click();
-
-      document.getElementById('processing-overlay').style.display = 'none';
-    }
-
-    document.getElementById('download').addEventListener('click', (e) => {
-      e.preventDefault();
-      saveCanvas();
-    });
+    // Initialize with English
+    updateWebsiteContent('en');
   </script>
 </body>
 </html>
