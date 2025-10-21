@@ -598,6 +598,41 @@
         height: 300px;
       }
     }
+    .translation-image-preview {
+  width: 100%;
+  height: auto; /* Changed from fixed height to auto */
+  overflow: visible; /* Changed from hidden to visible */
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.translation-image-preview img {
+  width: 100%;
+  height: auto; /* Changed to maintain aspect ratio */
+  object-fit: contain; /* Changed from cover to contain */
+  transition: transform 0.5s ease;
+}
+
+/* Remove the fixed height from the card to allow natural sizing */
+.translation-card-preview {
+  background: white;
+  border-radius: 15px;
+  overflow: visible; /* Changed from hidden to visible */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+  height: auto; /* Ensure card height is automatic */
+}
+
+/* Update the grid to allow for variable heights */
+.translations-grid-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  align-items: start; /* Align items to top instead of stretch */
+}
   </style>
 </head>
 <body class="light">
@@ -1416,6 +1451,7 @@
   </script>
 </body>
 </html>
+
 
 
 
