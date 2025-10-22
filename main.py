@@ -760,6 +760,9 @@ def download_file():
             session.pop('last_image_filename', None)
     flash("No image available for download.", "error")
     return redirect(url_for("index"))
-
+@app.route('/templates/<path:filename>')
+def serve_template_files(filename):
+    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+    return send_from_directory(base_dir, filename)
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
