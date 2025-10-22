@@ -1326,6 +1326,56 @@ def save_edited():
     except Exception as e:
         logger.error(f"Failed to save edited image: {str(e)}")
         return {"error": "Failed to save edited image"}, 500
+@app.route("/api/resize-image", methods=["POST"])
+def resize_image():
+    try:
+        if 'image' not in request.files:
+            return jsonify({"error": "No image file provided"}), 400
+        
+        file = request.files['image']
+        resolution = request.form.get('resolution', '1920x1080')
+        
+        if not file or not file.filename:
+            return jsonify({"error": "Invalid image file"}), 400
+        
+        # Parse resolution
+        try:
+            width, height = map(int, resolution.split('x'))
+        except:
+            return jsonify({"error": "Invalid resolution format"}), 400
+        
+        # Process image
+        img = Image.open(file.stream)
+        
+        # Resize image while maintaining aspect ratio
+        img.thumbnail((width, height), Image.Resampling.LANCZOS)
+        
+        # Create new image with target resolution
+        new_img = Image.new('RGB', (width, height), (255, 255, 255))
+        
+        # Calculate position to center the image
+        x = (width - img.width) // 2
+        y = (height - img.height) // 2
+        
+        # Paste the resized image
+        new_img.paste(img, (x, y))
+        
+        # Convert to base64
+        buffered = io.BytesIO()
+        new_img.save(buffered, format="PNG")
+        img_str = base64.b64encode(buffered.getvalue()).decode()
+        
+        return jsonify({
+            "success": True,
+            "image_data": f"data:image/png;base64,{img_str}",
+            "width": width,
+            "height": height
+        })
+        
+    except Exception as e:
+        logger.error(f"Error resizing image: {str(e)}")
+        return jsonify({"error": "Failed to resize image"}), 500
+
 @app.route("/download")
 def download_file():
     if not current_user.is_authenticated:
