@@ -188,19 +188,24 @@ def translate_and_replace(path, target_lang):
     if cv_img is None:
         logger.error(f"Failed to load image at {path}")
         return None, None
+
     translator = GoogleTranslator(source="auto", target=target_lang)
     boxes = perform_ocr(path)
     mask = np.zeros(cv_img.shape[:2], np.uint8)
+
     for box, _ in boxes:
         cv2.fillPoly(mask, [np.array(box, np.int32)], 255)
+
     clean = cv2.inpaint(cv_img, mask, 3, cv2.INPAINT_TELEA)
     image = Image.fromarray(cv2.cvtColor(clean, cv2.COLOR_BGR2RGB)).convert("RGBA")
     draw = ImageDraw.Draw(image)
     font_path = "static/font/arial.ttf"
+
     texts_list = []
     for box, text in boxes:
         if not text:
             continue
+
         try:
             trans = translator.translate(text)
             if not trans or len(trans.strip()) < 1:
@@ -209,16 +214,19 @@ def translate_and_replace(path, target_lang):
         except Exception as e:
             logger.warning(f"Translation failed for '{text}': {str(e)}")
             trans = text
+
         x0, y0 = int(min(p[0] for p in box)), int(min(p[1] for p in box))
         x1, y1 = int(max(p[0] for p in box)), int(max(p[1] for p in box))
-        region = cv_img[y0:y1, x0:x1] if (y1 > y0 and x1 > x0) else np.zeros((10, 10, 3), np.uint8)
+        region = cv_img[y0:y1, x0:x1] if (y1 > y0 and x1 > x0) else np.zeros((10,10,3), np.uint8)
         color = choose_contrasting_color(region)
         bw, bh = x1 - x0, y1 - y0
+
         max_width = bw * 0.9
         font = ImageFont.truetype(font_path, 5)
         lines = []
         words = trans.split()
         current_line = []
+
         for word in words:
             test_line = " ".join(current_line + [word])
             tw, th = measure_text(draw, test_line, font)
@@ -230,6 +238,7 @@ def translate_and_replace(path, target_lang):
                 current_line = [word]
         if current_line:
             lines.append(" ".join(current_line))
+
         best_size = 5
         high = max(min(bw, bh), 10)
         for size in range(5, high + 1, 2):
@@ -244,6 +253,7 @@ def translate_and_replace(path, target_lang):
             except Exception as e:
                 logger.error(f"Failed to load font at size {size}: {str(e)}")
                 break
+
         line_height = measure_text(draw, "A", font)[1] * 1.2
         pos_y = y0
         for line in lines:
@@ -269,6 +279,7 @@ def translate_and_replace(path, target_lang):
                 'width': max_width
             })
             pos_y += line_height
+
     logger.debug(f"Translation and replacement completed in {time.time() - start_time:.2f} seconds")
     return image, texts_list
 
