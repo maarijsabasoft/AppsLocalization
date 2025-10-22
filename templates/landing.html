@@ -767,11 +767,14 @@
       <div class="original-preview-section">
         <h3 id="original-title">Original Content</h3>
         <div class="preview-image-container">
-          <img src="/templates/9.png" alt="Original Content" id="original-preview"
-               onerror="this.style.display='none'; document.getElementById('original-placeholder').style.display='flex';">
-          <div class="image-placeholder-preview" id="original-placeholder" style="display: none;">
-            Original Image (9.png)
-          </div>
+<img src="{{ url_for('static', filename='9.png') }}" 
+     alt="Dutch Translation"
+     onerror="this.style.display='none'; document.getElementById('dutch-placeholder').style.display='flex';">
+
+<div class="image-placeholder-preview" id="dutch-placeholder" style="display: none;">
+  Orignal Image.png
+</div>
+
           <div class="image-label-preview" id="original-label">Original Document (9.png)</div>
         </div>
       </div>
@@ -1471,5 +1474,6 @@
   </script>
 </body>
 </html>
+
 
 
