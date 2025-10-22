@@ -837,70 +837,102 @@
       <p class="error-msg">{{ error }}</p>
       {% endif %}
     </div>
+<!-- Resolution Setter Tab -->
+<div id="resolution-setter" class="tab-content">
+  <form id="resolution-form">
+    <label for="resolution-image">Choose Image</label>
+    <input type="file" id="resolution-image" accept="image/*" required>
     
-    <!-- Resolution Setter Tab -->
-    <div id="resolution-setter" class="tab-content">
-      <form id="resolution-form">
-        <label for="resolution-image">Choose Image</label>
-        <input type="file" id="resolution-image" accept="image/*" required>
-        
-        <label for="resolution-preset">Select Resolution</label>
-        <select id="resolution-preset" required>
-          <optgroup label="Mobile">
-            <option value="iphone-15">iPhone 15 (1290×2796)</option>
-            <option value="iphone-14">iPhone 14 Pro (1179×2556)</option>
-            <option value="iphone-13">iPhone 13 (1170×2532)</option>
-            <option value="android-fhd">Android FHD+ (1080×2400)</option>
-            <option value="android-qhd">Android QHD+ (1440×3200)</option>
-            <option value="samsung-s21">Samsung S21 (1080×2400)</option>
-            <option value="google-pixel">Google Pixel (1080×2160)</option>
-          </optgroup>
-          <optgroup label="Tablet">
-            <option value="ipad-pro">iPad Pro (2048×2732)</option>
-            <option value="ipad-mini">iPad Mini (1536×2048)</option>
-            <option value="android-tab">Android Tablet (1600×2560)</option>
-            <option value="surface-pro">Surface Pro (2736×1824)</option>
-          </optgroup>
-          <optgroup label="Laptop">
-            <option value="macbook-13">MacBook 13" (2560×1600)</option>
-            <option value="macbook-16">MacBook 16" (3072×1920)</option>
-            <option value="dell-xps">Dell XPS (3840×2400)</option>
-            <option value="thinkpad">ThinkPad (1920×1080)</option>
-          </optgroup>
-          <optgroup label="Desktop">
-            <option value="hd">HD (1920×1080)</option>
-            <option value="qhd">QHD (2560×1440)</option>
-            <option value="4k">4K (3840×2160)</option>
-            <option value="5k">5K (5120×2880)</option>
-            <option value="8k">8K (7680×4320)</option>
-          </optgroup>
-          <optgroup label="Social Media">
-            <option value="instagram-post">Instagram Post (1080×1080)</option>
-            <option value="instagram-story">Instagram Story (1080×1920)</option>
-            <option value="facebook-cover">Facebook Cover (820×312)</option>
-            <option value="twitter-header">Twitter Header (1500×500)</option>
-          </optgroup>
-          <option value="custom">Custom Resolution</option>
-        </select>
-        
-        <div id="custom-resolution" style="display: none;">
-          <label for="custom-width">Width (px)</label>
-          <input type="number" id="custom-width" min="1" max="10000">
-          
-          <label for="custom-height">Height (px)</label>
-          <input type="number" id="custom-height" min="1" max="10000">
-        </div>
-        
-        <button type="submit">Apply Resolution</button>
-      </form>
+    <label for="resolution-preset">Select Resolution</label>
+    <select id="resolution-preset" required>
+      <optgroup label="Mobile">
+        <option value="iphone-15">iPhone 15 (1290×2796)</option>
+        <option value="iphone-14">iPhone 14 Pro (1179×2556)</option>
+        <option value="iphone-13">iPhone 13 (1170×2532)</option>
+        <option value="android-fhd">Android FHD+ (1080×2400)</option>
+        <option value="android-qhd">Android QHD+ (1440×3200)</option>
+        <option value="samsung-s21">Samsung S21 (1080×2400)</option>
+        <option value="google-pixel">Google Pixel (1080×2160)</option>
+      </optgroup>
+      <optgroup label="Tablet">
+        <option value="ipad-pro">iPad Pro (2048×2732)</option>
+        <option value="ipad-mini">iPad Mini (1536×2048)</option>
+        <option value="android-tab">Android Tablet (1600×2560)</option>
+        <option value="surface-pro">Surface Pro (2736×1824)</option>
+      </optgroup>
+      <optgroup label="Laptop">
+        <option value="macbook-13">MacBook 13" (2560×1600)</option>
+        <option value="macbook-16">MacBook 16" (3072×1920)</option>
+        <option value="dell-xps">Dell XPS (3840×2400)</option>
+        <option value="thinkpad">ThinkPad (1920×1080)</option>
+      </optgroup>
+      <optgroup label="Desktop">
+        <option value="hd">HD (1920×1080)</option>
+        <option value="qhd">QHD (2560×1440)</option>
+        <option value="4k">4K (3840×2160)</option>
+        <option value="5k">5K (5120×2880)</option>
+        <option value="8k">8K (7680×4320)</option>
+      </optgroup>
+      <optgroup label="Social Media">
+        <option value="instagram-post">Instagram Post (1080×1080)</option>
+        <option value="instagram-story">Instagram Story (1080×1920)</option>
+        <option value="facebook-cover">Facebook Cover (820×312)</option>
+        <option value="twitter-header">Twitter Header (1500×500)</option>
+      </optgroup>
+      <option value="custom">Custom Resolution</option>
+    </select>
+    
+    <div id="custom-resolution" style="display: none;">
+      <label for="custom-width">Width (px)</label>
+      <input type="number" id="custom-width" min="1" max="10000" value="1920">
       
-      <div id="resolution-result" class="result" style="display: none;">
-        <canvas id="resolution-canvas"></canvas>
-        <p style="display: flex; gap: 10px; margin-top: 1rem;">
-          <button id="resolution-download" class="download-btn">Download Image</button>
-        </p>
+      <label for="custom-height">Height (px)</label>
+      <input type="number" id="custom-height" min="1" max="10000" value="1080">
+    </div>
+    
+    <button type="submit">Apply Resolution</button>
+  </form>
+  
+  <div id="resolution-result" class="result" style="display: none;">
+    <p class="success-msg" id="resolution-success">Resolution applied successfully!</p>
+    <div id="resolution-controls" class="controls">
+      <div>
+        <label for="res-fontFamily">Font</label>
+        <select id="res-fontFamily">
+          <option value="Inter">Inter</option>
+          <option value="Arial">Arial</option>
+          <option value="Helvetica">Helvetica</option>
+          <option value="Times New Roman">Times New Roman</option>
+        </select>
+      </div>
+      <div>
+        <label for="res-fontSize">Size</label>
+        <input id="res-fontSize" type="number" min="8" step="1" value="20">
+      </div>
+      <div>
+        <label for="res-fill">Color</label>
+        <input id="res-fill" type="color" value="#000000">
+      </div>
+      <div>
+        <label for="res-textAlign">Align</label>
+        <select id="res-textAlign">
+          <option value="left">Left</option>
+          <option value="center">Center</option>
+          <option value="right">Right</option>
+        </select>
+      </div>
+      <div>
+        <label for="res-addText">Add Text</label>
+        <button id="res-addText">Add Text</button>
       </div>
     </div>
+    <canvas id="resolution-canvas"></canvas>
+    <p style="display: flex; gap: 10px; margin-top: 1rem;">
+      <button id="resolution-download" class="download-btn">Download Image</button>
+      <button id="resolution-share" class="download-btn">Share Image</button>
+    </p>
+  </div>
+</div>
     
     <!-- Image Text Extracter Tab -->
     <div id="image-text-extracter" class="tab-content">
@@ -2121,7 +2153,223 @@
     document.getElementById('processing-overlay').style.display = 'flex';
     initCanvas();
     {% endif %}
-   
+   // Resolution Setter Tab Functionality
+const resolutionPreset = document.getElementById('resolution-preset');
+const customResolution = document.getElementById('custom-resolution');
+
+if (resolutionPreset && customResolution) {
+  resolutionPreset.addEventListener('change', () => {
+    if (resolutionPreset.value === 'custom') {
+      customResolution.style.display = 'block';
+    } else {
+      customResolution.style.display = 'none';
+    }
+  });
+}
+
+// Resolution form submission
+const resolutionForm = document.getElementById('resolution-form');
+if (resolutionForm) {
+  resolutionForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const fileInput = document.getElementById('resolution-image');
+    if (!fileInput.files.length) {
+      alert('Please select an image.');
+      return;
+    }
+    
+    const resolutionValue = document.getElementById('resolution-preset').value;
+    let width, height;
+    
+    // Get resolution dimensions
+    if (resolutionValue === 'custom') {
+      width = parseInt(document.getElementById('custom-width').value);
+      height = parseInt(document.getElementById('custom-height').value);
+    } else {
+      // Map resolution keys to dimensions (you'll need to define these)
+      const resolutionMap = {
+        'iphone-15': [1290, 2796],
+        'iphone-14': [1179, 2556],
+        'iphone-13': [1170, 2532],
+        'android-fhd': [1080, 2400],
+        'android-qhd': [1440, 3200],
+        'samsung-s21': [1080, 2400],
+        'google-pixel': [1080, 2160],
+        'ipad-pro': [2048, 2732],
+        'ipad-mini': [1536, 2048],
+        'android-tab': [1600, 2560],
+        'surface-pro': [2736, 1824],
+        'macbook-13': [2560, 1600],
+        'macbook-16': [3072, 1920],
+        'dell-xps': [3840, 2400],
+        'thinkpad': [1920, 1080],
+        'hd': [1920, 1080],
+        'qhd': [2560, 1440],
+        '4k': [3840, 2160],
+        '5k': [5120, 2880],
+        '8k': [7680, 4320],
+        'instagram-post': [1080, 1080],
+        'instagram-story': [1080, 1920],
+        'facebook-cover': [820, 312],
+        'twitter-header': [1500, 500]
+      };
+      
+      [width, height] = resolutionMap[resolutionValue] || [1920, 1080];
+    }
+    
+    // Show processing
+    document.getElementById('processing-overlay').style.display = 'flex';
+    
+    try {
+      // Create FormData for the API request
+      const formData = new FormData();
+      formData.append('image', fileInput.files[0]);
+      formData.append('resolution', `${width}x${height}`);
+      
+      // Send to your backend API
+      const response = await fetch('/api/resize-image', {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to resize image');
+      }
+      
+      const result = await response.json();
+      
+      // Display the result
+      document.getElementById('resolution-success').textContent = 'Resolution applied successfully!';
+      document.getElementById('resolution-result').style.display = 'block';
+      
+      // Initialize canvas with the resized image
+      initResolutionCanvas(result.image_data, width, height);
+      
+    } catch (error) {
+      console.error('Error resizing image:', error);
+      alert('Failed to resize image. Please try again.');
+    } finally {
+      document.getElementById('processing-overlay').style.display = 'none';
+    }
+  });
+}
+
+// Initialize resolution canvas
+function initResolutionCanvas(imageData, width, height) {
+  const canvas = new fabric.Canvas('resolution-canvas', {
+    width: width,
+    height: height,
+    preserveObjectStacking: true,
+    selection: true
+  });
+  
+  // Load the image
+  fabric.Image.fromURL(imageData, function(img) {
+    img.set({
+      scaleX: width / img.width,
+      scaleY: height / img.height,
+      selectable: false,
+      originX: 'left',
+      originY: 'top'
+    });
+    canvas.add(img);
+    canvas.sendToBack(img);
+    canvas.renderAll();
+  });
+  
+  // Add text functionality
+  document.getElementById('res-addText').addEventListener('click', () => {
+    const newText = new fabric.Textbox('New Text', {
+      left: 50,
+      top: 50,
+      fontFamily: document.getElementById('res-fontFamily').value,
+      fontSize: parseInt(document.getElementById('res-fontSize').value),
+      fill: document.getElementById('res-fill').value,
+      textAlign: document.getElementById('res-textAlign').value,
+      width: 200,
+      selectable: true,
+      editable: true
+    });
+    canvas.add(newText);
+    canvas.setActiveObject(newText);
+    canvas.renderAll();
+  });
+  
+  // Control event listeners
+  document.getElementById('res-fontFamily').addEventListener('change', (e) => {
+    applyToSelectedResolution(canvas, 'fontFamily', e.target.value);
+  });
+  
+  document.getElementById('res-fontSize').addEventListener('input', (e) => {
+    applyToSelectedResolution(canvas, 'fontSize', parseInt(e.target.value));
+  });
+  
+  document.getElementById('res-fill').addEventListener('input', (e) => {
+    applyToSelectedResolution(canvas, 'fill', e.target.value);
+  });
+  
+  document.getElementById('res-textAlign').addEventListener('change', (e) => {
+    applyToSelectedResolution(canvas, 'textAlign', e.target.value);
+  });
+  
+  // Download functionality
+  document.getElementById('resolution-download').addEventListener('click', () => {
+    const dataURL = canvas.toDataURL({ format: 'png', multiplier: 1 });
+    const link = document.createElement('a');
+    link.download = `resized_image_${width}x${height}.png`;
+    link.href = dataURL;
+    link.click();
+  });
+  
+  // Share functionality
+  document.getElementById('resolution-share').addEventListener('click', async () => {
+    const dataURL = canvas.toDataURL({ format: 'png', multiplier: 1 });
+    
+    if (navigator.share) {
+      try {
+        // Convert dataURL to blob for sharing
+        const response = await fetch(dataURL);
+        const blob = await response.blob();
+        const file = new File([blob], 'resized_image.png', { type: 'image/png' });
+        
+        await navigator.share({
+          title: 'Resized Image',
+          files: [file]
+        });
+      } catch (err) {
+        console.error('Share failed:', err);
+        fallbackShare(dataURL);
+      }
+    } else {
+      fallbackShare(dataURL);
+    }
+  });
+}
+
+// Helper function to apply styles to selected objects
+function applyToSelectedResolution(canvas, property, value) {
+  const activeObjects = canvas.getActiveObjects();
+  activeObjects.forEach(obj => {
+    if (obj.type === 'textbox' || obj.type === 'i-text') {
+      obj.set(property, value);
+      obj.set('dirty', true);
+    }
+  });
+  canvas.requestRenderAll();
+}
+
+// Fallback share function
+function fallbackShare(dataURL) {
+  const shareOptions = `
+    <div style="margin-top:10px">
+      <a href="https://wa.me/?text=${encodeURIComponent('Check out my resized image!')}" target="_blank">Share on WhatsApp</a> |
+      <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent('Check out my resized image!')}&url=${encodeURIComponent(dataURL)}" target="_blank">Share on Twitter</a>
+    </div>
+  `;
+  alert("Sharing not supported on this browser. Use the download button or the links below.");
+  document.body.insertAdjacentHTML("beforeend", shareOptions);
+}
     const shareBtn = document.getElementById("share");
     if (shareBtn) {
       shareBtn.addEventListener("click", async () => {
@@ -2167,6 +2415,7 @@
   </script>
 </body>
 </html>
+
 
 
 
