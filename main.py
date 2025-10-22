@@ -19,6 +19,7 @@ from flask_session import Session
 from authlib.common.errors import AuthlibBaseError
 from datetime import datetime, timedelta
 
+from flask import send_from_directory
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
