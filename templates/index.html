@@ -2153,7 +2153,51 @@
     document.getElementById('processing-overlay').style.display = 'flex';
     initCanvas();
     {% endif %}
-   // Resolution Setter Tab Functionality
+
+    const shareBtn = document.getElementById("share");
+    if (shareBtn) {
+      shareBtn.addEventListener("click", async () => {
+        const imageUrl = window.location.origin + "/static/edited_image.png";
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: "Check out my generated image!",
+              text: "I created this using apps localization — try it out!",
+              url: imageUrl
+            });
+            console.log("Shared successfully");
+          } catch (err) {
+            console.error("Share failed:", err.message);
+          }
+        } else {
+          const shareOptions = `
+            <div style="margin-top:10px">
+              <a href="https://wa.me/?text=${encodeURIComponent(imageUrl)}" target="_blank">Share on WhatsApp</a> |
+              <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(imageUrl)}" target="_blank">Share on Twitter</a> |
+              <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}" target="_blank">Share on Facebook</a>
+            </div>
+          `;
+          alert("Sharing not supported on this browser. Copy or use the links below.");
+          document.body.insertAdjacentHTML("beforeend", shareOptions);
+        }
+      });
+    }
+      document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.querySelector(".language-btn");
+    const dropdown = document.querySelector(".language-dropdown");
+    // Toggle dropdown visibility
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isVisible = dropdown.style.display === "block";
+      dropdown.style.display = isVisible ? "none" : "block";
+    });
+    // Hide dropdown on outside click
+    document.addEventListener("click", () => {
+      dropdown.style.display = "none";
+    });
+  });
+
+       // Resolution Setter Tab Functionality
 const resolutionPreset = document.getElementById('resolution-preset');
 const customResolution = document.getElementById('custom-resolution');
 
@@ -2370,51 +2414,10 @@ function fallbackShare(dataURL) {
   alert("Sharing not supported on this browser. Use the download button or the links below.");
   document.body.insertAdjacentHTML("beforeend", shareOptions);
 }
-    const shareBtn = document.getElementById("share");
-    if (shareBtn) {
-      shareBtn.addEventListener("click", async () => {
-        const imageUrl = window.location.origin + "/static/edited_image.png";
-        if (navigator.share) {
-          try {
-            await navigator.share({
-              title: "Check out my generated image!",
-              text: "I created this using apps localization — try it out!",
-              url: imageUrl
-            });
-            console.log("Shared successfully");
-          } catch (err) {
-            console.error("Share failed:", err.message);
-          }
-        } else {
-          const shareOptions = `
-            <div style="margin-top:10px">
-              <a href="https://wa.me/?text=${encodeURIComponent(imageUrl)}" target="_blank">Share on WhatsApp</a> |
-              <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(imageUrl)}" target="_blank">Share on Twitter</a> |
-              <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}" target="_blank">Share on Facebook</a>
-            </div>
-          `;
-          alert("Sharing not supported on this browser. Copy or use the links below.");
-          document.body.insertAdjacentHTML("beforeend", shareOptions);
-        }
-      });
-    }
-      document.addEventListener("DOMContentLoaded", () => {
-    const btn = document.querySelector(".language-btn");
-    const dropdown = document.querySelector(".language-dropdown");
-    // Toggle dropdown visibility
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const isVisible = dropdown.style.display === "block";
-      dropdown.style.display = isVisible ? "none" : "block";
-    });
-    // Hide dropdown on outside click
-    document.addEventListener("click", () => {
-      dropdown.style.display = "none";
-    });
-  });
   </script>
 </body>
 </html>
+
 
 
 
