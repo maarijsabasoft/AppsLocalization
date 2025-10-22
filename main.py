@@ -674,8 +674,8 @@ def translate_text():
             TranslationUsage.timestamp >= today,
             TranslationUsage.timestamp < tomorrow
         ).first()
-        if usage and usage.count >= 500:
-            return jsonify({"error": "Daily translation limit of 500 reached"}), 429
+        if usage and usage.count >= 10:
+            return jsonify({"error": "Daily translation limit of 10 reached"}), 429
         translator = GoogleTranslator(source="auto", target=target_lang)
         translated_text = translator.translate(source_text)
         if not translated_text:
