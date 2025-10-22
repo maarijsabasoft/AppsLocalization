@@ -26,7 +26,7 @@
       align-items: center;
     }
     body.light {
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #111;
     }
     body.dark {
@@ -50,6 +50,16 @@
       font-weight: 700;
       margin: 0;
       color: inherit;
+      /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+      /* -webkit-background-clip: text; */
+      /* -webkit-text-fill-color: transparent; */
+      /* background-clip: text; */
+    }
+    body.dark h1 {
+      color: white;
+      /* -webkit-background-clip: text; */
+      /* -webkit-text-fill-color: transparent; */
+      /* background-clip: text; */
     }
     h2 {
       font-size: clamp(1.5rem, 4vw, 2rem);
@@ -64,39 +74,57 @@
     }
     p {
       font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-      color: #555;
+      color: black;
       margin: 0.5rem 0;
       line-height: 1.6;
     }
     body.dark p {
       color: #f0f0f0;
     }
+    
+    /* Enhanced Button Styles */
     .btn {
       display: inline-block;
       border: none;
-      background: linear-gradient(135deg, #4a6ee0 0%, #6a11cb 100%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #fff;
       padding: clamp(0.7rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
-      border-radius: clamp(6px, 1.5vw, 8px);
+      border-radius: 12px;
       font-size: clamp(0.9rem, 2.5vw, 1rem);
       font-weight: 600;
       text-decoration: none;
       text-transform: uppercase;
       cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
+      transition: all 0.3s ease;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .btn:hover::before {
+      left: 100%;
     }
     .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
     body.dark .btn {
-      background: linear-gradient(135deg, #1a2a3d, #2c5364);
-      border: 1px solid #444;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
     }
     body.dark .btn:hover {
-      box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
     }
+    
     #hero {
       position: relative;
       width: 100vw;
@@ -148,17 +176,24 @@
     #tutorial{
       background-color: transparent;
     }
+    
+    /* Enhanced Card Styles */
     #features, #testimonials, #why-apps-localization, #translation-preview {
       background: rgba(255,255,255,0.95);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
       padding: clamp(2rem, 5vw, 3rem);
       margin: 2rem 0;
       border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
     }
     body.dark #features, body.dark #testimonials, body.dark #why-apps-localization, body.dark #tutorial, body.dark #translation-preview {
       background: rgba(30,32,44,0.95);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.6);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
     }
+    
+    /* Enhanced Feature Grid */
     .feature-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -167,18 +202,22 @@
     }
     .feature-card {
       background: rgba(255,255,255,0.8);
-      border-radius: clamp(6px, 1.5vw, 8px);
+      border-radius: 16px;
       padding: clamp(1rem, 3vw, 1.5rem);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
     }
     .feature-card:hover {
       transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
     }
     body.dark .feature-card {
       background: rgba(36,38,54,0.8);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
+    
     #how-to-use {
       position: relative;
     }
@@ -196,14 +235,14 @@
       top: 0;
       bottom: 0;
       width: 4px;
-      background: #007bff;
+      background: #667eea;
     }
     [lang="ar"] #how-to-use .timeline::before {
       left: auto;
       right: 20px;
     }
     body.dark #how-to-use .timeline::before {
-      background: #00c6ff;
+      background: #4facfe;
     }
     #how-to-use .timeline li {
       position: relative;
@@ -213,8 +252,9 @@
       color: #111;
       background: rgba(255,255,255,0.9);
       padding: 1rem;
-      border-radius: 8px;
+      border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
     }
     [lang="ar"] #how-to-use .timeline li {
       padding-left: 0;
@@ -224,7 +264,7 @@
     body.dark #how-to-use .timeline li {
       color: #e6e6e6;
       background: rgba(36,38,54,0.9);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
     #how-to-use .timeline li::before {
       content: '';
@@ -234,20 +274,21 @@
       transform: translateY(-50%);
       width: 20px;
       height: 20px;
-      background: #007bff;
+      background: #667eea;
       border-radius: 50%;
       border: 3px solid #fff;
-      box-shadow: 0 0 0 3px #007bff;
+      box-shadow: 0 0 0 3px #667eea;
     }
     [lang="ar"] #how-to-use .timeline li::before {
       left: auto;
       right: 12px;
     }
     body.dark #how-to-use .timeline li::before {
-      background: #00c6ff;
+      background: #4facfe;
       border: 3px solid #2c5364;
-      box-shadow: 0 0 0 3px #00c6ff;
+      box-shadow: 0 0 0 3px #4facfe;
     }
+    
     #testimonials .testimonial-grid {
       display: flex;
       overflow-x: auto;
@@ -255,7 +296,7 @@
       margin-top: clamp(1.5rem, 4vw, 2.5rem);
       padding-bottom: 1rem;
       scrollbar-width: thin;
-      scrollbar-color: #007bff #eaeaea;
+      scrollbar-color: #667eea #eaeaea;
     }
     #testimonials .testimonial-grid::-webkit-scrollbar {
       height: 8px;
@@ -265,33 +306,37 @@
       border-radius: 4px;
     }
     #testimonials .testimonial-grid::-webkit-scrollbar-thumb {
-      background: #007bff;
+      background: #667eea;
       border-radius: 4px;
     }
     body.dark #testimonials .testimonial-grid::-webkit-scrollbar-track {
       background: #2a2d3a;
     }
     body.dark #testimonials .testimonial-grid::-webkit-scrollbar-thumb {
-      background: #00c6ff;
+      background: #4facfe;
     }
+    
     .testimonial-card {
       flex: 0 0 auto;
       width: 300px;
       background: rgba(255,255,255,0.8);
-      border-radius: clamp(6px, 1.5vw, 8px);
+      border-radius: 16px;
       padding: clamp(1rem, 3vw, 1.5rem);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
       align-items: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
     }
     [lang="ar"] .testimonial-card {
       text-align: right;
     }
     body.dark .testimonial-card {
       background: rgba(36,38,54,0.8);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
+    
     .avatar {
       width: 60px;
       height: 60px;
@@ -299,25 +344,29 @@
       object-fit: cover;
       margin-bottom: 0.5rem;
     }
+    
     #tutorial iframe {
       width: 100%;
       max-width: min(90vw, 800px);
       height: clamp(200px, 50vw, 450px);
       border: none;
-      border-radius: clamp(6px, 1.5vw, 8px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     }
     body.dark #tutorial iframe {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     }
+    
     footer {
       margin-top: clamp(2rem, 5vw, 3rem);
       font-size: clamp(0.8rem, 2vw, 0.9rem);
-      color: #555;
+      color: black;
     }
     body.dark footer {
       color: #f0f0f0;
     }
+    
+    /* Enhanced Theme Toggle */
     #theme-toggle {
       position: fixed;
       top: clamp(10px, 2vw, 20px);
@@ -326,25 +375,27 @@
       color: #fff;
       border: none;
       border-radius: 50%;
-      width: clamp(36px, 8vw, 46px);
-      height: clamp(36px, 8vw, 46px);
-      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      width: clamp(40px, 8vw, 50px);
+      height: clamp(40px, 8vw, 50px);
+      font-size: clamp(1rem, 3vw, 1.3rem);
       cursor: pointer;
       z-index: 10000;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.3s, box-shadow 0.3s;
+      backdrop-filter: blur(10px);
     }
     [lang="ar"] #theme-toggle {
       right: auto;
       left: clamp(10px, 2vw, 20px);
     }
     #theme-toggle:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px) rotate(15deg);
       box-shadow: 0 8px 18px rgba(0,0,0,0.4);
     }
-    /* Language Selector Styles */
+    
+    /* Enhanced Language Selector */
     #language-selector {
       position: fixed;
       top: clamp(10px, 2vw, 20px);
@@ -356,6 +407,7 @@
       border-radius: 50px;
       padding: 8px 15px;
       color: white;
+      backdrop-filter: blur(10px);
     }
     [lang="ar"] #language-selector {
       left: auto;
@@ -377,7 +429,8 @@
       background: #333;
       color: white;
     }
-    /* Translation Preview Styles */
+    
+    /* Enhanced Translation Preview Styles */
     .translation-preview-container {
       max-width: 1200px;
       margin: 0 auto;
@@ -398,15 +451,27 @@
     }
     .language-selector-preview select {
       padding: 0.5rem 1rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      border-radius: 12px;
+      border: 1px solid #ddd;
       font-size: 1rem;
+      background: rgba(255,255,255,0.8);
+      transition: all 0.3s ease;
+    }
+    .language-selector-preview select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
     }
     body.dark .language-selector-preview select {
-      background: #2a2d3a;
+      background: rgba(42,45,58,0.8);
       color: #e0e0e0;
-      border: 1px solid #555;
+      border: 1px solid black;
     }
+    body.dark .language-selector-preview select:focus {
+      border-color: #4facfe;
+      box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
+    }
+    
     .original-preview-section {
       margin-bottom: 3rem;
     }
@@ -414,9 +479,13 @@
       position: relative;
       max-width: 600px;
       margin: 0 auto;
-      border-radius: 15px;
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease;
+    }
+    .preview-image-container:hover {
+      transform: translateY(-5px);
     }
     .preview-image-container img {
       width: 100%;
@@ -432,15 +501,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      color: #4a6ee0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
       font-weight: 600;
       font-size: 1.1rem;
-      border-radius: 15px;
+      border-radius: 20px;
     }
     body.dark .image-placeholder-preview {
-      background: linear-gradient(135deg, #1a2a3d, #2c5364);
-      color: #e0e0e0;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
     }
     .image-label-preview {
       position: absolute;
@@ -452,6 +521,7 @@
       padding: 15px;
       font-size: 1.2rem;
     }
+    
     .translations-grid-preview {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -460,21 +530,23 @@
     }
     .translation-card-preview {
       background: white;
-      border-radius: 15px;
+      border-radius: 20px;
       overflow: visible;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
       transition: all 0.3s ease;
-      border: 1px solid #f0f0f0;
+      border: 1px solid rgba(255,255,255,0.2);
       height: auto;
+      backdrop-filter: blur(10px);
     }
     .translation-card-preview:hover {
       transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     }
     body.dark .translation-card-preview {
-      background: rgba(36,38,54,0.8);
-      border: 1px solid #444;
+      background: rgba(36,38,54,0.95);
+      border: 1px solid rgba(255,255,255,0.1);
     }
+    
     .translation-image-preview {
       width: 100%;
       height: auto;
@@ -483,6 +555,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 20px 20px 0 0;
     }
     body.dark .translation-image-preview {
       background-color: #2a2d3a;
@@ -496,6 +569,7 @@
     .translation-card-preview:hover .translation-image-preview img {
       transform: scale(1.1);
     }
+    
     .translation-info-preview {
       padding: 20px;
       text-align: left;
@@ -507,7 +581,7 @@
       font-size: 1.2rem;
       color: #333;
       margin-bottom: 10px;
-      font-weight: 500;
+      font-weight: 600;
     }
     body.dark .translation-title-preview {
       color: #f0f0f0;
@@ -522,13 +596,18 @@
     }
     .language-badge-preview {
       display: inline-block;
-      background: linear-gradient(to right, #4a6ee0, #6a11cb);
+      background: linear-gradient(to right, #667eea, #764ba2);
       color: white;
       padding: 5px 12px;
       border-radius: 20px;
       font-size: 0.8rem;
       margin-top: 10px;
+      font-weight: 600;
     }
+    body.dark .language-badge-preview {
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+    }
+    
     .testimonial-card p:nth-of-type(1) {
       color: rgba(0, 0, 0, 0.75);
       font-style: italic;
@@ -544,6 +623,7 @@
     body.dark .testimonial-card p:nth-of-type(2) {
       color: rgba(255, 255, 255, 0.5);
     }
+    
     @media (max-width: 768px) {
       .translations-grid-preview {
         grid-template-columns: 1fr;
@@ -655,10 +735,11 @@
       width: 100%;
       height: 80vh;
       overflow: hidden;
-      border-radius: 12px;
+      border-radius: 20px;
       max-width: 1200px;
       margin: 0 auto;
       background: black;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
     ">
       <iframe
         src="https://www.loom.com/embed/70c2d45cf8dc47e09f30b1296c24a399"
@@ -682,19 +763,7 @@
   <section id="translation-preview" class="landing-section">
     <h2 id="preview-title">Translation Preview</h2>
     <p id="preview-subtitle">See your original image and all translations in one place</p>
-    <!-- <div class="translation-preview-container">
-      <div class="language-selector-preview">
-        <label for="preview-language">Preview Language:</label>
-        <select id="preview-language">
-          <option value="en">English</option>
-          <option value="fr">French</option>
-          <option value="de">German</option>
-          <option value="es">Spanish</option>
-          <option value="it">Italian</option>
-          <option value="nl">Dutch</option>
-          <option value="ar">Arabic</option>
-        </select>
-      </div> -->
+    <div class="translation-preview-container">
       <div class="original-preview-section">
         <h3 id="original-title">Original Content</h3>
         <div class="preview-image-container">
@@ -781,16 +850,16 @@
           </div>
           <div class="translation-card-preview">
             <div class="translation-image-preview">
-              <img src="/templates/Portuguese.png" alt="portuguese Translation"
-                   onerror="this.style.display='none'; document.getElementById('arabic-placeholder').style.display='flex';">
-              <div class="image-placeholder-preview" id="arabic-placeholder" style="display: none;">
+              <img src="/templates/Portuguese.png" alt="Portuguese Translation"
+                   onerror="this.style.display='none'; document.getElementById('portuguese-placeholder').style.display='flex';">
+              <div class="image-placeholder-preview" id="portuguese-placeholder" style="display: none;">
                 Portuguese.png
               </div>
             </div>
             <div class="translation-info-preview">
               <h4 class="translation-title-preview" id="translation-6-title">Portuguese Translation</h4>
               <p class="translation-desc-preview" id="translation-6-desc">Portuguese translation with precise localization and cultural adaptation for Portuguese-speaking audiences.</p>
-              <span class="language-badge-preview" id="translation-6-badge">Portuguese</span>
+              <span class="language-badge-preview" id="translation-6-badge">Português</span>
             </div>
           </div>
         </div>
@@ -811,7 +880,6 @@
     const body = document.body;
     const themeToggle = document.getElementById('theme-toggle');
     const languageSelect = document.getElementById('language-select');
-    const previewLanguage = document.getElementById('preview-language');
     const heroVideo = document.getElementById('hero-video');
     const videoError = document.getElementById('video-error');
     const translations = {
@@ -1299,6 +1367,7 @@
         footerText: "© 2023 توطين التطبيقات. جميع الحقوق محفوظة."
       }
     };
+
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
       body.classList.remove("light");
@@ -1345,7 +1414,7 @@
       document.getElementById('feature-4-title').textContent = data.feature4Title;
       document.getElementById('feature-4-desc').textContent = data.feature4Desc;
       document.getElementById('feature-5-title').textContent = data.feature5Title;
-            document.getElementById('feature-5-desc').textContent = data.feature5Desc;
+      document.getElementById('feature-5-desc').textContent = data.feature5Desc;
       document.getElementById('feature-6-title').textContent = data.feature6Title;
       document.getElementById('feature-6-desc').textContent = data.feature6Desc;
       document.getElementById('how-to-title').textContent = data.howToTitle;
@@ -1396,13 +1465,8 @@
     languageSelect.addEventListener('change', (e) => {
       updateWebsiteContent(e.target.value);
     });
-    previewLanguage.addEventListener('change', (e) => {
-      updateWebsiteContent(e.target.value);
-      languageSelect.value = e.target.value;
-    });
     // Initialize with English
     updateWebsiteContent('en');
   </script>
 </body>
 </html>
-
