@@ -1794,240 +1794,243 @@ let redoHistory = [];
 let clipboard = null;
 let isPenActive = false;
 let customFontName = null;
-
-function initCanvas() {
-  const fonts = [{% for font in fonts %}'{{ font }}'{% if not loop.last %},{% endif %}{% endfor %}];
-  const img = new Image();
-  img.src = "data:image/png;base64,{{ clean_image }}";
-  img.onload = () => {
-    try {
-      const maxWidth = Math.min(window.innerWidth * 0.9, 600);
-      scale = Math.min(maxWidth / img.width, 1);
-      canvas = new fabric.Canvas('canvas', {
-        width: img.width * scale,
-        height: img.height * scale,
-        preserveObjectStacking: true,
-        selection: true
-      });
-      const fabricImg = new fabric.Image(img, {
-        scaleX: scale,
-        scaleY: scale,
-        selectable: false,
-        originX: 'left',
-        originY: 'top'
-      });
-      canvas.add(fabricImg);
-      canvas.sendToBack(fabricImg);
-      texts = JSON.parse('{{ texts_json | safe }}');
-      texts.forEach(text => {
-        const textObj = new fabric.Textbox(text.text, {
-          left: text.left * scale,
-          top: text.top * scale,
-          fontFamily: text.fontFamily || 'Inter',
-          fontSize: text.fontSize * scale,
-          fill: text.fill,
-          textAlign: text.textAlign || 'left',
-          lineHeight: text.lineHeight || 1.2,
-          width: (text.width || img.width) * scale,
-          selectable: true,
-          editable: true
-        });
-        canvas.add(textObj);
-      });
-      canvas.on('selection:created', updateControls);
-      canvas.on('selection:updated', updateControls);
-      canvas.on('selection:cleared', updateControls);
-      canvas.on('object:modified', saveState);
-      canvas.on('text:changed', (e) => {
-        if (e.target && e.target.type === 'textbox') {
-          saveState();
-        }
-      });
-      canvas.on('mouse:down', (o) => {
-        if (isPenActive) {
-          let isDrawing = true;
-          const pointer = canvas.getPointer(o.e);
-          const currentPath = new fabric.Path(`M ${pointer.x} ${pointer.y}`, {
-            stroke: document.getElementById('penColor').value,
-            strokeWidth: parseInt(document.getElementById('penWidth').value),
-            fill: null,
-            selectable: true,
-            strokeLineCap: 'round',
-            strokeLineJoin: 'round'
+  function initCanvas() {
+      const fonts = [{% for font in fonts %}'{{ font }}'{% if not loop.last %},{% endif %}{% endfor %}];
+      const img = new Image();
+      img.src = "data:image/png;base64,{{ clean_image }}";
+      img.onload = () => {
+        try {
+          const maxWidth = Math.min(window.innerWidth * 0.9, 600);
+          scale = Math.min(maxWidth / img.width, 1);
+          canvas = new fabric.Canvas('canvas', {
+            width: img.width * scale,
+            height: img.height * scale,
+            preserveObjectStacking: true,
+            selection: true
           });
-          canvas.add(currentPath);
-          canvas.on('mouse:move', (o) => {
-            if (!isDrawing || !isPenActive) return;
-            const pointer = canvas.getPointer(o.e);
-            currentPath.path.push(['L', pointer.x, pointer.y]);
-            currentPath.set('dirty', true);
-            canvas.renderAll();
+          const fabricImg = new fabric.Image(img, {
+            scaleX: scale,
+            scaleY: scale,
+            selectable: false,
+            originX: 'left',
+            originY: 'top'
           });
-          canvas.on('mouse:up', () => {
-            isDrawing = false;
-            canvas.off('mouse:move');
-            canvas.off('mouse:up');
+          canvas.add(fabricImg);
+          canvas.sendToBack(fabricImg);
+          texts = JSON.parse('{{ texts_json | safe }}');
+          texts.forEach(text => {
+            const textObj = new fabric.Textbox(text.text, {
+              left: text.left * scale,
+              top: text.top * scale,
+              fontFamily: text.fontFamily || 'NotoSansArabic',
+              fontSize: text.fontSize * scale,
+              fill: text.fill,
+              textAlign: text.textAlign || 'right',
+              lineHeight: text.lineHeight || 1.2,
+              width: (text.width || img.width) * scale,
+              selectable: true,
+              editable: true
+            });
+            canvas.add(textObj);
+          });
+          canvas.on('selection:created', updateControls);
+          canvas.on('selection:updated', updateControls);
+          canvas.on('selection:cleared', updateControls);
+          canvas.on('object:modified', () => {
             saveState();
           });
-        } else if (o.e.ctrlKey) {
-          const target = canvas.findTarget(o.e, false);
-          if (target && (target.type === 'textbox' || target.type === 'path')) {
-            const activeObjects = canvas.getActiveObjects();
-            if (activeObjects.includes(target)) {
-              canvas.removeFromActiveSelection(target);
-            } else {
-              canvas.addToActiveSelection(target);
+          // Fixed text editing event handling
+          canvas.on('text:changed', (e) => {
+            if (e.target && e.target.type === 'textbox') {
+              saveState();
             }
-            canvas.renderAll();
-          }
-        }
-      });
-      document.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey && (e.key === 'z' || e.key === 'y' || e.key === 'a' || e.key === 'c' || e.key === 'x' || e.key === 'v')) ||
-            (e.key === 'Backspace' || e.key === 'Delete') && !e.target.isContentEditable) {
-          e.preventDefault();
-        }
-        if (e.ctrlKey && e.key === 'z') {
-          undo();
-        } else if (e.ctrlKey && e.key === 'y') {
-          redo();
-        }
-        if (e.ctrlKey && e.key === 'a') {
-          const textObjects = canvas.getObjects().filter(obj => obj.type === 'textbox');
-          if (textObjects.length > 0) {
-            canvas.setActiveObject(new fabric.ActiveSelection(textObjects, { canvas }));
-            updateControls();
-            canvas.renderAll();
-          }
-        }
-        if (e.ctrlKey && e.key === 'c') {
-          const activeObjects = canvas.getActiveObjects();
-          if (activeObjects.length > 0) {
-            clipboard = activeObjects.map(obj => obj.toObject(['animation']));
-          }
-        }
-        if (e.ctrlKey && e.key === 'x') {
-          const activeObjects = canvas.getActiveObjects();
-          if (activeObjects.length > 0) {
-            clipboard = activeObjects.map(obj => obj.toObject(['animation']));
-            activeObjects.forEach(obj => {
-              canvas.remove(obj);
-            });
-            canvas.discardActiveObject();
-            updateControls();
-            canvas.renderAll();
-            saveState();
-          }
-        }
-        if (e.ctrlKey && e.key === 'v') {
-          if (clipboard) {
-            clipboard.forEach(item => {
-              if (item.type === 'textbox') {
-                const newText = new fabric.Textbox(item.text, {
-                  ...item,
-                  left: (item.left / scale + 10) * scale,
-                  top: (item.top / scale + 10) * scale,
-                  fontSize: item.fontSize,
-                  width: item.width,
-                  selectable: true,
-                  editable: true
-                });
-                canvas.add(newText);
-              } else if (item.type === 'path') {
-                const newPath = new fabric.Path(item.path, {
-                  ...item,
-                  left: (item.left / scale + 10) * scale,
-                  top: (item.top / scale + 10) * scale,
-                  selectable: true
-                });
-                canvas.add(newPath);
-              }
-            });
-            canvas.renderAll();
-            saveState();
-            reconstructTexts();
-          }
-        }
-        if (e.key === 'Backspace' && !e.target.isContentEditable) {
-          const activeObjects = canvas.getActiveObjects();
-          if (activeObjects.length > 0) {
-            activeObjects.forEach(obj => {
-              if (obj.type === 'textbox') {
-                const selectionStart = obj.selectionStart;
-                const selectionEnd = obj.selectionEnd;
-                let text = obj.text;
-                if (selectionStart !== selectionEnd) {
-                  text = text.slice(0, selectionStart) + text.slice(selectionEnd);
-                  obj.selectionStart = obj.selectionEnd = selectionStart;
-                } else if (selectionStart > 0) {
-                  text = text.slice(0, selectionStart - 1) + text.slice(selectionEnd);
-                  obj.selectionStart = obj.selectionEnd = selectionStart - 1;
+          });
+          canvas.on('mouse:down', (o) => {
+            if (isPenActive) {
+              let isDrawing = true;
+              const pointer = canvas.getPointer(o.e);
+              const currentPath = new fabric.Path(`M ${pointer.x} ${pointer.y}`, {
+                stroke: document.getElementById('penColor').value,
+                strokeWidth: parseInt(document.getElementById('penWidth').value),
+                fill: null,
+                selectable: true,
+                strokeLineCap: 'round',
+                strokeLineJoin: 'round'
+              });
+              canvas.add(currentPath);
+              canvas.on('mouse:move', (o) => {
+                if (!isDrawing || !isPenActive) return;
+                const pointer = canvas.getPointer(o.e);
+                currentPath.path.push(['L', pointer.x, pointer.y]);
+                currentPath.set('dirty', true);
+                canvas.renderAll();
+              });
+              canvas.on('mouse:up', () => {
+                isDrawing = false;
+                canvas.off('mouse:move');
+                canvas.off('mouse:up');
+                saveState();
+              });
+            } else if (o.e.ctrlKey) {
+              const target = canvas.findTarget(o.e, false);
+              if (target && (target.type === 'textbox' || target.type === 'path')) {
+                const activeObjects = canvas.getActiveObjects();
+                if (activeObjects.includes(target)) {
+                  canvas.removeFromActiveSelection(target);
+                } else {
+                  canvas.addToActiveSelection(target);
                 }
-                obj.text = text;
-                obj.set('dirty', true);
-                canvas.requestRenderAll();
-              } else {
-                canvas.remove(obj);
+                canvas.renderAll();
+              }
+            }
+          });
+          document.addEventListener('keydown', (e) => {
+            // Prevent default behavior for keys we're handling
+            if ((e.ctrlKey && (e.key === 'z' || e.key === 'y' || e.key === 'a' || e.key === 'c' || e.key === 'x' || e.key === 'v')) ||
+                (e.key === 'Backspace' || e.key === 'Delete') && !e.target.isContentEditable) {
+              e.preventDefault();
+            }
+            if (e.ctrlKey && e.key === 'z') {
+              undo();
+            } else if (e.ctrlKey && e.key === 'y') {
+              redo();
+            }
+            if (e.ctrlKey && e.key === 'a') {
+              const textObjects = canvas.getObjects().filter(obj => obj.type === 'textbox');
+              if (textObjects.length > 0) {
+                canvas.setActiveObject(new fabric.ActiveSelection(textObjects, { canvas }));
+                updateControls();
+                canvas.renderAll();
+              }
+            }
+            if (e.ctrlKey && e.key === 'c') {
+              const activeObjects = canvas.getActiveObjects();
+              if (activeObjects.length > 0) {
+                clipboard = activeObjects.map(obj => obj.toObject(['animation']));
+              }
+            }
+            if (e.ctrlKey && e.key === 'x') {
+              const activeObjects = canvas.getActiveObjects();
+              if (activeObjects.length > 0) {
+                clipboard = activeObjects.map(obj => obj.toObject(['animation']));
+                activeObjects.forEach(obj => {
+                  canvas.remove(obj);
+                });
+                canvas.discardActiveObject();
+                updateControls();
+                canvas.renderAll();
+                saveState();
+              }
+            }
+            if (e.ctrlKey && e.key === 'v') {
+              if (clipboard) {
+                clipboard.forEach(item => {
+                  if (item.type === 'textbox') {
+                    const newText = new fabric.Textbox(item.text, {
+                      ...item,
+                      left: (item.left / scale + 10) * scale,
+                      top: (item.top / scale + 10) * scale,
+                      fontSize: item.fontSize,
+                      width: item.width,
+                      selectable: true,
+                      editable: true
+                    });
+                    canvas.add(newText);
+                  } else if (item.type === 'path') {
+                    const newPath = new fabric.Path(item.path, {
+                      ...item,
+                      left: (item.left / scale + 10) * scale,
+                      top: (item.top / scale + 10) * scale,
+                      selectable: true
+                    });
+                    canvas.add(newPath);
+                  }
+                });
+                canvas.renderAll();
+                saveState();
+                reconstructTexts();
+              }
+            }
+            if (e.key === 'Backspace' && !e.target.isContentEditable) {
+              e.preventDefault();
+              const activeObjects = canvas.getActiveObjects();
+              if (activeObjects.length > 0) {
+                activeObjects.forEach(obj => {
+                  if (obj.type === 'textbox') {
+                    const selectionStart = obj.selectionStart;
+                    const selectionEnd = obj.selectionEnd;
+                    let text = obj.text;
+                    if (selectionStart !== selectionEnd) {
+                      text = text.slice(0, selectionStart) + text.slice(selectionEnd);
+                      obj.selectionStart = obj.selectionEnd = selectionStart;
+                    } else if (selectionStart > 0) {
+                      text = text.slice(0, selectionStart - 1) + text.slice(selectionEnd);
+                      obj.selectionStart = obj.selectionEnd = selectionStart - 1;
+                    }
+                    obj.text = text;
+                    obj.set('dirty', true);
+                    canvas.requestRenderAll();
+                  } else {
+                    canvas.remove(obj);
+                  }
+                });
+                updateControls();
+                saveState();
+                reconstructTexts();
+              }
+            }
+            if (e.key === 'Delete' && !e.target.isContentEditable) {
+              const activeObjects = canvas.getActiveObjects();
+              if (activeObjects.length > 0) {
+                activeObjects.forEach(obj => {
+                  canvas.remove(obj);
+                });
+                canvas.discardActiveObject();
+                updateControls();
+                canvas.renderAll();
+                saveState();
+                reconstructTexts();
+              }
+            }
+          });
+          window.addEventListener('resize', () => {
+            const newMaxWidth = Math.min(window.innerWidth * 0.9, 600);
+            const newScale = Math.min(newMaxWidth / img.width, 1);
+            canvas.setDimensions({
+              width: img.width * newScale,
+              height: img.height * newScale
+            });
+            canvas.getObjects().forEach(obj => {
+              if (obj.type === 'image') {
+                obj.set({ scaleX: newScale, scaleY: newScale });
+              } else if (obj.type === 'textbox' || obj.type === 'path') {
+                obj.set({
+                  left: (obj.left / scale) * newScale,
+                  top: (obj.top / scale) * newScale,
+                  fontSize: obj.type === 'textbox' ? (obj.fontSize / scale) * newScale : obj.fontSize,
+                  width: obj.type === 'textbox' ? (obj.width / scale) * newScale : obj.width
+                });
               }
             });
-            updateControls();
-            saveState();
-            reconstructTexts();
-          }
-        }
-        if (e.key === 'Delete' && !e.target.isContentEditable) {
-          const activeObjects = canvas.getActiveObjects();
-          if (activeObjects.length > 0) {
-            activeObjects.forEach(obj => {
-              canvas.remove(obj);
-            });
-            canvas.discardActiveObject();
-            updateControls();
+            scale = newScale;
             canvas.renderAll();
-            saveState();
-            reconstructTexts();
-          }
+          });
+          canvas.renderAll();
+          saveState();
+          document.getElementById('processing-overlay').style.display = 'none';
+          preloadFonts(fonts);
+        } catch (err) {
+          console.error('Canvas initialization failed:', err);
+          alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
+          document.getElementById('processing-overlay').style.display = 'none';
         }
-      });
-      window.addEventListener('resize', () => {
-        const newMaxWidth = Math.min(window.innerWidth * 0.9, 600);
-        const newScale = Math.min(newMaxWidth / img.width, 1);
-        canvas.setDimensions({
-          width: img.width * newScale,
-          height: img.height * newScale
-        });
-        canvas.getObjects().forEach(obj => {
-          if (obj.type === 'image') {
-            obj.set({ scaleX: newScale, scaleY: newScale });
-          } else if (obj.type === 'textbox' || obj.type === 'path') {
-            obj.set({
-              left: (obj.left / scale) * newScale,
-              top: (obj.top / scale) * newScale,
-              fontSize: obj.type === 'textbox' ? (obj.fontSize / scale) * newScale : obj.fontSize,
-              width: obj.type === 'textbox' ? (obj.width / scale) * newScale : obj.width
-            });
-          }
-        });
-        scale = newScale;
-        canvas.renderAll();
-      });
-      canvas.renderAll();
-      saveState();
-      document.getElementById('processing-overlay').style.display = 'none';
-      preloadFonts(fonts);
-    } catch (err) {
-      console.error('Canvas initialization failed:', err);
-      alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
-      document.getElementById('processing-overlay').style.display = 'none';
+      };
+      img.onerror = () => {
+        console.error('Failed to load image');
+        alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
+        document.getElementById('processing-overlay').style.display = 'none';
+      };
     }
-  };
-  img.onerror = () => {
-    console.error('Failed to load image');
-    alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
-    document.getElementById('processing-overlay').style.display = 'none';
-  };
-}
-
 function saveState() {
   const state = canvas.toJSON(['animation']);
   undoHistory.push(state);
@@ -2421,6 +2424,7 @@ initCanvas();
 </script>
 </body>
 </html>
+
 
 
 
