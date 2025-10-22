@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -27,7 +27,6 @@
       overflow-x: hidden;
       font-family: "Inter", sans-serif;
       transition: background 0.5s ease, color 0.3s ease;
-      direction: ltr;
     }
     body {
       display: flex;
@@ -43,40 +42,6 @@
       background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       color: #e6e6e6;
     }
-    
-    /* Tab Styles */
-    .tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      width: 100%;
-      max-width: min(90vw, 720px);
-      flex-wrap: wrap;
-    }
-    .tab {
-      flex: 1;
-      min-width: 120px;
-      padding: 0.8rem 1rem;
-      background: rgba(255, 255, 255, 0.7);
-      border: none;
-      border-radius: 8px 8px 0 0;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
-    }
-    body.dark .tab {
-      background: rgba(30, 32, 44, 0.7);
-    }
-    .tab.active {
-      background: rgba(255, 255, 255, 0.95);
-      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-    }
-    body.dark .tab.active {
-      background: rgba(30, 32, 44, 0.95);
-      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
-    }
-    
     .share-btn {
       background-color: #4CAF50;
       color: white;
@@ -143,8 +108,7 @@
     select,
     input[type="file"],
     input[type="color"],
-    input[type="number"],
-    textarea {
+    input[type="number"] {
       width: 100%;
       padding: clamp(0.5rem, 2vw, 0.8rem) 1rem;
       border: 1px solid #ccc;
@@ -155,8 +119,7 @@
     select:focus,
     input[type="file"]:focus,
     input[type="color"]:focus,
-    input[type="number"]:focus,
-    textarea:focus {
+    input[type="number"]:focus {
       outline: none;
       border-color: #007bff;
       box-shadow: 0 0 6px rgba(0, 123, 255, 0.35);
@@ -164,8 +127,7 @@
     body.dark select,
     body.dark input[type="file"],
     body.dark input[type="color"],
-    body.dark input[type="number"],
-    body.dark textarea {
+    body.dark input[type="number"] {
       background: #2a2d3a;
       color: #e0e0e0;
       border: 1px solid #555;
@@ -173,8 +135,2530 @@
     body.dark select:focus,
     body.dark input[type="file"]:focus,
     body.dark input[type="color"]:focus,
-    body.dark input[type="number"]:focus,
-    body.dark textarea:focus {
+    body.dark input[type="number"]:focus {
+      border-color: #00c6ff;
+      box-shadow: 0 0 6px rgba(0, 198, 255, 0.35);
+    }
+    button[type="submit"],
+    .download-btn {
+      display: inline-block;
+      margin: clamp(1rem, 3vw, 2rem) clamp(0.5rem, 1vw, 1rem) 0 0;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
+      padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1rem, 2.5vw, 1.6rem);
+      border: none;
+      border-radius: clamp(6px, 1.5vw, 10px);
+      font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
+    }
+    button[type="submit"]:hover,
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+    }
+    body.dark button[type="submit"],
+    body.dark .download-btn {
+      background: linear-gradient(135deg, #1a2a3d, #2c5364);
+      color: #f2f2f2;
+      border: 1px solid #444;
+    }
+    body.dark button[type="submit"]:hover,
+    body.dark .download-btn:hover {
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+    }
+    .result {
+      margin-top: clamp(1.5rem, 4vw, 2.5rem);
+      text-align: center;
+      background: rgba(250, 250, 250, 0.95);
+      border-radius: clamp(8px, 2vw, 14px);
+      padding: clamp(1rem, 3vw, 1.5rem);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      color: #222;
+      transition: background 0.4s ease, color 0.4s ease;
+      width: 100%;
+      max-width: min(90vw, 720px);
+    }
+    body.dark .result {
+      background: rgba(36, 38, 54, 0.95);
+      color: #f0f0f0;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+    }
+    #processing-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      color: #333;
+      animation: fadeInOverlay 0.3s ease forwards;
+    }
+    .spinner {
+      border: 6px solid #eaeaea;
+      border-top: 6px solid #007bff;
+      border-right: 6px solid #00c6ff;
+      border-radius: 50%;
+      width: clamp(50px, 10vw, 70px);
+      height: clamp(50px, 10vw, 70px);
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes fadeInOverlay {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    body.dark #processing-overlay {
+      background: rgba(20, 22, 30, 0.92);
+      color: #e6e6e6;
+    }
+    body.dark .spinner {
+      border: 6px solid #2a2d3a;
+      border-top: 6px solid #00c6ff;
+      border-right: 6px solid #007bff;
+    }
+    #theme-toggle {
+      position: fixed;
+      top: clamp(10px, 2vw, 20px);
+      right: clamp(10px, 2vw, 20px);
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: clamp(36px, 8vw, 46px);
+      height: clamp(36px, 8vw, 46px);
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      cursor: pointer;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .tutorial-btn {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      border: 1px solid var(--btn-border);
+      transition: background-color 0.2s, color 0.2s, transform 0.2s;
+      z-index: 1000;
+    }
+    .tutorial-btn:hover {
+      transform: translateY(-2px);
+      background-color: var(--btn-hover-bg);
+    }
+    body.light {
+      --btn-bg: #f4f4f4;
+      --btn-border: #ccc;
+      --btn-text: #333;
+      --btn-hover-bg: #e0e0e0;
+    }
+    body.dark {
+      --btn-bg: #222;
+      --btn-border: #444;
+      --btn-text: #f8f8f8;
+      --btn-hover-bg: #333;
+    }
+    #theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+    }
+    .success-msg {
+      font-weight: 600;
+      color: #007bff;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+    }
+    .error-msg {
+      font-weight: 600;
+      color: #ff6b6b;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+    }
+    body.dark .success-msg {
+      color: #00c6ff;
+    }
+    body.dark .error-msg {
+      color: #ff6b6b;
+    }
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+      max-width: min(90vw, 600px);
+      border-radius: clamp(6px, 1.5vw, 10px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      margin: clamp(0.5rem, 2vw, 1rem) auto 0;
+      display: block;
+    }
+    body.dark canvas {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    #controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: clamp(0.3rem, 1vw, 0.5rem);
+      margin: clamp(0.5rem, 2vw, 1rem) 0;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: clamp(6px, 1.5vw, 8px);
+      padding: clamp(0.3rem, 1vw, 0.5rem);
+      width: 100%;
+      max-width: min(90vw, 720px);
+      transition: background 0.4s ease;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    body.dark #controls {
+      background: rgba(36, 38, 54, 0.95);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    #controls label {
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+      color: #333;
+    }
+    body.dark #controls label {
+      color: #e0e0e0;
+    }
+    #controls select,
+    #controls input {
+      width: 100%;
+      padding: clamp(0.2rem, 1vw, 0.3rem);
+      margin-bottom: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: clamp(4px, 1vw, 6px);
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+    }
+    body.dark #controls select,
+    body.dark input[type="file"],
+    body.dark input[type="color"],
+    body.dark input[type="number"] {
+      background: #2a2d3a;
+      color: #e0e0e0;
+      border: 1px solid #555;
+    }
+    #controls button {
+      width: 100%;
+      padding: clamp(0.2rem, 1vw, 0.3rem);
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
+      border: none;
+      border-radius: clamp(4px, 1vw, 6px);
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    body.dark #controls button {
+      background: linear-gradient(135deg, #1a2a3d, #2c5364);
+      border: 1px solid #444;
+    }
+    #controls button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    #controls button.active {
+      background: linear-gradient(135deg, #007bff, #00c6ff);
+      transform: scale(0.95);
+    }
+    body.dark #controls button.active {
+      background: linear-gradient(135deg, #005b99, #0088cc);
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @media (max-width: 768px) {
+      #controls {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      }
+    }
+    @media (max-width: 480px) {
+      #controls {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      }
+    }
+    .result canvas {
+      width: 100% !important;
+      height: auto !important;
+      max-width: min(90vw, 600px);
+      display: block;
+      margin: clamp(0.5rem, 2vw, 1rem) auto 0;
+    }
+    {% if fonts %}
+      {% for font in fonts %}
+        @font-face {
+          font-family: "{{ font }}";
+          src: url("{{ url_for('static', filename='fonts/' + font + '.ttf') }}") format("truetype");
+        }
+      {% endfor %}
+    {% endif %}
+  </style>
+</head>
+<body class="light">
+  <a href="/tutorial" class="tutorial-btn">Tutorial</a>
+  <button id="theme-toggle">🌙</button>
+  <main class="card">
+    <h1>Apps Localization</h1>
+    <p class="subtitle">Translate &amp; resize text in your images seamlessly</p>
+    <form id="translate-form" method="POST" enctype="multipart/form-data">
+      <label for="image">Upload image</label>
+      <input type="file" name="image" id="image" accept="image/*" required aria-label="Upload image" />
+      <label for="language">Target language</label>
+      <select name="language" id="language" required aria-label="Select target language">
+        <option value="en">English</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="es">Spanish</option>
+        <option value="it">Italian</option>
+        <option value="nl">Dutch</option>
+      </select>
+      <label for="resolution">Output resolution</label>
+      <select name="resolution" id="resolution" required aria-label="Select output resolution">
+        <optgroup label="Original">
+          <option value="original">Use Original Size</option>
+        </optgroup>
+        <optgroup label="Phones – Portrait">
+          <option value="iphone-15">iPhone 15 (1290×2796)</option>
+          <option value="iphone-14">iPhone 14 Pro (1179×2556)</option>
+          <option value="iphone-13">iPhone 13 (1170×2532)</option>
+          <option value="android-fhd">Android FHD+ (1080×2400)</option>
+          <option value="android-qhd">Android QHD+ (1440×3200)</option>
+        </optgroup>
+        <optgroup label="Tablets">
+          <option value="ipad-pro">iPad Pro (2048×2732)</option>
+          <option value="ipad-mini">iPad Mini (1536×2048)</option>
+          <option value="android-tab">Android Tablet (1600×2560)</option>
+        </optgroup>
+        <optgroup label="Laptops / Desktops">
+          <option value="hd">Desktop HD (1920×1080)</option>
+          <option value="qhd">Desktop QHD (2560×1440)</option>
+          <option value="4k">Desktop 4K (3840×2160)</option>
+        </optgroup>
+        <optgroup label="Generic Shapes">
+          <option value="square-1to1">Square 1:1 (1080×1080)</option>
+          <option value="portrait-3to4">Portrait 3:4 (1350×1800)</option>
+          <option value="landscape-16to9">Landscape 16:9 (1920×1080)</option>
+        </optgroup>
+      </select>
+      <button type="submit">Translate &amp; Convert</button>
+    </form>
+    {% if success %}
+    <div class="result">
+      <p class="success-msg">{{ success }}</p>
+      <div id="controls">
+        <div>
+          <label for="fontFamily">Font</label>
+          <select id="fontFamily">
+            {% for font in fonts %}
+            <option value="{{ font }}">{{ font }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="customFont">Upload Font (.ttf, .otf)</label>
+          <input id="customFont" type="file" accept=".ttf,.otf" aria-label="Upload custom font">
+        </div>
+        <div>
+          <label for="fontSize">Size</label>
+          <input id="fontSize" type="number" min="8" step="1">
+        </div>
+        <div>
+          <label for="fill">Color</label>
+          <input id="fill" type="color" value="#000000">
+        </div>
+        <div>
+          <label for="stroke">Outline</label>
+          <input id="stroke" type="color" value="#000000">
+        </div>
+        <div>
+          <label for="strokeWidth">Width</label>
+          <input id="strokeWidth" type="number" min="0" max="10" step="0.5" value="0">
+        </div>
+        <div>
+          <label for="lineHeight">Height</label>
+          <input id="lineHeight" type="number" min="0.5" max="3" step="0.1" value="1.2">
+        </div>
+        <div>
+          <label for="textBackgroundColor">Bg Color</label>
+          <input id="textBackgroundColor" type="color" value="#ffffff">
+        </div>
+        <div>
+          <label for="textAlign">Align</label>
+          <select id="textAlign">
+            <option value="left">Left</option>
+            <option value="center">Center</option>
+            <option value="right">Right</option>
+          </select>
+        </div>
+        <div>
+          <label for="animation">Animation</label>
+          <select id="animation">
+            <option value="none">None</option>
+            <option value="bounce">Bounce</option>
+            <option value="pulse">Pulse</option>
+          </select>
+        </div>
+        <div>
+          <label for="opacity">Opacity</label>
+          <input id="opacity" type="number" min="0" max="1" step="0.1" value="1">
+        </div>
+        <div>
+          <label for="fontWeight">Weight</label>
+          <select id="fontWeight">
+            <option value="100">100</option>
+            <option value="200">200</option>
+            <option value="300">300</option>
+            <option value="normal">Normal</option>
+            <option value="500">500</option>
+            <option value="600">600</option>
+            <option value="bold">Bold</option>
+            <option value="800">800</option>
+            <option value="900">900</option>
+          </select>
+        </div>
+        <div>
+          <label for="italic">Style</label>
+          <button id="italic">Italic</button>
+        </div>
+        <div>
+          <label for="addText">Add</label>
+          <button id="addText">Add Text</button>
+        </div>
+        <div>
+          <label for="removeText">Delete</label>
+          <button id="removeText">Delete</button>
+        </div>
+        <div>
+          <label for="penTool">Pen</label>
+          <button id="penTool">Pen</button>
+        </div>
+        <div>
+          <label for="penColor">Pen Color</label>
+          <input id="penColor" type="color" value="#000000">
+        </div>
+        <div>
+          <label for="penWidth">Pen Width</label>
+          <select id="penWidth">
+            <option value="1">1px</option>
+            <option value="3">3px</option>
+            <option value="5">5px</option>
+            <option value="10">10px</option>
+          </select>
+        </div>
+      </div>
+      <canvas id="canvas"></canvas>
+      <p style="display: flex; gap: 10px;">
+        <button id="download" class="download-btn">Download Image</button>
+        <button id="share" class="download-btn">Share Image</button>
+      </p>
+    </div>
+    {% endif %}
+    {% if error %}
+    <p class="error-msg">{{ error }}</p>
+    {% endif %}
+  </main>
+  <div id="processing-overlay">
+    <div class="spinner"></div>
+    <p>Processing your image… please wait!</p>
+  </div>
+  <script>
+    const body = document.body;
+    const themeToggle = document.getElementById('theme-toggle');
+    let canvas = null;
+    let texts = [];
+    let scale = 1;
+    let undoHistory = [];
+    let redoHistory = [];
+    let clipboard = null;
+    let isPenActive = false;
+    let customFontName = null;
+
+    // Theme toggle
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      body.classList.remove("light");
+      body.classList.add("dark");
+      themeToggle.textContent = "☀️";
+    } else {
+      body.classList.remove("dark");
+      body.classList.add("light");
+      themeToggle.textContent = "🌙";
+    }
+    themeToggle.addEventListener("click", () => {
+      if (body.classList.contains("light")) {
+        body.classList.replace("light", "dark");
+        localStorage.setItem("theme", "dark");
+        themeToggle.textContent = "☀️";
+      } else {
+        body.classList.replace("dark", "light");
+        localStorage.setItem("theme", "light");
+        themeToggle.textContent = "🌙";
+      }
+    });
+
+    // Form submission
+    document.getElementById('translate-form').addEventListener('submit', () => {
+      document.getElementById('processing-overlay').style.display = 'flex';
+    });
+
+    // Handle custom font upload
+    document.getElementById('customFont').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file && (file.name.endsWith('.ttf') || file.name.endsWith('.otf'))) {
+        const fontName = file.name.split('.')[0];
+        customFontName = fontName;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const fontUrl = event.target.result;
+          const fontFace = new FontFace(fontName, `url(${fontUrl})`);
+          document.fonts.add(fontFace);
+          fontFace.load().then(() => {
+            const fontSelect = document.getElementById('fontFamily');
+            if (!Array.from(fontSelect.options).some(opt => opt.value === fontName)) {
+              const option = document.createElement('option');
+              option.value = fontName;
+              option.textContent = fontName;
+              fontSelect.appendChild(option);
+            }
+            if (canvas) canvas.renderAll();
+          }).catch(err => {
+            console.error(`Failed to load custom font ${fontName}:`, err);
+            alert('Failed to load custom font. Please try another font file.');
+          });
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('Please upload a valid .ttf or .otf font file.');
+      }
+    });
+
+    // Preload fonts with fallback
+    function preloadFonts(fonts) {
+      const fontPromises = fonts.map(font => {
+        const fontUrl = `{{ url_for('static', filename='fonts/') }}${font}.ttf`;
+        const fontFace = new FontFace(font, `url(${fontUrl})`);
+        document.fonts.add(fontFace);
+        return fontFace.load().catch(err => {
+          console.error(`Failed to load font ${font}:`, err);
+          return null;
+        });
+      });
+      const timeout = new Promise(resolve => setTimeout(resolve, 3000));
+      Promise.race([Promise.all(fontPromises), timeout]).then(() => {
+        console.log('Font loading completed or timed out');
+        if (canvas) canvas.renderAll();
+      }).catch(err => {
+        console.error('Font preloading error:', err);
+        if (canvas) canvas.renderAll();
+      });
+    }
+
+    // Save state for undo/redo
+    function saveState() {
+      const state = canvas.toJSON(['animation']);
+      undoHistory.push(state);
+      redoHistory = [];
+    }
+
+    // Reconstruct texts from canvas objects
+    function reconstructTexts() {
+      texts = canvas.getObjects('textbox').map(obj => ({
+        text: obj.text,
+        left: obj.left / scale,
+        top: obj.top / scale,
+        fontFamily: obj.fontFamily,
+        fontSize: obj.fontSize / scale,
+        fill: obj.fill,
+        textAlign: obj.textAlign,
+        lineHeight: obj.lineHeight,
+        width: obj.width / scale,
+        stroke: obj.stroke,
+        strokeWidth: obj.strokeWidth,
+        textBackgroundColor: obj.textBackgroundColor,
+        opacity: obj.opacity,
+        fontWeight: obj.fontWeight,
+        fontStyle: obj.fontStyle
+      }));
+    }
+
+    // Undo action
+    function undo() {
+      if (undoHistory.length > 0) {
+        const currentState = canvas.toJSON(['animation']);
+        redoHistory.push(currentState);
+        const previousState = undoHistory.pop();
+        canvas.loadFromJSON(previousState, () => {
+          canvas.renderAll();
+          updateControls();
+          reconstructTexts();
+        });
+      }
+    }
+
+    // Redo action
+    function redo() {
+      if (redoHistory.length > 0) {
+        const currentState = canvas.toJSON(['animation']);
+        undoHistory.push(currentState);
+        const nextState = redoHistory.pop();
+        canvas.loadFromJSON(nextState, () => {
+          canvas.renderAll();
+          updateControls();
+          reconstructTexts();
+        });
+      }
+    }
+
+    // Initialize Fabric.js canvas
+    {% if success %}
+    function initCanvas() {
+      const fonts = [{% for font in fonts %}'{{ font }}'{% if not loop.last %},{% endif %}{% endfor %}];
+      const img = new Image();
+      img.src = "data:image/png;base64,{{ clean_image }}";
+      img.onload = () => {
+        try {
+          const maxWidth = Math.min(window.innerWidth * 0.9, 600);
+          scale = Math.min(maxWidth / img.width, 1);
+          canvas = new fabric.Canvas('canvas', {
+            width: img.width * scale,
+            height: img.height * scale,
+            preserveObjectStacking: true,
+            selection: true
+          });
+          const fabricImg = new fabric.Image(img, {
+            scaleX: scale,
+            scaleY: scale,
+            selectable: false,
+            originX: 'left',
+            originY: 'top'
+          });
+          canvas.add(fabricImg);
+          canvas.sendToBack(fabricImg);
+          texts = JSON.parse('{{ texts_json | safe }}');
+          texts.forEach(text => {
+            const textObj = new fabric.Textbox(text.text, {
+              left: text.left * scale,
+              top: text.top * scale,
+              fontFamily: text.fontFamily || 'Arial',
+              fontSize: text.fontSize * scale,
+              fill: text.fill,
+              textAlign: text.textAlign || 'left',
+              lineHeight: text.lineHeight || 1.2,
+              width: (text.width || img.width) * scale,
+              selectable: true,
+              editable: true
+            });
+            canvas.add(textObj);
+          });
+          canvas.on('selection:created', updateControls);
+          canvas.on('selection:updated', updateControls);
+          canvas.on('selection:cleared', updateControls);
+          canvas.on('object:modified', () => {
+            saveState();
+          });
+          canvas.on('mouse:down', (o) => {
+            if (isPenActive) {
+              let isDrawing = true;
+              const pointer = canvas.getPointer(o.e);
+              const currentPath = new fabric.Path(`M ${pointer.x} ${pointer.y}`, {
+                stroke: document.getElementById('penColor').value,
+                strokeWidth: parseInt(document.getElementById('penWidth').value),
+                fill: null,
+                selectable: true,
+                strokeLineCap: 'round',
+                strokeLineJoin: 'round'
+              });
+              canvas.add(currentPath);
+              canvas.on('mouse:move', (o) => {
+                if (!isDrawing || !isPenActive) return;
+                const pointer = canvas.getPointer(o.e);
+                currentPath.path.push(['L', pointer.x, pointer.y]);
+                currentPath.set('dirty', true);
+                canvas.renderAll();
+              });
+              canvas.on('mouse:up', () => {
+                isDrawing = false;
+                canvas.off('mouse:move');
+                canvas.off('mouse:up');
+                saveState();
+              });
+            } else if (o.e.ctrlKey) {
+              const target = canvas.findTarget(o.e, false);
+              if (target && (target.type === 'textbox' || target.type === 'path')) {
+                const activeObjects = canvas.getActiveObjects();
+                if (activeObjects.includes(target)) {
+                  canvas.removeFromActiveSelection(target);
+                } else {
+                  canvas.addToActiveSelection(target);
+                }
+                canvas.renderAll();
+              }
+            }
+          });
+          document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'z') {
+              e.preventDefault();
+              undo();
+            } else if (e.ctrlKey && e.key === 'y') {
+              e.preventDefault();
+              redo();
+            }
+            if (e.ctrlKey && e.key === 'a') {
+              e.preventDefault();
+              const textObjects = canvas.getObjects().filter(obj => obj.type === 'textbox');
+              if (textObjects.length > 0) {
+                canvas.setActiveObject(new fabric.ActiveSelection(textObjects, { canvas }));
+                updateControls();
+                canvas.renderAll();
+              }
+            }
+            if (e.ctrlKey && e.key === 'c') {
+              e.preventDefault();
+              const activeObjects = canvas.getActiveObjects();
+              if (activeObjects.length > 0) {
+                clipboard = activeObjects.map(obj => obj.toObject(['animation']));
+              }
+            }
+            if (e.ctrlKey && e.key === 'x') {
+              e.preventDefault();
+              const activeObjects = canvas.getActiveObjects();
+              if (activeObjects.length > 0) {
+                clipboard = activeObjects.map(obj => obj.toObject(['animation']));
+                activeObjects.forEach(obj => {
+                  canvas.remove(obj);
+                });
+                canvas.discardActiveObject();
+                updateControls();
+                canvas.renderAll();
+                saveState();
+              }
+            }
+            if (e.ctrlKey && e.key === 'v') {
+              e.preventDefault();
+              if (clipboard) {
+                clipboard.forEach(item => {
+                  if (item.type === 'textbox') {
+                    const newText = new fabric.Textbox(item.text, {
+                      ...item,
+                      left: (item.left / scale + 10) * scale,
+                      top: (item.top / scale + 10) * scale,
+                      fontSize: item.fontSize,
+                      width: item.width,
+                      selectable: true,
+                      editable: true
+                    });
+                    canvas.add(newText);
+                  } else if (item.type === 'path') {
+                    const newPath = new fabric.Path(item.path, {
+                      ...item,
+                      left: (item.left / scale + 10) * scale,
+                      top: (item.top / scale + 10) * scale,
+                      selectable: true
+                    });
+                    canvas.add(newPath);
+                  }
+                });
+                canvas.renderAll();
+                saveState();
+                reconstructTexts();
+              }
+            }
+            if (e.key === 'Backspace' && !e.target.isContentEditable) {
+              e.preventDefault();
+              const activeObjects = canvas.getActiveObjects();
+              if (activeObjects.length > 0) {
+                activeObjects.forEach(obj => {
+                  if (obj.type === 'textbox') {
+                    const selectionStart = obj.selectionStart;
+                    const selectionEnd = obj.selectionEnd;
+                    let text = obj.text;
+                    if (selectionStart !== selectionEnd) {
+                      text = text.slice(0, selectionStart) + text.slice(selectionEnd);
+                      obj.selectionStart = obj.selectionEnd = selectionStart;
+                    } else if (selectionStart > 0) {
+                      text = text.slice(0, selectionStart - 1) + text.slice(selectionEnd);
+                      obj.selectionStart = obj.selectionEnd = selectionStart - 1;
+                    }
+                    obj.text = text;
+                    obj.set('dirty', true);
+                    canvas.requestRenderAll();
+                  } else {
+                    canvas.remove(obj);
+                  }
+                });
+                updateControls();
+                saveState();
+                reconstructTexts();
+              }
+            }
+            if (e.key === 'Delete' && !e.target.isContentEditable) {
+              e.preventDefault();
+              const activeObjects = canvas.getActiveObjects();
+              if (activeObjects.length > 0) {
+                activeObjects.forEach(obj => {
+                  canvas.remove(obj);
+                });
+                canvas.discardActiveObject();
+                updateControls();
+                canvas.renderAll();
+                saveState();
+                reconstructTexts();
+              }
+            }
+          });
+          window.addEventListener('resize', () => {
+            const newMaxWidth = Math.min(window.innerWidth * 0.9, 600);
+            const newScale = Math.min(newMaxWidth / img.width, 1);
+            canvas.setDimensions({
+              width: img.width * newScale,
+              height: img.height * newScale
+            });
+            canvas.getObjects().forEach(obj => {
+              if (obj.type === 'image') {
+                obj.set({ scaleX: newScale, scaleY: newScale });
+              } else if (obj.type === 'textbox' || obj.type === 'path') {
+                obj.set({
+                  left: (obj.left / scale) * newScale,
+                  top: (obj.top / scale) * newScale,
+                  fontSize: obj.type === 'textbox' ? (obj.fontSize / scale) * newScale : obj.fontSize,
+                  width: obj.type === 'textbox' ? (obj.width / scale) * newScale : obj.width
+                });
+              }
+            });
+            scale = newScale;
+            canvas.renderAll();
+          });
+          canvas.renderAll();
+          saveState();
+          document.getElementById('processing-overlay').style.display = 'none';
+          preloadFonts(fonts);
+        } catch (err) {
+          console.error('Canvas initialization failed:', err);
+          alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
+          document.getElementById('processing-overlay').style.display = 'none';
+        }
+      };
+      img.onerror = () => {
+        console.error('Failed to load image');
+        alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
+        document.getElementById('processing-overlay').style.display = 'none';
+      };
+    }
+    function updateControls() {
+      const activeObjects = canvas.getActiveObjects();
+      if (activeObjects.length === 1 && (activeObjects[0].type === 'textbox' || activeObjects[0].type === 'i-text')) {
+        const activeObject = activeObjects[0];
+        document.getElementById('fontFamily').value = activeObject.fontFamily || 'Arial';
+        document.getElementById('fontSize').value = Math.round(activeObject.fontSize / scale) || 20;
+        document.getElementById('fill').value = rgbToHex(activeObject.fill) || '#000000';
+        document.getElementById('stroke').value = rgbToHex(activeObject.stroke) || '#000000';
+        document.getElementById('strokeWidth').value = activeObject.strokeWidth || 0;
+        document.getElementById('lineHeight').value = activeObject.lineHeight || 1.2;
+        document.getElementById('textBackgroundColor').value = rgbToHex(activeObject.textBackgroundColor) || '#ffffff';
+        document.getElementById('textAlign').value = activeObject.textAlign || 'left';
+        document.getElementById('animation').value = activeObject.animation || 'none';
+        document.getElementById('opacity').value = activeObject.opacity || 1;
+        document.getElementById('fontWeight').value = activeObject.fontWeight === 'bold' ? 'bold' : (activeObject.fontWeight || 'normal');
+        document.getElementById('italic').textContent = activeObject.fontStyle === 'italic' ? 'No Italic' : 'Italic';
+      } else {
+        document.getElementById('fontFamily').value = 'Arial';
+        document.getElementById('fontSize').value = 20;
+        document.getElementById('fill').value = '#000000';
+        document.getElementById('stroke').value = '#000000';
+        document.getElementById('strokeWidth').value = 0;
+        document.getElementById('lineHeight').value = 1.2;
+        document.getElementById('textBackgroundColor').value = '#ffffff';
+        document.getElementById('textAlign').value = 'left';
+        document.getElementById('animation').value = 'none';
+        document.getElementById('opacity').value = 1;
+        document.getElementById('fontWeight').value = 'normal';
+        document.getElementById('italic').textContent = 'Italic';
+      }
+    }
+    function rgbToHex(rgb) {
+      if (!rgb || rgb.startsWith('#')) return rgb || '#000000';
+      const [r, g, b] = rgb.match(/\d+/g)?.map(Number) || [0, 0, 0];
+      return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+    function applyAnimation(obj, animation) {
+      if (!obj) return;
+      obj.animation = animation;
+      if (animation === 'none') {
+        obj.set('animation', null);
+        obj.canvas.renderAll();
+      } else {
+        function animate() {
+          if (obj.animation === 'bounce') {
+            obj.animate('top', obj.top - 10, {
+              duration: 400,
+              onChange: canvas.renderAll.bind(canvas),
+              onComplete: function() {
+                obj.animate('top', obj.top + 10, {
+                  duration: 400,
+                  onChange: canvas.renderAll.bind(canvas),
+                  onComplete: animate
+                });
+              }
+            });
+          } else if (obj.animation === 'pulse') {
+            obj.animate('scaleX', 1.05, {
+              duration: 500,
+              onChange: canvas.renderAll.bind(canvas),
+              onComplete: function() {
+                obj.animate('scaleX', 1, {
+                  duration: 500,
+                  onChange: canvas.renderAll.bind(canvas),
+                  onComplete: animate
+                });
+              }
+            });
+            obj.animate('scaleY', 1.05, {
+              duration: 500,
+              onChange: canvas.renderAll.bind(canvas),
+              onComplete: function() {
+                obj.animate('scaleY', 1, {
+                  duration: 500,
+                  onChange: canvas.renderAll.bind(canvas)
+                });
+              }
+            });
+          }
+        }
+        animate();
+      }
+    }
+    function applyToSelected(property, value, transform = v => v) {
+      const activeObjects = canvas.getActiveObjects();
+      activeObjects.forEach(obj => {
+        if (obj.type === 'textbox' || obj.type === 'i-text') {
+          obj.set(property, transform(value));
+          obj.set('dirty', true);
+        }
+      });
+      canvas.requestRenderAll();
+      saveState();
+      reconstructTexts();
+    }
+    document.getElementById('fontFamily').addEventListener('change', (e) => {
+      applyToSelected('fontFamily', e.target.value);
+    });
+    document.getElementById('fontSize').addEventListener('input', (e) => {
+      applyToSelected('fontSize', e.target.value, v => parseInt(v) * scale);
+    });
+    document.getElementById('fill').addEventListener('input', (e) => {
+      applyToSelected('fill', e.target.value);
+    });
+    document.getElementById('stroke').addEventListener('input', (e) => {
+      applyToSelected('stroke', e.target.value);
+    });
+    document.getElementById('strokeWidth').addEventListener('input', (e) => {
+      applyToSelected('strokeWidth', e.target.value, parseFloat);
+    });
+    document.getElementById('lineHeight').addEventListener('input', (e) => {
+      applyToSelected('lineHeight', e.target.value, parseFloat);
+    });
+    document.getElementById('textBackgroundColor').addEventListener('input', (e) => {
+      applyToSelected('textBackgroundColor', e.target.value);
+    });
+    document.getElementById('textAlign').addEventListener('change', (e) => {
+      applyToSelected('textAlign', e.target.value);
+    });
+    document.getElementById('animation').addEventListener('change', (e) => {
+      const activeObjects = canvas.getActiveObjects();
+      activeObjects.forEach(obj => {
+        if (obj.type === 'textbox' || obj.type === 'i-text') {
+          applyAnimation(obj, e.target.value);
+        }
+      });
+      saveState();
+    });
+    document.getElementById('opacity').addEventListener('input', (e) => {
+      applyToSelected('opacity', e.target.value, parseFloat);
+    });
+    document.getElementById('fontWeight').addEventListener('change', (e) => {
+      applyToSelected('fontWeight', e.target.value);
+    });
+    document.getElementById('italic').addEventListener('click', () => {
+      const activeObjects = canvas.getActiveObjects();
+      activeObjects.forEach(obj => {
+        if (obj.type === 'textbox' || obj.type === 'i-text') {
+          const newStyle = obj.fontStyle === 'italic' ? 'normal' : 'italic';
+          obj.set('fontStyle', newStyle);
+          obj.set('dirty', true);
+        }
+      });
+      const activeObject = canvas.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        document.getElementById('italic').textContent = activeObject.fontStyle === 'italic' ? 'No Italic' : 'Italic';
+      }
+      canvas.requestRenderAll();
+      saveState();
+      reconstructTexts();
+    });
+    document.getElementById('addText').addEventListener('click', () => {
+      const newText = new fabric.Textbox('New Text', {
+        left: 50 * scale,
+        top: 50 * scale,
+        fontFamily: customFontName || 'Arial',
+        fontSize: 20 * scale,
+        fill: '#000000',
+        textAlign: 'left',
+        lineHeight: 1.2,
+        width: 200 * scale,
+        stroke: null,
+        strokeWidth: 0,
+        textBackgroundColor: '',
+        opacity: 1,
+        fontWeight: 'normal',
+        fontStyle: 'normal',
+        selectable: true,
+        editable: true
+      });
+      canvas.add(newText);
+      canvas.setActiveObject(newText);
+      updateControls();
+      canvas.renderAll();
+      saveState();
+      reconstructTexts();
+    });
+    document.getElementById('removeText').addEventListener('click', () => {
+      const activeObjects = canvas.getActiveObjects();
+      if (activeObjects.length > 0) {
+        activeObjects.forEach(obj => {
+          canvas.remove(obj);
+        });
+        canvas.discardActiveObject();
+        updateControls();
+        canvas.renderAll();
+        saveState();
+        reconstructTexts();
+      }
+    });
+    document.getElementById('penTool').addEventListener('click', () => {
+      isPenActive = !isPenActive;
+      canvas.isDrawingMode = isPenActive;
+      const penButton = document.getElementById('penTool');
+      if (isPenActive) {
+        penButton.classList.add('active');
+        canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+        canvas.freeDrawingBrush.color = document.getElementById('penColor').value;
+        canvas.freeDrawingBrush.width = parseInt(document.getElementById('penWidth').value);
+      } else {
+        penButton.classList.remove('active');
+        canvas.isDrawingMode = false;
+      }
+    });
+    document.getElementById('penColor').addEventListener('input', (e) => {
+      if (isPenActive) {
+        canvas.freeDrawingBrush.color = e.target.value;
+      }
+    });
+    document.getElementById('penWidth').addEventListener('change', (e) => {
+      if (isPenActive) {
+        canvas.freeDrawingBrush.width = parseInt(e.target.value);
+      }
+    });
+    function saveCanvas() {
+      if (!canvas) return;
+      document.getElementById('processing-overlay').style.display = 'flex';
+      const animatedObjects = canvas.getObjects().filter(obj => obj.animation && obj.animation !== 'none');
+      const savedStates = animatedObjects.map(obj => {
+        const anim = obj.animation;
+        const state = { top: obj.top, scaleX: obj.scaleX, scaleY: obj.scaleY };
+        obj.set({ animation: 'none' });
+        return { obj, state, anim };
+      });
+      canvas.renderAll();
+      const multiplier = {{ image_width }} / canvas.width;
+      const dataURL = canvas.toDataURL({ format: 'png', multiplier: multiplier });
+      savedStates.forEach(({ obj, state, anim }) => {
+        obj.set(state);
+        applyAnimation(obj, anim);
+      });
+      canvas.renderAll();
+      const link = document.createElement('a');
+      link.download = 'translated_image.png';
+      link.href = dataURL;
+      link.click();
+      document.getElementById('processing-overlay').style.display = 'none';
+    }
+    document.getElementById('download').addEventListener('click', (e) => {
+      e.preventDefault();
+      saveCanvas();
+    });
+    document.getElementById('processing-overlay').style.display = 'flex';
+    initCanvas();
+    {% endif %}
+    const shareBtn = document.getElementById("share");
+    shareBtn.addEventListener("click", async () => {
+      const imageUrl = window.location.origin + "/static/edited_image.png";
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Check out my generated image!",
+            text: "I created this using AskMyDatabase — try it out!",
+            url: imageUrl
+          });
+          console.log("Shared successfully");
+        } catch (err) {
+          console.error("Share failed:", err.message);
+        }
+      } else {
+        const shareOptions = `
+          <div style="margin-top:10px">
+            <a href="https://wa.me/?text=${encodeURIComponent(imageUrl)}" target="_blank">Share on WhatsApp</a> |
+            <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(imageUrl)}" target="_blank">Share on Twitter</a> |
+            <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}" target="_blank">Share on Facebook</a>
+          </div>
+        `;
+        alert("Sharing not supported on this browser. Copy or use the links below.");
+        document.body.insertAdjacentHTML("beforeend", shareOptions);
+      }
+    });
+  </script>
+</body>
+</html>
+ -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Apps Localization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+  <meta name="description" content="PicLingo – Translate & resize text in your images seamlessly. Perfect for multi-language content creation." />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NFM92282DY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NFM92282DY');
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+      font-family: "Inter", sans-serif;
+      transition: background 0.5s ease, color 0.3s ease;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: clamp(1rem, 5vw, 2rem);
+    }
+    body.light {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #333;
+    }
+    body.dark {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #e6e6e6;
+    }
+    .share-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .share-btn:hover {
+      background-color: #3e9142;
+    }
+    .card {
+      width: 100%;
+      max-width: min(90vw, 720px);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+      border-radius: clamp(0.8rem, 2vw, 1.2rem);
+      padding: clamp(1.5rem, 4vw, 2.8rem);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+      animation: fadein 0.6s ease;
+      transition: background 0.4s ease, color 0.4s ease, box-shadow 0.3s ease;
+    }
+    @keyframes fadein {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    body.dark .card {
+      background: rgba(30, 32, 44, 0.95);
+      color: #e6e6e6;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+    }
+    body.dark .card h1,
+    body.dark .card .subtitle,
+    body.dark .card label {
+      color: #f0f0f0;
+    }
+    h1 {
+      text-align: center;
+      margin: 0;
+      font-weight: 700;
+      font-size: clamp(1.5rem, 5vw, 2.4rem);
+      color: #111;
+    }
+    .subtitle {
+      text-align: center;
+      color: #555;
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      margin: 0.5rem 0 clamp(1rem, 3vw, 2.2rem);
+    }
+    label {
+      display: block;
+      margin: clamp(0.8rem, 2vw, 1.4rem) 0 0.5rem;
+      font-weight: 600;
+      color: #333;
+      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+    }
+    select,
+    input[type="file"],
+    input[type="color"],
+    input[type="number"] {
+      width: 100%;
+      padding: clamp(0.5rem, 2vw, 0.8rem) 1rem;
+      border: 1px solid #ccc;
+      border-radius: clamp(6px, 1.5vw, 10px);
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    select:focus,
+    input[type="file"]:focus,
+    input[type="color"]:focus,
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 6px rgba(0, 123, 255, 0.35);
+    }
+    body.dark select,
+    body.dark input[type="file"],
+    body.dark input[type="color"],
+    body.dark input[type="number"] {
+      background: #2a2d3a;
+      color: #e0e0e0;
+      border: 1px solid #555;
+    }
+    body.dark select:focus,
+    body.dark input[type="file"]:focus,
+    body.dark input[type="color"]:focus,
+    body.dark input[type="number"]:focus {
+      border-color: #00c6ff;
+      box-shadow: 0 0 6px rgba(0, 198, 255, 0.35);
+    }
+    button[type="submit"],
+    .download-btn {
+      display: inline-block;
+      margin: clamp(1rem, 3vw, 2rem) clamp(0.5rem, 1vw, 1rem) 0 0;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
+      padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1rem, 2.5vw, 1.6rem);
+      border: none;
+      border-radius: clamp(6px, 1.5vw, 10px);
+      font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
+    }
+    button[type="submit"]:hover,
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+    }
+    body.dark button[type="submit"],
+    body.dark .download-btn {
+      background: linear-gradient(135deg, #1a2a3d, #2c5364);
+      color: #f2f2f2;
+      border: 1px solid #444;
+    }
+    body.dark button[type="submit"]:hover,
+    body.dark .download-btn:hover {
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+    }
+    .result {
+      margin-top: clamp(1.5rem, 4vw, 2.5rem);
+      text-align: center;
+      background: rgba(250, 250, 250, 0.95);
+      border-radius: clamp(8px, 2vw, 14px);
+      padding: clamp(1rem, 3vw, 1.5rem);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      color: #222;
+      transition: background 0.4s ease, color 0.4s ease;
+      width: 100%;
+      max-width: min(90vw, 720px);
+    }
+    body.dark .result {
+      background: rgba(36, 38, 54, 0.95);
+      color: #f0f0f0;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+    }
+    #processing-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      color: #333;
+      animation: fadeInOverlay 0.3s ease forwards;
+    }
+    .spinner {
+      border: 6px solid #eaeaea;
+      border-top: 6px solid #007bff;
+      border-right: 6px solid #00c6ff;
+      border-radius: 50%;
+      width: clamp(50px, 10vw, 70px);
+      height: clamp(50px, 10vw, 70px);
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes fadeInOverlay {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    body.dark #processing-overlay {
+      background: rgba(20, 22, 30, 0.92);
+      color: #e6e6e6;
+    }
+    body.dark .spinner {
+      border: 6px solid #2a2d3a;
+      border-top: 6px solid #00c6ff;
+      border-right: 6px solid #007bff;
+    }
+    #theme-toggle {
+      position: fixed;
+      top: clamp(10px, 2vw, 20px);
+      right: clamp(10px, 2vw, 20px);
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: clamp(36px, 8vw, 46px);
+      height: clamp(36px, 8vw, 46px);
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      cursor: pointer;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .tutorial-btn {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      border: 1px solid var(--btn-border);
+      transition: background-color 0.2s, color 0.2s, transform 0.2s;
+      z-index: 1000;
+    }
+    .tutorial-btn:hover {
+      transform: translateY(-2px);
+      background-color: var(--btn-hover-bg);
+    }
+    body.light {
+      --btn-bg: #f4f4f4;
+      --btn-border: #ccc;
+      --btn-text: #333;
+      --btn-hover-bg: #e0e0e0;
+    }
+    body.dark {
+      --btn-bg: #222;
+      --btn-border: #444;
+      --btn-text: #f8f8f8;
+      --btn-hover-bg: #333;
+    }
+    #theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+    }
+    .success-msg {
+      font-weight: 600;
+      color: #007bff;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+    }
+    .error-msg {
+      font-weight: 600;
+      color: #ff6b6b;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+    }
+    body.dark .success-msg {
+      color: #00c6ff;
+    }
+    body.dark .error-msg {
+      color: #ff6b6b;
+    }
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+      max-width: min(90vw, 600px);
+      border-radius: clamp(6px, 1.5vw, 10px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      margin: clamp(0.5rem, 2vw, 1rem) auto 0;
+      display: block;
+    }
+    body.dark canvas {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    #controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: clamp(0.3rem, 1vw, 0.5rem);
+      margin: clamp(0.5rem, 2vw, 1rem) 0;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: clamp(6px, 1.5vw, 8px);
+      padding: clamp(0.3rem, 1vw, 0.5rem);
+      width: 100%;
+      max-width: min(90vw, 720px);
+      transition: background 0.4s ease;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    body.dark #controls {
+      background: rgba(36, 38, 54, 0.95);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    #controls label {
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+      color: #333;
+    }
+    body.dark #controls label {
+      color: #e0e0e0;
+    }
+    #controls select,
+    #controls input {
+      width: 100%;
+      padding: clamp(0.2rem, 1vw, 0.3rem);
+      margin-bottom: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: clamp(4px, 1vw, 6px);
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+    }
+    body.dark #controls select,
+    body.dark input[type="file"],
+    body.dark input[type="color"],
+    body.dark input[type="number"] {
+      background: #2a2d3a;
+      color: #e0e0e0;
+      border: 1px solid #555;
+    }
+    #controls button {
+      width: 100%;
+      padding: clamp(0.2rem, 1vw, 0.3rem);
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
+      border: none;
+      border-radius: clamp(4px, 1vw, 6px);
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    body.dark #controls button {
+      background: linear-gradient(135deg, #1a2a3d, #2c5364);
+      border: 1px solid #444;
+    }
+    #controls button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    #controls button.active {
+      background: linear-gradient(135deg, #007bff, #00c6ff);
+      transform: scale(0.95);
+    }
+    body.dark #controls button.active {
+      background: linear-gradient(135deg, #005b99, #0088cc);
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @media (max-width: 768px) {
+      #controls {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      }
+    }
+    @media (max-width: 480px) {
+      #controls {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      }
+    }
+    .result canvas {
+      width: 100% !important;
+      height: auto !important;
+      max-width: min(90vw, 600px);
+      display: block;
+      margin: clamp(0.5rem, 2vw, 1rem) auto 0;
+    }
+    {% if fonts %}
+      {% for font in fonts %}
+        @font-face {
+          font-family: "{{ font }}";
+          src: url("{{ url_for('static', filename='fonts/' + font + '.ttf') }}") format("truetype");
+        }
+      {% endfor %}
+    {% endif %}
+  </style>
+</head>
+<body class="light">
+  <a href="/tutorial" class="tutorial-btn">Tutorial</a>
+  <button id="theme-toggle">🌙</button>
+  <main class="card">
+    <h1>Apps Localization</h1>
+    <p class="subtitle">Translate &amp; resize text in your images seamlessly</p>
+    <form id="translate-form" method="POST" enctype="multipart/form-data">
+      <label for="image">Upload image</label>
+      <input type="file" name="image" id="image" accept="image/*" required aria-label="Upload image" />
+      <label for="language">Target language</label>
+      <select name="language" id="language" required aria-label="Select target language">
+        <option value="en">English</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="es">Spanish</option>
+        <option value="it">Italian</option>
+        <option value="nl">Dutch</option>
+      </select>
+      <label for="resolution">Output resolution</label>
+      <select name="resolution" id="resolution" required aria-label="Select output resolution">
+        <optgroup label="Original">
+          <option value="original">Use Original Size</option>
+        </optgroup>
+        <optgroup label="Phones – Portrait">
+          <option value="iphone-15">iPhone 15 (1290×2796)</option>
+          <option value="iphone-14">iPhone 14 Pro (1179×2556)</option>
+          <option value="iphone-13">iPhone 13 (1170×2532)</option>
+          <option value="android-fhd">Android FHD+ (1080×2400)</option>
+          <option value="android-qhd">Android QHD+ (1440×3200)</option>
+        </optgroup>
+        <optgroup label="Tablets">
+          <option value="ipad-pro">iPad Pro (2048×2732)</option>
+          <option value="ipad-mini">iPad Mini (1536×2048)</option>
+          <option value="android-tab">Android Tablet (1600×2560)</option>
+        </optgroup>
+        <optgroup label="Laptops / Desktops">
+          <option value="hd">Desktop HD (1920×1080)</option>
+          <option value="qhd">Desktop QHD (2560×1440)</option>
+          <option value="4k">Desktop 4K (3840×2160)</option>
+        </optgroup>
+        <optgroup label="Generic Shapes">
+          <option value="square-1to1">Square 1:1 (1080×1080)</option>
+          <option value="portrait-3to4">Portrait 3:4 (1350×1800)</option>
+          <option value="landscape-16to9">Landscape 16:9 (1920×1080)</option>
+        </optgroup>
+      </select>
+      <button type="submit">Translate &amp; Convert</button>
+    </form>
+    {% if success %}
+    <div class="result">
+      <p class="success-msg">{{ success }}</p>
+      <div id="controls">
+        <div>
+          <label for="fontFamily">Font</label>
+          <select id="fontFamily">
+            {% for font in fonts %}
+            <option value="{{ font }}">{{ font }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="customFont">Upload Font (.ttf, .otf)</label>
+          <input id="customFont" type="file" accept=".ttf,.otf" aria-label="Upload custom font">
+        </div>
+        <div>
+          <label for="fontSize">Size</label>
+          <input id="fontSize" type="number" min="8" step="1">
+        </div>
+        <div>
+          <label for="fill">Color</label>
+          <input id="fill" type="color" value="#000000">
+        </div>
+        <div>
+          <label for="stroke">Outline</label>
+          <input id="stroke" type="color" value="#000000">
+        </div>
+        <div>
+          <label for="strokeWidth">Width</label>
+          <input id="strokeWidth" type="number" min="0" max="10" step="0.5" value="0">
+        </div>
+        <div>
+          <label for="lineHeight">Height</label>
+          <input id="lineHeight" type="number" min="0.5" max="3" step="0.1" value="1.2">
+        </div>
+        <div>
+          <label for="textBackgroundColor">Bg Color</label>
+          <input id="textBackgroundColor" type="color" value="#ffffff">
+        </div>
+        <div>
+          <label for="textAlign">Align</label>
+          <select id="textAlign">
+            <option value="left">Left</option>
+            <option value="center">Center</option>
+            <option value="right">Right</option>
+          </select>
+        </div>
+        <div>
+          <label for="animation">Animation</label>
+          <select id="animation">
+            <option value="none">None</option>
+            <option value="bounce">Bounce</option>
+            <option value="pulse">Pulse</option>
+          </select>
+        </div>
+        <div>
+          <label for="opacity">Opacity</label>
+          <input id="opacity" type="number" min="0" max="1" step="0.1" value="1">
+        </div>
+        <div>
+          <label for="fontWeight">Weight</label>
+          <select id="fontWeight">
+            <option value="100">100</option>
+            <option value="200">200</option>
+            <option value="300">300</option>
+            <option value="normal">Normal</option>
+            <option value="500">500</option>
+            <option value="600">600</option>
+            <option value="bold">Bold</option>
+            <option value="800">800</option>
+            <option value="900">900</option>
+          </select>
+        </div>
+        <div>
+          <label for="italic">Style</label>
+          <button id="italic">Italic</button>
+        </div>
+        <div>
+          <label for="addText">Add</label>
+          <button id="addText">Add Text</button>
+        </div>
+        <div>
+          <label for="removeText">Delete</label>
+          <button id="removeText">Delete</button>
+        </div>
+        <div>
+          <label for="penTool">Pen</label>
+          <button id="penTool">Pen</button>
+        </div>
+        <div>
+          <label for="penColor">Pen Color</label>
+          <input id="penColor" type="color" value="#000000">
+        </div>
+        <div>
+          <label for="penWidth">Pen Width</label>
+          <select id="penWidth">
+            <option value="1">1px</option>
+            <option value="3">3px</option>
+            <option value="5">5px</option>
+            <option value="10">10px</option>
+          </select>
+        </div>
+      </div>
+      <canvas id="canvas"></canvas>
+      <p style="display: flex; gap: 10px;">
+        <button id="download" class="download-btn">Download Image</button>
+        <button id="share" class="download-btn">Share Image</button>
+      </p>
+    </div>
+    {% endif %}
+    {% if error %}
+    <p class="error-msg">{{ error }}</p>
+    {% endif %}
+  </main>
+  <div id="processing-overlay">
+    <div class="spinner"></div>
+    <p>Processing your image… please wait!</p>
+  </div>
+  <script>
+    const body = document.body;
+    const themeToggle = document.getElementById('theme-toggle');
+    let canvas = null;
+    let texts = [];
+    let scale = 1;
+    let undoHistory = [];
+    let redoHistory = [];
+    let clipboard = null;
+    let isPenActive = false;
+    let customFontName = null;
+
+    // Theme toggle
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      body.classList.remove("light");
+      body.classList.add("dark");
+      themeToggle.textContent = "☀️";
+    } else {
+      body.classList.remove("dark");
+      body.classList.add("light");
+      themeToggle.textContent = "🌙";
+    }
+    themeToggle.addEventListener("click", () => {
+      if (body.classList.contains("light")) {
+        body.classList.replace("light", "dark");
+        localStorage.setItem("theme", "dark");
+        themeToggle.textContent = "☀️";
+      } else {
+        body.classList.replace("dark", "light");
+        localStorage.setItem("theme", "light");
+        themeToggle.textContent = "🌙";
+      }
+    });
+
+    // Form submission
+    document.getElementById('translate-form').addEventListener('submit', () => {
+      document.getElementById('processing-overlay').style.display = 'flex';
+    });
+
+    // Handle custom font upload
+    document.getElementById('customFont').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file && (file.name.endsWith('.ttf') || file.name.endsWith('.otf'))) {
+        const fontName = file.name.split('.')[0];
+        customFontName = fontName;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const fontUrl = event.target.result;
+          const fontFace = new FontFace(fontName, `url(${fontUrl})`);
+          document.fonts.add(fontFace);
+          fontFace.load().then(() => {
+            const fontSelect = document.getElementById('fontFamily');
+            if (!Array.from(fontSelect.options).some(opt => opt.value === fontName)) {
+              const option = document.createElement('option');
+              option.value = fontName;
+              option.textContent = fontName;
+              fontSelect.appendChild(option);
+            }
+            if (canvas) canvas.renderAll();
+          }).catch(err => {
+            console.error(`Failed to load custom font ${fontName}:`, err);
+            alert('Failed to load custom font. Please try another font file.');
+          });
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('Please upload a valid .ttf or .otf font file.');
+      }
+    });
+
+    // Preload fonts with fallback
+    function preloadFonts(fonts) {
+      const fontPromises = fonts.map(font => {
+        const fontUrl = `{{ url_for('static', filename='fonts/') }}${font}.ttf`;
+        const fontFace = new FontFace(font, `url(${fontUrl})`);
+        document.fonts.add(fontFace);
+        return fontFace.load().catch(err => {
+          console.error(`Failed to load font ${font}:`, err);
+          return null;
+        });
+      });
+      const timeout = new Promise(resolve => setTimeout(resolve, 3000));
+      Promise.race([Promise.all(fontPromises), timeout]).then(() => {
+        console.log('Font loading completed or timed out');
+        if (canvas) canvas.renderAll();
+      }).catch(err => {
+        console.error('Font preloading error:', err);
+        if (canvas) canvas.renderAll();
+      });
+    }
+
+    // Save state for undo/redo
+    function saveState() {
+      const state = canvas.toJSON(['animation']);
+      undoHistory.push(state);
+      redoHistory = [];
+    }
+
+    // Reconstruct texts from canvas objects
+    function reconstructTexts() {
+      texts = canvas.getObjects('textbox').map(obj => ({
+        text: obj.text,
+        left: obj.left / scale,
+        top: obj.top / scale,
+        fontFamily: obj.fontFamily,
+        fontSize: obj.fontSize / scale,
+        fill: obj.fill,
+        textAlign: obj.textAlign,
+        lineHeight: obj.lineHeight,
+        width: obj.width / scale,
+        stroke: obj.stroke,
+        strokeWidth: obj.strokeWidth,
+        textBackgroundColor: obj.textBackgroundColor,
+        opacity: obj.opacity,
+        fontWeight: obj.fontWeight,
+        fontStyle: obj.fontStyle
+      }));
+    }
+
+    // Undo action
+    function undo() {
+      if (undoHistory.length > 0) {
+        const currentState = canvas.toJSON(['animation']);
+        redoHistory.push(currentState);
+        const previousState = undoHistory.pop();
+        canvas.loadFromJSON(previousState, () => {
+          canvas.renderAll();
+          updateControls();
+          reconstructTexts();
+        });
+      }
+    }
+
+    // Redo action
+    function redo() {
+      if (redoHistory.length > 0) {
+        const currentState = canvas.toJSON(['animation']);
+        undoHistory.push(currentState);
+        const nextState = redoHistory.pop();
+        canvas.loadFromJSON(nextState, () => {
+          canvas.renderAll();
+          updateControls();
+          reconstructTexts();
+        });
+      }
+    }
+
+    // Initialize Fabric.js canvas
+    {% if success %}
+    function initCanvas() {
+      const fonts = [{% for font in fonts %}'{{ font }}'{% if not loop.last %},{% endif %}{% endfor %}];
+      const img = new Image();
+      img.src = "data:image/png;base64,{{ clean_image }}";
+      img.onload = () => {
+        try {
+          const maxWidth = Math.min(window.innerWidth * 0.9, 600);
+          scale = Math.min(maxWidth / img.width, 1);
+          canvas = new fabric.Canvas('canvas', {
+            width: img.width * scale,
+            height: img.height * scale,
+            preserveObjectStacking: true,
+            selection: true
+          });
+          const fabricImg = new fabric.Image(img, {
+            scaleX: scale,
+            scaleY: scale,
+            selectable: false,
+            originX: 'left',
+            originY: 'top'
+          });
+          canvas.add(fabricImg);
+          canvas.sendToBack(fabricImg);
+          texts = JSON.parse('{{ texts_json | safe }}');
+          texts.forEach(text => {
+            const textObj = new fabric.Textbox(text.text, {
+              left: text.left * scale,
+              top: text.top * scale,
+              fontFamily: text.fontFamily || 'Arial',
+              fontSize: text.fontSize * scale,
+              fill: text.fill,
+              textAlign: text.textAlign || 'left',
+              lineHeight: text.lineHeight || 1.2,
+              width: (text.width || img.width) * scale,
+              selectable: true,
+              editable: true
+            });
+            canvas.add(textObj);
+          });
+          canvas.on('selection:created', updateControls);
+          canvas.on('selection:updated', updateControls);
+          canvas.on('selection:cleared', updateControls);
+          canvas.on('object:modified', () => {
+            saveState();
+          });
+          canvas.on('mouse:down', (o) => {
+            if (isPenActive) {
+              let isDrawing = true;
+              const pointer = canvas.getPointer(o.e);
+              const currentPath = new fabric.Path(`M ${pointer.x} ${pointer.y}`, {
+                stroke: document.getElementById('penColor').value,
+                strokeWidth: parseInt(document.getElementById('penWidth').value),
+                fill: null,
+                selectable: true,
+                strokeLineCap: 'round',
+                strokeLineJoin: 'round'
+              });
+              canvas.add(currentPath);
+              canvas.on('mouse:move', (o) => {
+                if (!isDrawing || !isPenActive) return;
+                const pointer = canvas.getPointer(o.e);
+                currentPath.path.push(['L', pointer.x, pointer.y]);
+                currentPath.set('dirty', true);
+                canvas.renderAll();
+              });
+              canvas.on('mouse:up', () => {
+                isDrawing = false;
+                canvas.off('mouse:move');
+                canvas.off('mouse:up');
+                saveState();
+              });
+            } else if (o.e.ctrlKey) {
+              const target = canvas.findTarget(o.e, false);
+              if (target && (target.type === 'textbox' || target.type === 'path')) {
+                const activeObjects = canvas.getActiveObjects();
+                if (activeObjects.includes(target)) {
+                  canvas.removeFromActiveSelection(target);
+                } else {
+                  canvas.addToActiveSelection(target);
+                }
+                canvas.renderAll();
+              }
+            }
+          });
+          document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'z') {
+              e.preventDefault();
+              undo();
+            } else if (e.ctrlKey && e.key === 'y') {
+              e.preventDefault();
+              redo();
+            }
+            if (e.ctrlKey && e.key === 'a') {
+              e.preventDefault();
+              const textObjects = canvas.getObjects().filter(obj => obj.type === 'textbox');
+              if (textObjects.length > 0) {
+                canvas.setActiveObject(new fabric.ActiveSelection(textObjects, { canvas }));
+                updateControls();
+                canvas.renderAll();
+              }
+            }
+            if (e.ctrlKey && e.key === 'c') {
+              e.preventDefault();
+              const activeObjects = canvas.getActiveObjects();
+              if (activeObjects.length > 0) {
+                clipboard = activeObjects.map(obj => obj.toObject(['animation']));
+              }
+            }
+            if (e.ctrlKey && e.key === 'x') {
+              e.preventDefault();
+              const activeObjects = canvas.getActiveObjects();
+              if (activeObjects.length > 0) {
+                clipboard = activeObjects.map(obj => obj.toObject(['animation']));
+                activeObjects.forEach(obj => {
+                  canvas.remove(obj);
+                });
+                canvas.discardActiveObject();
+                updateControls();
+                canvas.renderAll();
+                saveState();
+              }
+            }
+            if (e.ctrlKey && e.key === 'v') {
+              e.preventDefault();
+              if (clipboard) {
+                clipboard.forEach(item => {
+                  if (item.type === 'textbox') {
+                    const newText = new fabric.Textbox(item.text, {
+                      ...item,
+                      left: (item.left / scale + 10) * scale,
+                      top: (item.top / scale + 10) * scale,
+                      fontSize: item.fontSize,
+                      width: item.width,
+                      selectable: true,
+                      editable: true
+                    });
+                    canvas.add(newText);
+                  } else if (item.type === 'path') {
+                    const newPath = new fabric.Path(item.path, {
+                      ...item,
+                      left: (item.left / scale + 10) * scale,
+                      top: (item.top / scale + 10) * scale,
+                      selectable: true
+                    });
+                    canvas.add(newPath);
+                  }
+                });
+                canvas.renderAll();
+                saveState();
+                reconstructTexts();
+              }
+            }
+            if (e.key === 'Backspace' && !e.target.isContentEditable) {
+              e.preventDefault();
+              const activeObjects = canvas.getActiveObjects();
+              if (activeObjects.length > 0) {
+                activeObjects.forEach(obj => {
+                  if (obj.type === 'textbox') {
+                    const selectionStart = obj.selectionStart;
+                    const selectionEnd = obj.selectionEnd;
+                    let text = obj.text;
+                    if (selectionStart !== selectionEnd) {
+                      text = text.slice(0, selectionStart) + text.slice(selectionEnd);
+                      obj.selectionStart = obj.selectionEnd = selectionStart;
+                    } else if (selectionStart > 0) {
+                      text = text.slice(0, selectionStart - 1) + text.slice(selectionEnd);
+                      obj.selectionStart = obj.selectionEnd = selectionStart - 1;
+                    }
+                    obj.text = text;
+                    obj.set('dirty', true);
+                    canvas.requestRenderAll();
+                  } else {
+                    canvas.remove(obj);
+                  }
+                });
+                updateControls();
+                saveState();
+                reconstructTexts();
+              }
+            }
+            if (e.key === 'Delete' && !e.target.isContentEditable) {
+              e.preventDefault();
+              const activeObjects = canvas.getActiveObjects();
+              if (activeObjects.length > 0) {
+                activeObjects.forEach(obj => {
+                  canvas.remove(obj);
+                });
+                canvas.discardActiveObject();
+                updateControls();
+                canvas.renderAll();
+                saveState();
+                reconstructTexts();
+              }
+            }
+          });
+          window.addEventListener('resize', () => {
+            const newMaxWidth = Math.min(window.innerWidth * 0.9, 600);
+            const newScale = Math.min(newMaxWidth / img.width, 1);
+            canvas.setDimensions({
+              width: img.width * newScale,
+              height: img.height * newScale
+            });
+            canvas.getObjects().forEach(obj => {
+              if (obj.type === 'image') {
+                obj.set({ scaleX: newScale, scaleY: newScale });
+              } else if (obj.type === 'textbox' || obj.type === 'path') {
+                obj.set({
+                  left: (obj.left / scale) * newScale,
+                  top: (obj.top / scale) * newScale,
+                  fontSize: obj.type === 'textbox' ? (obj.fontSize / scale) * newScale : obj.fontSize,
+                  width: obj.type === 'textbox' ? (obj.width / scale) * newScale : obj.width
+                });
+              }
+            });
+            scale = newScale;
+            canvas.renderAll();
+          });
+          canvas.renderAll();
+          saveState();
+          document.getElementById('processing-overlay').style.display = 'none';
+          preloadFonts(fonts);
+        } catch (err) {
+          console.error('Canvas initialization failed:', err);
+          alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
+          document.getElementById('processing-overlay').style.display = 'none';
+        }
+      };
+      img.onerror = () => {
+        console.error('Failed to load image');
+        alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
+        document.getElementById('processing-overlay').style.display = 'none';
+      };
+    }
+    function updateControls() {
+      const activeObjects = canvas.getActiveObjects();
+      if (activeObjects.length === 1 && (activeObjects[0].type === 'textbox' || activeObjects[0].type === 'i-text')) {
+        const activeObject = activeObjects[0];
+        document.getElementById('fontFamily').value = activeObject.fontFamily || 'Arial';
+        document.getElementById('fontSize').value = Math.round(activeObject.fontSize / scale) || 20;
+        document.getElementById('fill').value = rgbToHex(activeObject.fill) || '#000000';
+        document.getElementById('stroke').value = rgbToHex(activeObject.stroke) || '#000000';
+        document.getElementById('strokeWidth').value = activeObject.strokeWidth || 0;
+        document.getElementById('lineHeight').value = activeObject.lineHeight || 1.2;
+        document.getElementById('textBackgroundColor').value = rgbToHex(activeObject.textBackgroundColor) || '#ffffff';
+        document.getElementById('textAlign').value = activeObject.textAlign || 'left';
+        document.getElementById('animation').value = activeObject.animation || 'none';
+        document.getElementById('opacity').value = activeObject.opacity || 1;
+        document.getElementById('fontWeight').value = activeObject.fontWeight === 'bold' ? 'bold' : (activeObject.fontWeight || 'normal');
+        document.getElementById('italic').textContent = activeObject.fontStyle === 'italic' ? 'No Italic' : 'Italic';
+      } else {
+        document.getElementById('fontFamily').value = 'Arial';
+        document.getElementById('fontSize').value = 20;
+        document.getElementById('fill').value = '#000000';
+        document.getElementById('stroke').value = '#000000';
+        document.getElementById('strokeWidth').value = 0;
+        document.getElementById('lineHeight').value = 1.2;
+        document.getElementById('textBackgroundColor').value = '#ffffff';
+        document.getElementById('textAlign').value = 'left';
+        document.getElementById('animation').value = 'none';
+        document.getElementById('opacity').value = 1;
+        document.getElementById('fontWeight').value = 'normal';
+        document.getElementById('italic').textContent = 'Italic';
+      }
+    }
+    function rgbToHex(rgb) {
+      if (!rgb || rgb.startsWith('#')) return rgb || '#000000';
+      const [r, g, b] = rgb.match(/\d+/g)?.map(Number) || [0, 0, 0];
+      return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+    function applyAnimation(obj, animation) {
+      if (!obj) return;
+      obj.animation = animation;
+      if (animation === 'none') {
+        obj.set('animation', null);
+        obj.canvas.renderAll();
+      } else {
+        function animate() {
+          if (obj.animation === 'bounce') {
+            obj.animate('top', obj.top - 10, {
+              duration: 400,
+              onChange: canvas.renderAll.bind(canvas),
+              onComplete: function() {
+                obj.animate('top', obj.top + 10, {
+                  duration: 400,
+                  onChange: canvas.renderAll.bind(canvas),
+                  onComplete: animate
+                });
+              }
+            });
+          } else if (obj.animation === 'pulse') {
+            obj.animate('scaleX', 1.05, {
+              duration: 500,
+              onChange: canvas.renderAll.bind(canvas),
+              onComplete: function() {
+                obj.animate('scaleX', 1, {
+                  duration: 500,
+                  onChange: canvas.renderAll.bind(canvas),
+                  onComplete: animate
+                });
+              }
+            });
+            obj.animate('scaleY', 1.05, {
+              duration: 500,
+              onChange: canvas.renderAll.bind(canvas),
+              onComplete: function() {
+                obj.animate('scaleY', 1, {
+                  duration: 500,
+                  onChange: canvas.renderAll.bind(canvas)
+                });
+              }
+            });
+          }
+        }
+        animate();
+      }
+    }
+    function applyToSelected(property, value, transform = v => v) {
+      const activeObjects = canvas.getActiveObjects();
+      activeObjects.forEach(obj => {
+        if (obj.type === 'textbox' || obj.type === 'i-text') {
+          obj.set(property, transform(value));
+          obj.set('dirty', true);
+        }
+      });
+      canvas.requestRenderAll();
+      saveState();
+      reconstructTexts();
+    }
+    document.getElementById('fontFamily').addEventListener('change', (e) => {
+      applyToSelected('fontFamily', e.target.value);
+    });
+    document.getElementById('fontSize').addEventListener('input', (e) => {
+      applyToSelected('fontSize', e.target.value, v => parseInt(v) * scale);
+    });
+    document.getElementById('fill').addEventListener('input', (e) => {
+      applyToSelected('fill', e.target.value);
+    });
+    document.getElementById('stroke').addEventListener('input', (e) => {
+      applyToSelected('stroke', e.target.value);
+    });
+    document.getElementById('strokeWidth').addEventListener('input', (e) => {
+      applyToSelected('strokeWidth', e.target.value, parseFloat);
+    });
+    document.getElementById('lineHeight').addEventListener('input', (e) => {
+      applyToSelected('lineHeight', e.target.value, parseFloat);
+    });
+    document.getElementById('textBackgroundColor').addEventListener('input', (e) => {
+      applyToSelected('textBackgroundColor', e.target.value);
+    });
+    document.getElementById('textAlign').addEventListener('change', (e) => {
+      applyToSelected('textAlign', e.target.value);
+    });
+    document.getElementById('animation').addEventListener('change', (e) => {
+      const activeObjects = canvas.getActiveObjects();
+      activeObjects.forEach(obj => {
+        if (obj.type === 'textbox' || obj.type === 'i-text') {
+          applyAnimation(obj, e.target.value);
+        }
+      });
+      saveState();
+    });
+    document.getElementById('opacity').addEventListener('input', (e) => {
+      applyToSelected('opacity', e.target.value, parseFloat);
+    });
+    document.getElementById('fontWeight').addEventListener('change', (e) => {
+      applyToSelected('fontWeight', e.target.value);
+    });
+    document.getElementById('italic').addEventListener('click', () => {
+      const activeObjects = canvas.getActiveObjects();
+      activeObjects.forEach(obj => {
+        if (obj.type === 'textbox' || obj.type === 'i-text') {
+          const newStyle = obj.fontStyle === 'italic' ? 'normal' : 'italic';
+          obj.set('fontStyle', newStyle);
+          obj.set('dirty', true);
+        }
+      });
+      const activeObject = canvas.getActiveObject();
+      if (activeObject && (activeObject.type === 'textbox' || activeObject.type === 'i-text')) {
+        document.getElementById('italic').textContent = activeObject.fontStyle === 'italic' ? 'No Italic' : 'Italic';
+      }
+      canvas.requestRenderAll();
+      saveState();
+      reconstructTexts();
+    });
+    document.getElementById('addText').addEventListener('click', () => {
+      const newText = new fabric.Textbox('New Text', {
+        left: 50 * scale,
+        top: 50 * scale,
+        fontFamily: customFontName || 'Arial',
+        fontSize: 20 * scale,
+        fill: '#000000',
+        textAlign: 'left',
+        lineHeight: 1.2,
+        width: 200 * scale,
+        stroke: null,
+        strokeWidth: 0,
+        textBackgroundColor: '',
+        opacity: 1,
+        fontWeight: 'normal',
+        fontStyle: 'normal',
+        selectable: true,
+        editable: true
+      });
+      canvas.add(newText);
+      canvas.setActiveObject(newText);
+      updateControls();
+      canvas.renderAll();
+      saveState();
+      reconstructTexts();
+    });
+    document.getElementById('removeText').addEventListener('click', () => {
+      const activeObjects = canvas.getActiveObjects();
+      if (activeObjects.length > 0) {
+        activeObjects.forEach(obj => {
+          canvas.remove(obj);
+        });
+        canvas.discardActiveObject();
+        updateControls();
+        canvas.renderAll();
+        saveState();
+        reconstructTexts();
+      }
+    });
+    document.getElementById('penTool').addEventListener('click', () => {
+      isPenActive = !isPenActive;
+      canvas.isDrawingMode = isPenActive;
+      const penButton = document.getElementById('penTool');
+      if (isPenActive) {
+        penButton.classList.add('active');
+        canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+        canvas.freeDrawingBrush.color = document.getElementById('penColor').value;
+        canvas.freeDrawingBrush.width = parseInt(document.getElementById('penWidth').value);
+      } else {
+        penButton.classList.remove('active');
+        canvas.isDrawingMode = false;
+      }
+    });
+    document.getElementById('penColor').addEventListener('input', (e) => {
+      if (isPenActive) {
+        canvas.freeDrawingBrush.color = e.target.value;
+      }
+    });
+    document.getElementById('penWidth').addEventListener('change', (e) => {
+      if (isPenActive) {
+        canvas.freeDrawingBrush.width = parseInt(e.target.value);
+      }
+    });
+    function saveCanvas() {
+      if (!canvas) return;
+      document.getElementById('processing-overlay').style.display = 'flex';
+      const animatedObjects = canvas.getObjects().filter(obj => obj.animation && obj.animation !== 'none');
+      const savedStates = animatedObjects.map(obj => {
+        const anim = obj.animation;
+        const state = { top: obj.top, scaleX: obj.scaleX, scaleY: obj.scaleY };
+        obj.set({ animation: 'none' });
+        return { obj, state, anim };
+      });
+      canvas.renderAll();
+      const multiplier = {{ image_width }} / canvas.width;
+      const dataURL = canvas.toDataURL({ format: 'png', multiplier: multiplier });
+      savedStates.forEach(({ obj, state, anim }) => {
+        obj.set(state);
+        applyAnimation(obj, anim);
+      });
+      canvas.renderAll();
+      const link = document.createElement('a');
+      link.download = 'translated_image.png';
+      link.href = dataURL;
+      link.click();
+      document.getElementById('processing-overlay').style.display = 'none';
+    }
+    document.getElementById('download').addEventListener('click', (e) => {
+      e.preventDefault();
+      saveCanvas();
+    });
+    document.getElementById('processing-overlay').style.display = 'flex';
+    initCanvas();
+    {% endif %}
+    const shareBtn = document.getElementById("share");
+    shareBtn.addEventListener("click", async () => {
+      const imageUrl = window.location.origin + "/static/edited_image.png";
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Check out my generated image!",
+            text: "I created this using AskMyDatabase — try it out!",
+            url: imageUrl
+          });
+          console.log("Shared successfully");
+        } catch (err) {
+          console.error("Share failed:", err.message);
+        }
+      } else {
+        const shareOptions = `
+          <div style="margin-top:10px">
+            <a href="https://wa.me/?text=${encodeURIComponent(imageUrl)}" target="_blank">Share on WhatsApp</a> |
+            <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(imageUrl)}" target="_blank">Share on Twitter</a> |
+            <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}" target="_blank">Share on Facebook</a>
+          </div>
+        `;
+        alert("Sharing not supported on this browser. Copy or use the links below.");
+        document.body.insertAdjacentHTML("beforeend", shareOptions);
+      }
+    });
+  </script>
+</body>
+</html>
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Apps Localization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+  <meta name="description" content="PicLingo – Translate & resize text in your images seamlessly. Perfect for multi-language content creation." />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NFM92282DY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NFM92282DY');
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+      font-family: "Inter", sans-serif;
+      transition: background 0.5s ease, color 0.3s ease;
+      direction: ltr;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: clamp(1rem, 5vw, 2rem);
+    }
+    body.light {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #333;
+    }
+    body.dark {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #e6e6e6;
+    }
+    .share-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .share-btn:hover {
+      background-color: #3e9142;
+    }
+    .card {
+      width: 100%;
+      max-width: min(90vw, 720px);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+      border-radius: clamp(0.8rem, 2vw, 1.2rem);
+      padding: clamp(1.5rem, 4vw, 2.8rem);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+      animation: fadein 0.6s ease;
+      transition: background 0.4s ease, color 0.4s ease, box-shadow 0.3s ease;
+    }
+    @keyframes fadein {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    body.dark .card {
+      background: rgba(30, 32, 44, 0.95);
+      color: #e6e6e6;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+    }
+    body.dark .card h1,
+    body.dark .card .subtitle,
+    body.dark .card label {
+      color: #f0f0f0;
+    }
+    h1 {
+      text-align: center;
+      margin: 0;
+      font-weight: 700;
+      font-size: clamp(1.5rem, 5vw, 2.4rem);
+      color: #111;
+    }
+    .subtitle {
+      text-align: center;
+      color: #555;
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      margin: 0.5rem 0 clamp(1rem, 3vw, 2.2rem);
+    }
+    label {
+      display: block;
+      margin: clamp(0.8rem, 2vw, 1.4rem) 0 0.5rem;
+      font-weight: 600;
+      color: #333;
+      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+    }
+    select,
+    input[type="file"],
+    input[type="color"],
+    input[type="number"] {
+      width: 100%;
+      padding: clamp(0.5rem, 2vw, 0.8rem) 1rem;
+      border: 1px solid #ccc;
+      border-radius: clamp(6px, 1.5vw, 10px);
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    select:focus,
+    input[type="file"]:focus,
+    input[type="color"]:focus,
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 6px rgba(0, 123, 255, 0.35);
+    }
+    body.dark select,
+    body.dark input[type="file"],
+    body.dark input[type="color"],
+    body.dark input[type="number"] {
+      background: #2a2d3a;
+      color: #e0e0e0;
+      border: 1px solid #555;
+    }
+    body.dark select:focus,
+    body.dark input[type="file"]:focus,
+    body.dark input[type="color"]:focus,
+    body.dark input[type="number"]:focus {
       border-color: #00c6ff;
       box-shadow: 0 0 6px rgba(0, 198, 255, 0.35);
     }
@@ -558,13 +3042,6 @@
       #controls {
         grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
       }
-      .tabs {
-        flex-direction: column;
-      }
-      .tab {
-        border-radius: 8px;
-        margin-bottom: 0.5rem;
-      }
     }
     @media (max-width: 480px) {
       #controls {
@@ -582,50 +3059,14 @@
       display: block;
       margin: clamp(0.5rem, 2vw, 1rem) auto 0;
     }
-    
-    /* Tab Content */
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    
-    /* Character counter */
-    .char-counter {
-      text-align: right;
-      font-size: 0.8rem;
-      margin-top: 0.3rem;
-      color: #666;
-    }
-    body.dark .char-counter {
-      color: #aaa;
-    }
-    
-    /* Text result area */
-    .text-result {
-      background: #f8f9fa;
-      border-radius: 8px;
-      padding: 1rem;
-      margin-top: 1rem;
-      white-space: pre-wrap;
-      min-height: 100px;
-      text-align: left;
-    }
-    body.dark .text-result {
-      background: #2a2d3a;
-    }
-    
-    /* Usage counter */
-    .usage-counter {
-      text-align: center;
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: #666;
-    }
-    body.dark .usage-counter {
-      color: #aaa;
-    }
+    {% if fonts %}
+      {% for font in fonts %}
+        @font-face {
+          font-family: "{{ font }}";
+          src: url("{{ url_for('static', filename='font/' + font + '.ttf') }}") format("truetype");
+        }
+      {% endfor %}
+    {% endif %}
   </style>
 </head>
 <body class="light">
@@ -634,9 +3075,9 @@
   <div class="header-buttons">
     <!-- Language Toggle Button -->
     <div class="language-toggle">
-      <button class="language-btn" style="gap: 6px;">
-        🌐 English <span style="font-size: 12px;">▼</span>
-      </button>
+<button class="language-btn" style="gap: 6px;">
+  🌐 English <span style="font-size: 12px;">▼</span>
+</button>
       <div class="language-dropdown">
         <div class="language-option active" data-lang="en">
           <span class="language-flag">🇺🇸</span> English
@@ -663,522 +3104,173 @@
     </div>
     <button id="theme-toggle">🌙</button>
   </div>
-  
-  <!-- Tabs -->
-  <div class="tabs">
-    <button class="tab active" data-tab="image-text-translation">Image Text Translation & Resolution Setter</button>
-    <button class="tab" data-tab="resolution-setter">Resolution Setter</button>
-    <button class="tab" data-tab="image-text-extracter">Image Text Extracter</button>
-    <button class="tab" data-tab="translate-text">Translate Text</button>
-  </div>
-  
   <main class="card">
     <h1 data-i18n="app_title">Apps Localization</h1>
     <p class="subtitle" data-i18n="app_subtitle">Translate &amp; resize text in your images seamlessly</p>
-    
-    <!-- Image Text Translation & Resolution Setter Tab -->
-    <div id="image-text-translation" class="tab-content active">
-      <form id="translate-form" method="POST" enctype="multipart/form-data">
-        <label for="image" data-i18n="upload_image">Upload image</label>
-        <input type="file" name="image" id="image" accept="image/*" required aria-label="Upload image" />
-        <label for="language" data-i18n="target_language">Target language</label>
-        <select name="language" id="form-language" required aria-label="Select target language">
-          <option value="en">English</option>
-          <option value="fr">French</option>
-          <option value="de">German</option>
-          <option value="es">Spanish</option>
-          <option value="it">Italian</option>
-          <option value="nl">Dutch</option>
-          <option value="pt">Portuguese</option>
-        </select>
-        <label for="resolution" data-i18n="output_resolution">Output resolution</label>
-        <select name="resolution" id="resolution" required aria-label="Select output resolution">
-          <optgroup label="Original">
-            <option value="original" data-i18n="original_size">Use Original Size</option>
-          </optgroup>
-          <optgroup label="Phones – Portrait">
-            <option value="iphone-15">iPhone 15 (1290×2796)</option>
-            <option value="iphone-14">iPhone 14 Pro (1179×2556)</option>
-            <option value="iphone-13">iPhone 13 (1170×2532)</option>
-            <option value="android-fhd">Android FHD+ (1080×2400)</option>
-            <option value="android-qhd">Android QHD+ (1440×3200)</option>
-          </optgroup>
-          <optgroup label="Tablets">
-            <option value="ipad-pro">iPad Pro (2048×2732)</option>
-            <option value="ipad-mini">iPad Mini (1536×2048)</option>
-            <option value="android-tab">Android Tablet (1600×2560)</option>
-          </optgroup>
-          <optgroup label="Laptops / Desktops">
-            <option value="hd">Desktop HD (1920×1080)</option>
-            <option value="qhd">Desktop QHD (2560×1440)</option>
-            <option value="4k">Desktop 4K (3840×2160)</option>
-          </optgroup>
-          <optgroup label="Generic Shapes">
-            <option value="square-1to1">Square 1:1 (1080×1080)</option>
-            <option value="portrait-3to4">Portrait 3:4 (1350×1800)</option>
-            <option value="landscape-16to9">Landscape 16:9 (1920×1080)</option>
-          </optgroup>
-        </select>
-        <button type="submit" data-i18n="translate_convert">Translate &amp; Convert</button>
-      </form>
-      
-      {% if success %}
-      <div class="result">
-        <p class="success-msg">{{ success }}</p>
-        <div id="controls">
-          <div>
-            <label for="fontFamily" data-i18n="font">Font</label>
-            <select id="fontFamily">
-              {% for font in fonts %}
-              <option value="{{ font }}">{{ font }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div>
-            <label for="customFont" data-i18n="upload_font">Upload Font (.ttf, .otf)</label>
-            <input id="customFont" type="file" accept=".ttf,.otf" aria-label="Upload custom font">
-          </div>
-          <div>
-            <label for="fontSize" data-i18n="size">Size</label>
-            <input id="fontSize" type="number" min="8" step="1">
-          </div>
-          <div>
-            <label for="fill" data-i18n="color">Color</label>
-            <input id="fill" type="color" value="#000000">
-          </div>
-          <div>
-            <label for="stroke" data-i18n="outline">Outline</label>
-            <input id="stroke" type="color" value="#000000">
-          </div>
-          <div>
-            <label for="strokeWidth" data-i18n="width">Width</label>
-            <input id="strokeWidth" type="number" min="0" max="10" step="0.5" value="0">
-          </div>
-          <div>
-            <label for="lineHeight" data-i18n="height">Height</label>
-            <input id="lineHeight" type="number" min="0.5" max="3" step="0.1" value="1.2">
-          </div>
-          <div>
-            <label for="textBackgroundColor" data-i18n="bg_color">Bg Color</label>
-            <input id="textBackgroundColor" type="color" value="#ffffff">
-          </div>
-          <div>
-            <label for="textAlign" data-i18n="align">Align</label>
-            <select id="textAlign">
-              <option value="left" data-i18n="left">Left</option>
-              <option value="center" data-i18n="center">Center</option>
-              <option value="right" data-i18n="right">Right</option>
-            </select>
-          </div>
-          <div>
-            <label for="animation" data-i18n="animation">Animation</label>
-            <select id="animation">
-              <option value="none" data-i18n="none">None</option>
-              <option value="bounce" data-i18n="bounce">Bounce</option>
-              <option value="pulse" data-i18n="pulse">Pulse</option>
-            </select>
-          </div>
-          <div>
-            <label for="opacity" data-i18n="opacity">Opacity</label>
-            <input id="opacity" type="number" min="0" max="1" step="0.1" value="1">
-          </div>
-          <div>
-            <label for="fontWeight" data-i18n="weight">Weight</label>
-            <select id="fontWeight">
-              <option value="100">100</option>
-              <option value="200">200</option>
-              <option value="300">300</option>
-              <option value="normal" data-i18n="normal">Normal</option>
-              <option value="500">500</option>
-              <option value="600">600</option>
-              <option value="bold" data-i18n="bold">Bold</option>
-              <option value="800">800</option>
-              <option value="900">900</option>
-            </select>
-          </div>
-          <div>
-            <label for="italic" data-i18n="style">Style</label>
-            <button id="italic" data-i18n="italic">Italic</button>
-          </div>
-          <div>
-            <label for="addText" data-i18n="add">Add</label>
-            <button id="addText" data-i18n="add_text">Add Text</button>
-          </div>
-          <div>
-            <label for="removeText" data-i18n="delete">Delete</label>
-            <button id="removeText" data-i18n="delete">Delete</button>
-          </div>
-          <div>
-            <label for="penTool" data-i18n="pen">Pen</label>
-            <button id="penTool" data-i18n="pen">Pen</button>
-          </div>
-          <div>
-            <label for="penColor" data-i18n="pen_color">Pen Color</label>
-            <input id="penColor" type="color" value="#000000">
-          </div>
-          <div>
-            <label for="penWidth" data-i18n="pen_width">Pen Width</label>
-            <select id="penWidth">
-              <option value="1">1px</option>
-              <option value="3">3px</option>
-              <option value="5">5px</option>
-              <option value="10">10px</option>
-            </select>
-          </div>
+    <form id="translate-form" method="POST" enctype="multipart/form-data">
+      <label for="image" data-i18n="upload_image">Upload image</label>
+      <input type="file" name="image" id="image" accept="image/*" required aria-label="Upload image" />
+      <label for="language" data-i18n="target_language">Target language</label>
+      <select name="language" id="form-language" required aria-label="Select target language">
+        <option value="en">English</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="es">Spanish</option>
+        <option value="it">Italian</option>
+        <option value="nl">Dutch</option>
+        <option value="pt">Portuguese</option>
+      </select>
+      <label for="resolution" data-i18n="output_resolution">Output resolution</label>
+      <select name="resolution" id="resolution" required aria-label="Select output resolution">
+        <optgroup label="Original">
+          <option value="original" data-i18n="original_size">Use Original Size</option>
+        </optgroup>
+        <optgroup label="Phones – Portrait">
+          <option value="iphone-15">iPhone 15 (1290×2796)</option>
+          <option value="iphone-14">iPhone 14 Pro (1179×2556)</option>
+          <option value="iphone-13">iPhone 13 (1170×2532)</option>
+          <option value="android-fhd">Android FHD+ (1080×2400)</option>
+          <option value="android-qhd">Android QHD+ (1440×3200)</option>
+        </optgroup>
+        <optgroup label="Tablets">
+          <option value="ipad-pro">iPad Pro (2048×2732)</option>
+          <option value="ipad-mini">iPad Mini (1536×2048)</option>
+          <option value="android-tab">Android Tablet (1600×2560)</option>
+        </optgroup>
+        <optgroup label="Laptops / Desktops">
+          <option value="hd">Desktop HD (1920×1080)</option>
+          <option value="qhd">Desktop QHD (2560×1440)</option>
+          <option value="4k">Desktop 4K (3840×2160)</option>
+        </optgroup>
+        <optgroup label="Generic Shapes">
+          <option value="square-1to1">Square 1:1 (1080×1080)</option>
+          <option value="portrait-3to4">Portrait 3:4 (1350×1800)</option>
+          <option value="landscape-16to9">Landscape 16:9 (1920×1080)</option>
+        </optgroup>
+      </select>
+      <button type="submit" data-i18n="translate_convert">Translate &amp; Convert</button>
+    </form>
+    {% if success %}
+    <div class="result">
+      <p class="success-msg">{{ success }}</p>
+      <div id="controls">
+        <div>
+          <label for="fontFamily" data-i18n="font">Font</label>
+          <select id="fontFamily">
+            {% for font in fonts %}
+            <option value="{{ font }}">{{ font }}</option>
+            {% endfor %}
+          </select>
         </div>
-        <canvas id="canvas"></canvas>
-        <p style="display: flex; gap: 10px;">
-          <button id="download" class="download-btn" data-i18n="download_image">Download Image</button>
-          <button id="share" class="download-btn" data-i18n="share_image">Share Image</button>
-        </p>
+        <div>
+          <label for="customFont" data-i18n="upload_font">Upload Font (.ttf, .otf)</label>
+          <input id="customFont" type="file" accept=".ttf,.otf" aria-label="Upload custom font">
+        </div>
+        <div>
+          <label for="fontSize" data-i18n="size">Size</label>
+          <input id="fontSize" type="number" min="8" step="1">
+        </div>
+        <div>
+          <label for="fill" data-i18n="color">Color</label>
+          <input id="fill" type="color" value="#000000">
+        </div>
+        <div>
+          <label for="stroke" data-i18n="outline">Outline</label>
+          <input id="stroke" type="color" value="#000000">
+        </div>
+        <div>
+          <label for="strokeWidth" data-i18n="width">Width</label>
+          <input id="strokeWidth" type="number" min="0" max="10" step="0.5" value="0">
+        </div>
+        <div>
+          <label for="lineHeight" data-i18n="height">Height</label>
+          <input id="lineHeight" type="number" min="0.5" max="3" step="0.1" value="1.2">
+        </div>
+        <div>
+          <label for="textBackgroundColor" data-i18n="bg_color">Bg Color</label>
+          <input id="textBackgroundColor" type="color" value="#ffffff">
+        </div>
+        <div>
+          <label for="textAlign" data-i18n="align">Align</label>
+          <select id="textAlign">
+            <option value="left" data-i18n="left">Left</option>
+            <option value="center" data-i18n="center">Center</option>
+            <option value="right" data-i18n="right">Right</option>
+          </select>
+        </div>
+        <div>
+          <label for="animation" data-i18n="animation">Animation</label>
+          <select id="animation">
+            <option value="none" data-i18n="none">None</option>
+            <option value="bounce" data-i18n="bounce">Bounce</option>
+            <option value="pulse" data-i18n="pulse">Pulse</option>
+          </select>
+        </div>
+        <div>
+          <label for="opacity" data-i18n="opacity">Opacity</label>
+          <input id="opacity" type="number" min="0" max="1" step="0.1" value="1">
+        </div>
+        <div>
+          <label for="fontWeight" data-i18n="weight">Weight</label>
+          <select id="fontWeight">
+            <option value="100">100</option>
+            <option value="200">200</option>
+            <option value="300">300</option>
+            <option value="normal" data-i18n="normal">Normal</option>
+            <option value="500">500</option>
+            <option value="600">600</option>
+            <option value="bold" data-i18n="bold">Bold</option>
+            <option value="800">800</option>
+            <option value="900">900</option>
+          </select>
+        </div>
+        <div>
+          <label for="italic" data-i18n="style">Style</label>
+          <button id="italic" data-i18n="italic">Italic</button>
+        </div>
+        <div>
+          <label for="addText" data-i18n="add">Add</label>
+          <button id="addText" data-i18n="add_text">Add Text</button>
+        </div>
+        <div>
+          <label for="removeText" data-i18n="delete">Delete</label>
+          <button id="removeText" data-i18n="delete">Delete</button>
+        </div>
+        <div>
+          <label for="penTool" data-i18n="pen">Pen</label>
+          <button id="penTool" data-i18n="pen">Pen</button>
+        </div>
+        <div>
+          <label for="penColor" data-i18n="pen_color">Pen Color</label>
+          <input id="penColor" type="color" value="#000000">
+        </div>
+        <div>
+          <label for="penWidth" data-i18n="pen_width">Pen Width</label>
+          <select id="penWidth">
+            <option value="1">1px</option>
+            <option value="3">3px</option>
+            <option value="5">5px</option>
+            <option value="10">10px</option>
+          </select>
+        </div>
       </div>
-      {% endif %}
-      {% if error %}
-      <p class="error-msg">{{ error }}</p>
-      {% endif %}
+      <canvas id="canvas"></canvas>
+      <p style="display: flex; gap: 10px;">
+        <button id="download" class="download-btn" data-i18n="download_image">Download Image</button>
+        <button id="share" class="download-btn" data-i18n="share_image">Share Image</button>
+      </p>
     </div>
-<!-- Resolution Setter Tab -->
-<div id="resolution-setter" class="tab-content">
-  <form id="resolution-form">
-    <label for="resolution-image">Choose Image</label>
-    <input type="file" id="resolution-image" accept="image/*" required>
-    
-    <label for="resolution-preset">Select Resolution</label>
-    <select id="resolution-preset" required>
-      <optgroup label="Mobile">
-        <option value="iphone-15">iPhone 15 (1290×2796)</option>
-        <option value="iphone-14">iPhone 14 Pro (1179×2556)</option>
-        <option value="iphone-13">iPhone 13 (1170×2532)</option>
-        <option value="android-fhd">Android FHD+ (1080×2400)</option>
-        <option value="android-qhd">Android QHD+ (1440×3200)</option>
-        <option value="samsung-s21">Samsung S21 (1080×2400)</option>
-        <option value="google-pixel">Google Pixel (1080×2160)</option>
-      </optgroup>
-      <optgroup label="Tablet">
-        <option value="ipad-pro">iPad Pro (2048×2732)</option>
-        <option value="ipad-mini">iPad Mini (1536×2048)</option>
-        <option value="android-tab">Android Tablet (1600×2560)</option>
-        <option value="surface-pro">Surface Pro (2736×1824)</option>
-      </optgroup>
-      <optgroup label="Laptop">
-        <option value="macbook-13">MacBook 13" (2560×1600)</option>
-        <option value="macbook-16">MacBook 16" (3072×1920)</option>
-        <option value="dell-xps">Dell XPS (3840×2400)</option>
-        <option value="thinkpad">ThinkPad (1920×1080)</option>
-      </optgroup>
-      <optgroup label="Desktop">
-        <option value="hd">HD (1920×1080)</option>
-        <option value="qhd">QHD (2560×1440)</option>
-        <option value="4k">4K (3840×2160)</option>
-        <option value="5k">5K (5120×2880)</option>
-        <option value="8k">8K (7680×4320)</option>
-      </optgroup>
-      <optgroup label="Social Media">
-        <option value="instagram-post">Instagram Post (1080×1080)</option>
-        <option value="instagram-story">Instagram Story (1080×1920)</option>
-        <option value="facebook-cover">Facebook Cover (820×312)</option>
-        <option value="twitter-header">Twitter Header (1500×500)</option>
-      </optgroup>
-      <option value="custom">Custom Resolution</option>
-    </select>
-    
-    <div id="custom-resolution" style="display: none;">
-      <label for="custom-width">Width (px)</label>
-      <input type="number" id="custom-width" min="1" max="10000" value="1920">
-      
-      <label for="custom-height">Height (px)</label>
-      <input type="number" id="custom-height" min="1" max="10000" value="1080">
-    </div>
-    
-    <button type="submit">Apply Resolution</button>
-  </form>
-  
-  <div id="resolution-result" class="result" style="display: none;">
-    <p class="success-msg" id="resolution-success">Resolution applied successfully!</p>
-    <div id="resolution-controls" class="controls">
-      <div>
-        <label for="res-fontFamily">Font</label>
-        <select id="res-fontFamily">
-          <option value="Inter">Inter</option>
-          <option value="Arial">Arial</option>
-          <option value="Helvetica">Helvetica</option>
-          <option value="Times New Roman">Times New Roman</option>
-        </select>
-      </div>
-      <div>
-        <label for="res-fontSize">Size</label>
-        <input id="res-fontSize" type="number" min="8" step="1" value="20">
-      </div>
-      <div>
-        <label for="res-fill">Color</label>
-        <input id="res-fill" type="color" value="#000000">
-      </div>
-      <div>
-        <label for="res-textAlign">Align</label>
-        <select id="res-textAlign">
-          <option value="left">Left</option>
-          <option value="center">Center</option>
-          <option value="right">Right</option>
-        </select>
-      </div>
-      <div>
-        <label for="res-addText">Add Text</label>
-        <button id="res-addText">Add Text</button>
-      </div>
-    </div>
-    <canvas id="resolution-canvas"></canvas>
-    <p style="display: flex; gap: 10px; margin-top: 1rem;">
-      <button id="resolution-download" class="download-btn">Download Image</button>
-      <button id="resolution-share" class="download-btn">Share Image</button>
-    </p>
-  </div>
-</div>
-    
-    <!-- Image Text Extracter Tab -->
-    <div id="image-text-extracter" class="tab-content">
-      <form id="extract-form">
-        <label for="extract-image">Upload Image to Extract Text</label>
-        <input type="file" id="extract-image" accept="image/*" required>
-        
-        <button type="submit">Extract Text</button>
-      </form>
-      
-      <div id="extract-result" class="result" style="display: none;">
-        <h3>Extracted Text:</h3>
-        <div class="text-result" id="extracted-text"></div>
-        <p style="display: flex; gap: 10px; margin-top: 1rem;">
-          <button id="copy-text" class="download-btn">Copy Text</button>
-          <button id="download-text" class="download-btn">Download as TXT</button>
-        </p>
-      </div>
-    </div>
-    
-    <!-- Translate Text Tab -->
-    <div id="translate-text" class="tab-content">
-      <form id="text-translate-form">
-        <label for="source-text">Enter Text to Translate (max 100 characters)</label>
-        <textarea id="source-text" maxlength="100" placeholder="Type your text here..." required></textarea>
-        <div class="char-counter"><span id="char-count">0</span>/100 characters</div>
-        
-        <label for="target-language">Target Language</label>
-        <select id="target-language" required>
-          <option value="en">English</option>
-          <option value="fr">French</option>
-          <option value="de">German</option>
-          <option value="es">Spanish</option>
-          <option value="it">Italian</option>
-          <option value="nl">Dutch</option>
-          <option value="pt">Portuguese</option>
-          <option value="ru">Russian</option>
-          <option value="ja">Japanese</option>
-          <option value="ko">Korean</option>
-          <option value="zh">Chinese</option>
-          <option value="ar">Arabic</option>
-          <option value="hi">Hindi</option>
-        </select>
-        
-        <button type="submit">Translate Text</button>
-      </form>
-      
-      <div class="usage-counter">
-        <span id="usage-count">0</span>/500 translations used today
-      </div>
-      
-      <div id="translate-result" class="result" style="display: none;">
-        <h3>Translated Text:</h3>
-        <div class="text-result" id="translated-text"></div>
-        <p style="display: flex; gap: 10px; margin-top: 1rem;">
-          <button id="copy-translation" class="download-btn">Copy Translation</button>
-        </p>
-      </div>
-    </div>
+    {% endif %}
+    {% if error %}
+    <p class="error-msg">{{ error }}</p>
+    {% endif %}
   </main>
-  
   <div id="processing-overlay">
     <div class="spinner"></div>
     <p data-i18n="processing">Processing your image… please wait!</p>
   </div>
-  
   <script>
-    // Tab functionality
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        // Remove active class from all tabs and contents
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        
-        // Add active class to clicked tab and corresponding content
-        tab.classList.add('active');
-        const tabId = tab.getAttribute('data-tab');
-        document.getElementById(tabId).classList.add('active');
-      });
-    });
-    
-    // Character counter for translate text tab
-    const sourceText = document.getElementById('source-text');
-    const charCount = document.getElementById('char-count');
-    
-    if (sourceText && charCount) {
-      sourceText.addEventListener('input', () => {
-        charCount.textContent = sourceText.value.length;
-      });
-    }
-    
-    // Custom resolution toggle
-    const resolutionPreset = document.getElementById('resolution-preset');
-    const customResolution = document.getElementById('custom-resolution');
-    
-    if (resolutionPreset && customResolution) {
-      resolutionPreset.addEventListener('change', () => {
-        if (resolutionPreset.value === 'custom') {
-          customResolution.style.display = 'block';
-        } else {
-          customResolution.style.display = 'none';
-        }
-      });
-    }
-    
-    // Usage counter for translate text (simulated)
-    let usageCount = 0;
-    const usageElement = document.getElementById('usage-count');
-    
-    // Simulate loading usage from localStorage
-    if (usageElement) {
-      const savedUsage = localStorage.getItem('translateUsage');
-      if (savedUsage) {
-        usageCount = parseInt(savedUsage);
-      }
-      usageElement.textContent = usageCount;
-      
-      // Update usage counter
-      function updateUsage() {
-        usageCount++;
-        usageElement.textContent = usageCount;
-        localStorage.setItem('translateUsage', usageCount);
-      }
-      
-      // Translate text form submission
-      const textTranslateForm = document.getElementById('text-translate-form');
-      if (textTranslateForm) {
-        textTranslateForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          
-          if (usageCount >= 500) {
-            alert('Daily limit reached. You can only translate 500 texts per day.');
-            return;
-          }
-          
-          const sourceText = document.getElementById('source-text').value;
-          const targetLanguage = document.getElementById('target-language').value;
-          
-          if (!sourceText.trim()) {
-            alert('Please enter text to translate.');
-            return;
-          }
-          
-          // Show processing
-          document.getElementById('processing-overlay').style.display = 'flex';
-          
-          // Simulate translation API call
-          setTimeout(() => {
-            // This would be replaced with actual translation API
-            const translatedText = `[Translated to ${targetLanguage}]: ${sourceText}`;
-            
-            document.getElementById('translated-text').textContent = translatedText;
-            document.getElementById('translate-result').style.display = 'block';
-            document.getElementById('processing-overlay').style.display = 'none';
-            
-            updateUsage();
-          }, 1500);
-        });
-      }
-    }
-    
-    // Text extraction form submission
-    const extractForm = document.getElementById('extract-form');
-    if (extractForm) {
-      extractForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const fileInput = document.getElementById('extract-image');
-        if (!fileInput.files.length) {
-          alert('Please select an image.');
-          return;
-        }
-        
-        // Show processing
-        document.getElementById('processing-overlay').style.display = 'flex';
-        
-        // Simulate text extraction
-        setTimeout(() => {
-          // This would be replaced with actual OCR API
-          const extractedText = "This is a simulated text extraction result. In a real implementation, this would contain the actual text extracted from the image using OCR technology.";
-          
-          document.getElementById('extracted-text').textContent = extractedText;
-          document.getElementById('extract-result').style.display = 'block';
-          document.getElementById('processing-overlay').style.display = 'none';
-        }, 2000);
-      });
-    }
-    
-    // Copy text functionality
-    document.getElementById('copy-text')?.addEventListener('click', () => {
-      const text = document.getElementById('extracted-text').textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        alert('Text copied to clipboard!');
-      });
-    });
-    
-    document.getElementById('copy-translation')?.addEventListener('click', () => {
-      const text = document.getElementById('translated-text').textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        alert('Translation copied to clipboard!');
-      });
-    });
-    
-    // Download text as TXT file
-    document.getElementById('download-text')?.addEventListener('click', () => {
-      const text = document.getElementById('extracted-text').textContent;
-      const blob = new Blob([text], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'extracted-text.txt';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    });
-    
-    // Resolution form submission
-    const resolutionForm = document.getElementById('resolution-form');
-    if (resolutionForm) {
-      resolutionForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const fileInput = document.getElementById('resolution-image');
-        if (!fileInput.files.length) {
-          alert('Please select an image.');
-          return;
-        }
-        
-        // Show processing
-        document.getElementById('processing-overlay').style.display = 'flex';
-        
-        // Simulate resolution change
-        setTimeout(() => {
-          // This would be replaced with actual image processing
-          const resultDiv = document.getElementById('resolution-result');
-          resultDiv.style.display = 'block';
-          document.getElementById('processing-overlay').style.display = 'none';
-          
-          // In a real implementation, we would resize the image here
-          alert('Resolution applied successfully! In a real implementation, the image would be resized to the selected resolution.');
-        }, 1500);
-      });
-    }
-    
-
+    // Language translations
     const translations = {
       en: {
         app_title: "Apps Localization",
@@ -2153,7 +4245,7 @@
     document.getElementById('processing-overlay').style.display = 'flex';
     initCanvas();
     {% endif %}
-
+   
     const shareBtn = document.getElementById("share");
     if (shareBtn) {
       shareBtn.addEventListener("click", async () => {
@@ -2196,231 +4288,9 @@
       dropdown.style.display = "none";
     });
   });
-
-       // Resolution Setter Tab Functionality
-const resolutionPreset = document.getElementById('resolution-preset');
-const customResolution = document.getElementById('custom-resolution');
-
-if (resolutionPreset && customResolution) {
-  resolutionPreset.addEventListener('change', () => {
-    if (resolutionPreset.value === 'custom') {
-      customResolution.style.display = 'block';
-    } else {
-      customResolution.style.display = 'none';
-    }
-  });
-}
-
-// Resolution form submission
-const resolutionForm = document.getElementById('resolution-form');
-if (resolutionForm) {
-  resolutionForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const fileInput = document.getElementById('resolution-image');
-    if (!fileInput.files.length) {
-      alert('Please select an image.');
-      return;
-    }
-    
-    const resolutionValue = document.getElementById('resolution-preset').value;
-    let width, height;
-    
-    // Get resolution dimensions
-    if (resolutionValue === 'custom') {
-      width = parseInt(document.getElementById('custom-width').value);
-      height = parseInt(document.getElementById('custom-height').value);
-    } else {
-      // Map resolution keys to dimensions (you'll need to define these)
-      const resolutionMap = {
-        'iphone-15': [1290, 2796],
-        'iphone-14': [1179, 2556],
-        'iphone-13': [1170, 2532],
-        'android-fhd': [1080, 2400],
-        'android-qhd': [1440, 3200],
-        'samsung-s21': [1080, 2400],
-        'google-pixel': [1080, 2160],
-        'ipad-pro': [2048, 2732],
-        'ipad-mini': [1536, 2048],
-        'android-tab': [1600, 2560],
-        'surface-pro': [2736, 1824],
-        'macbook-13': [2560, 1600],
-        'macbook-16': [3072, 1920],
-        'dell-xps': [3840, 2400],
-        'thinkpad': [1920, 1080],
-        'hd': [1920, 1080],
-        'qhd': [2560, 1440],
-        '4k': [3840, 2160],
-        '5k': [5120, 2880],
-        '8k': [7680, 4320],
-        'instagram-post': [1080, 1080],
-        'instagram-story': [1080, 1920],
-        'facebook-cover': [820, 312],
-        'twitter-header': [1500, 500]
-      };
-      
-      [width, height] = resolutionMap[resolutionValue] || [1920, 1080];
-    }
-    
-    // Show processing
-    document.getElementById('processing-overlay').style.display = 'flex';
-    
-    try {
-      // Create FormData for the API request
-      const formData = new FormData();
-      formData.append('image', fileInput.files[0]);
-      formData.append('resolution', `${width}x${height}`);
-      
-      // Send to your backend API
-      const response = await fetch('/api/resize-image', {
-        method: 'POST',
-        body: formData
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to resize image');
-      }
-      
-      const result = await response.json();
-      
-      // Display the result
-      document.getElementById('resolution-success').textContent = 'Resolution applied successfully!';
-      document.getElementById('resolution-result').style.display = 'block';
-      
-      // Initialize canvas with the resized image
-      initResolutionCanvas(result.image_data, width, height);
-      
-    } catch (error) {
-      console.error('Error resizing image:', error);
-      alert('Failed to resize image. Please try again.');
-    } finally {
-      document.getElementById('processing-overlay').style.display = 'none';
-    }
-  });
-}
-
-// Initialize resolution canvas
-function initResolutionCanvas(imageData, width, height) {
-  const canvas = new fabric.Canvas('resolution-canvas', {
-    width: width,
-    height: height,
-    preserveObjectStacking: true,
-    selection: true
-  });
-  
-  // Load the image
-  fabric.Image.fromURL(imageData, function(img) {
-    img.set({
-      scaleX: width / img.width,
-      scaleY: height / img.height,
-      selectable: false,
-      originX: 'left',
-      originY: 'top'
-    });
-    canvas.add(img);
-    canvas.sendToBack(img);
-    canvas.renderAll();
-  });
-  
-  // Add text functionality
-  document.getElementById('res-addText').addEventListener('click', () => {
-    const newText = new fabric.Textbox('New Text', {
-      left: 50,
-      top: 50,
-      fontFamily: document.getElementById('res-fontFamily').value,
-      fontSize: parseInt(document.getElementById('res-fontSize').value),
-      fill: document.getElementById('res-fill').value,
-      textAlign: document.getElementById('res-textAlign').value,
-      width: 200,
-      selectable: true,
-      editable: true
-    });
-    canvas.add(newText);
-    canvas.setActiveObject(newText);
-    canvas.renderAll();
-  });
-  
-  // Control event listeners
-  document.getElementById('res-fontFamily').addEventListener('change', (e) => {
-    applyToSelectedResolution(canvas, 'fontFamily', e.target.value);
-  });
-  
-  document.getElementById('res-fontSize').addEventListener('input', (e) => {
-    applyToSelectedResolution(canvas, 'fontSize', parseInt(e.target.value));
-  });
-  
-  document.getElementById('res-fill').addEventListener('input', (e) => {
-    applyToSelectedResolution(canvas, 'fill', e.target.value);
-  });
-  
-  document.getElementById('res-textAlign').addEventListener('change', (e) => {
-    applyToSelectedResolution(canvas, 'textAlign', e.target.value);
-  });
-  
-  // Download functionality
-  document.getElementById('resolution-download').addEventListener('click', () => {
-    const dataURL = canvas.toDataURL({ format: 'png', multiplier: 1 });
-    const link = document.createElement('a');
-    link.download = `resized_image_${width}x${height}.png`;
-    link.href = dataURL;
-    link.click();
-  });
-  
-  // Share functionality
-  document.getElementById('resolution-share').addEventListener('click', async () => {
-    const dataURL = canvas.toDataURL({ format: 'png', multiplier: 1 });
-    
-    if (navigator.share) {
-      try {
-        // Convert dataURL to blob for sharing
-        const response = await fetch(dataURL);
-        const blob = await response.blob();
-        const file = new File([blob], 'resized_image.png', { type: 'image/png' });
-        
-        await navigator.share({
-          title: 'Resized Image',
-          files: [file]
-        });
-      } catch (err) {
-        console.error('Share failed:', err);
-        fallbackShare(dataURL);
-      }
-    } else {
-      fallbackShare(dataURL);
-    }
-  });
-}
-
-// Helper function to apply styles to selected objects
-function applyToSelectedResolution(canvas, property, value) {
-  const activeObjects = canvas.getActiveObjects();
-  activeObjects.forEach(obj => {
-    if (obj.type === 'textbox' || obj.type === 'i-text') {
-      obj.set(property, value);
-      obj.set('dirty', true);
-    }
-  });
-  canvas.requestRenderAll();
-}
-
-// Fallback share function
-function fallbackShare(dataURL) {
-  const shareOptions = `
-    <div style="margin-top:10px">
-      <a href="https://wa.me/?text=${encodeURIComponent('Check out my resized image!')}" target="_blank">Share on WhatsApp</a> |
-      <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent('Check out my resized image!')}&url=${encodeURIComponent(dataURL)}" target="_blank">Share on Twitter</a>
-    </div>
-  `;
-  alert("Sharing not supported on this browser. Use the download button or the links below.");
-  document.body.insertAdjacentHTML("beforeend", shareOptions);
-}
   </script>
 </body>
 </html>
-
-
-
-
 
 
 
