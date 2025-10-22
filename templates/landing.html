@@ -764,17 +764,14 @@
     <h2 id="preview-title">Translation Preview</h2>
     <p id="preview-subtitle">See your original image and all translations in one place</p>
     <div class="translation-preview-container">
-      <div class="original-preview-section">
+   <div class="original-preview-section">
         <h3 id="original-title">Original Content</h3>
         <div class="preview-image-container">
-<img src="{{ url_for('static', filename='9.png') }}" 
-     alt="Dutch Translation"
-     onerror="this.style.display='none'; document.getElementById('dutch-placeholder').style.display='flex';">
-
-<div class="image-placeholder-preview" id="dutch-placeholder" style="display: none;">
-  Orignal Image.png
-</div>
-
+          <img src="/templates/9.png" alt="Original Content" id="original-preview"
+               onerror="this.style.display='none'; document.getElementById('original-placeholder').style.display='flex';">
+          <div class="image-placeholder-preview" id="original-placeholder" style="display: none;">
+            Original Image (9.png)
+          </div>
           <div class="image-label-preview" id="original-label">Original Document (9.png)</div>
         </div>
       </div>
@@ -784,8 +781,7 @@
           <div class="translation-card-preview">
             <div class="translation-image-preview">
               <img src="/templates/Dutch.png" alt="Dutch Translation"
-     onerror="this.style.display='none'; document.getElementById('dutch-placeholder').style.display='flex';">
-
+                   onerror="this.style.display='none'; document.getElementById('dutch-placeholder').style.display='flex';">
               <div class="image-placeholder-preview" id="dutch-placeholder" style="display: none;">
                 Dutch.png
               </div>
@@ -854,16 +850,16 @@
           </div>
           <div class="translation-card-preview">
             <div class="translation-image-preview">
-              <img src="/templates/Portuguese.png" alt="Portuguese Translation"
-                   onerror="this.style.display='none'; document.getElementById('portuguese-placeholder').style.display='flex';">
-              <div class="image-placeholder-preview" id="portuguese-placeholder" style="display: none;">
+              <img src="/templates/Portuguese.png" alt="portuguese Translation"
+                   onerror="this.style.display='none'; document.getElementById('arabic-placeholder').style.display='flex';">
+              <div class="image-placeholder-preview" id="arabic-placeholder" style="display: none;">
                 Portuguese.png
               </div>
             </div>
             <div class="translation-info-preview">
               <h4 class="translation-title-preview" id="translation-6-title">Portuguese Translation</h4>
               <p class="translation-desc-preview" id="translation-6-desc">Portuguese translation with precise localization and cultural adaptation for Portuguese-speaking audiences.</p>
-              <span class="language-badge-preview" id="translation-6-badge">Português</span>
+              <span class="language-badge-preview" id="translation-6-badge">Portuguese</span>
             </div>
           </div>
         </div>
@@ -1474,6 +1470,7 @@
   </script>
 </body>
 </html>
+
 
 
 
