@@ -18,7 +18,13 @@ from authlib.integrations.flask_client import OAuth
 from flask_session import Session
 from authlib.common.errors import AuthlibBaseError
 from datetime import datetime, timedelta
-
+import yake
+from PIL import Image
+from yake import KeywordExtractor
+from nltk.corpus import wordnet
+import nltk
+nltk.download('wordnet', quiet=True)
+nltk.download('omw-1.4', quiet=True)  # For multilingual support if needed
 from flask import send_from_directory
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
