@@ -767,7 +767,13 @@
       </svg>
       Translate Text
     </button>
-  </div>
+ <button class="tab" data-tab="keywords-extractor">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px;">
+      <path d="M5 12H19M5 6H19M5 18H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Keywords Extractor
+  </button>
+</div>
   
   <main class="card">
     <h1 data-i18n="app_title">Apps Localization</h1>
@@ -1040,7 +1046,7 @@
           <option value="ru">Russian</option>
           <option value="ja">Japanese</option>
           <option value="ko">Korean</option>
-          <!-- <option value="zh">Chinese</option> -->
+          <option value="zh">Chinese</option>
           <option value="ar">Arabic</option>
           <option value="hi">Hindi</option>
         </select>
@@ -1049,7 +1055,7 @@
       </form>
       
       <div class="usage-counter">
-        <span id="usage-count">0</span>/10 translations used today
+        <span id="usage-count">0</span>/500 translations used today
       </div>
       
       <div id="translate-result" class="result" style="display: none;">
@@ -1060,15 +1066,32 @@
         </p>
       </div>
     </div>
+<!-- Keywords Extractor Tab Content -->
+<div id="keywords-extractor" class="tab-content">
+  <form id="keywords-form">
+    <label for="input-text" data-i18n="enter_text">Enter Text (optional)</label>
+    <textarea id="input-text" placeholder="Type your text here..." rows="5"></textarea>
+    <label for="input-image" data-i18n="upload_image">Or Upload Image (optional)</label>
+    <input type="file" id="input-image" accept="image/*">
+    <button type="submit" data-i18n="extract_keywords">Extract Keywords</button>
+  </form>
+ 
+  <div id="keywords-result" class="result" style="display: none;">
+    <h3 data-i18n="extracted_keywords">Extracted Keywords:</h3>
+    <div class="text-result" id="keywords-text"></div>
+    <p style="display: flex; gap: 10px; margin-top: 1rem;">
+      <button id="copy-keywords" class="download-btn" data-i18n="copy_text">Copy Text</button>
+      <button id="download-keywords" class="download-btn" data-i18n="download_txt">Download as TXT</button>
+    </p>
+  </div>
+</div>
   </main>
   
   <div id="processing-overlay">
     <div class="spinner"></div>
     <p data-i18n="processing">Processing your image… please wait!</p>
   </div>
-
-  <script>
-    
+<script>
 // Translations
 const translations = {
   en: {
@@ -1110,25 +1133,30 @@ const translations = {
     download_image: "Download Image",
     share_image: "Share Image",
     processing: "Processing your image… please wait!",
-    tutorial: "Tutorial"
+    tutorial: "Tutorial",
+    enter_text: "Enter Text (optional)",
+    extract_keywords: "Extract Keywords",
+    extracted_keywords: "Extracted Keywords",
+    copy_text: "Copy Text",
+    download_txt: "Download as TXT"
   },
   fr: {
-    app_title: "Localisation d'Applications",
-    app_subtitle: "Traduisez et redimensionnez le texte dans vos images facilement",
-    upload_image: "Télécharger l'image",
+    app_title: "Localisation d'applications",
+    app_subtitle: "Traduisez et redimensionnez le texte dans vos images sans effort",
+    upload_image: "Télécharger une image",
     target_language: "Langue cible",
     output_resolution: "Résolution de sortie",
     original_size: "Utiliser la taille originale",
-    translate_convert: "Traduire et Convertir",
+    translate_convert: "Traduire et convertir",
     font: "Police",
-    upload_font: "Télécharger Police (.ttf, .otf)",
+    upload_font: "Télécharger une police (.ttf, .otf)",
     size: "Taille",
     color: "Couleur",
     outline: "Contour",
     width: "Largeur",
     height: "Hauteur",
     bg_color: "Couleur de fond",
-    align: "Aligner",
+    align: "Alignement",
     left: "Gauche",
     center: "Centre",
     right: "Droite",
@@ -1143,39 +1171,44 @@ const translations = {
     style: "Style",
     italic: "Italique",
     add: "Ajouter",
-    add_text: "Ajouter Texte",
+    add_text: "Ajouter du texte",
     delete: "Supprimer",
     pen: "Stylo",
-    pen_color: "Couleur Stylo",
-    pen_width: "Largeur Stylo",
-    download_image: "Télécharger Image",
-    share_image: "Partager Image",
-    processing: "Traitement de votre image… veuillez patienter!",
-    tutorial: "Tutoriel"
+    pen_color: "Couleur du stylo",
+    pen_width: "Largeur du stylo",
+    download_image: "Télécharger l'image",
+    share_image: "Partager l'image",
+    processing: "Traitement de votre image… veuillez patienter !",
+    tutorial: "Tutoriel",
+    enter_text: "Entrer du texte (facultatif)",
+    extract_keywords: "Extraire les mots-clés",
+    extracted_keywords: "Mots-clés extraits",
+    copy_text: "Copier le texte",
+    download_txt: "Télécharger en TXT"
   },
   de: {
-    app_title: "App-Lokalisierung",
-    app_subtitle: "Text in Ihren Bildern übersetzen und skalieren",
+    app_title: "Apps-Lokalisierung",
+    app_subtitle: "Text in Ihren Bildern nahtlos übersetzen und skalieren",
     upload_image: "Bild hochladen",
     target_language: "Zielsprache",
-    output_resolution: "Ausgabequalität",
+    output_resolution: "Ausgabeauflösung",
     original_size: "Originalgröße verwenden",
-    translate_convert: "Übersetzen und Konvertieren",
+    translate_convert: "Übersetzen und konvertieren",
     font: "Schriftart",
     upload_font: "Schriftart hochladen (.ttf, .otf)",
     size: "Größe",
     color: "Farbe",
-    outline: "Kontur",
+    outline: "Umriss",
     width: "Breite",
     height: "Höhe",
     bg_color: "Hintergrundfarbe",
-    align: "Ausrichten",
+    align: "Ausrichtung",
     left: "Links",
     center: "Zentriert",
     right: "Rechts",
     animation: "Animation",
     none: "Keine",
-    bounce: "Springen",
+    bounce: "Hüpfen",
     pulse: "Pulsieren",
     opacity: "Deckkraft",
     weight: "Gewicht",
@@ -1191,58 +1224,68 @@ const translations = {
     pen_width: "Stiftbreite",
     download_image: "Bild herunterladen",
     share_image: "Bild teilen",
-    processing: "Bild wird verarbeitet… bitte warten!",
-    tutorial: "Anleitung"
+    processing: "Ihr Bild wird verarbeitet… bitte warten!",
+    tutorial: "Anleitung",
+    enter_text: "Text eingeben (optional)",
+    extract_keywords: "Schlüsselwörter extrahieren",
+    extracted_keywords: "Extrahierte Schlüsselwörter",
+    copy_text: "Text kopieren",
+    download_txt: "Als TXT herunterladen"
   },
   es: {
-    app_title: "Localización de Aplicaciones",
-    app_subtitle: "Traduce y redimensiona texto en tus imágenes fácilmente",
+    app_title: "Localización de aplicaciones",
+    app_subtitle: "Traduce y redimensiona el texto en tus imágenes sin problemas",
     upload_image: "Subir imagen",
     target_language: "Idioma objetivo",
     output_resolution: "Resolución de salida",
     original_size: "Usar tamaño original",
-    translate_convert: "Traducir y Convertir",
+    translate_convert: "Traducir y convertir",
     font: "Fuente",
-    upload_font: "Subir Fuente (.ttf, .otf)",
+    upload_font: "Subir fuente (.ttf, .otf)",
     size: "Tamaño",
     color: "Color",
     outline: "Contorno",
     width: "Ancho",
-    height: "Altura",
+    height: "Alto",
     bg_color: "Color de fondo",
-    align: "Alinear",
+    align: "Alineación",
     left: "Izquierda",
     center: "Centro",
     right: "Derecha",
     animation: "Animación",
     none: "Ninguna",
     bounce: "Rebotar",
-    pulse: "Pulso",
+    pulse: "Pulsar",
     opacity: "Opacidad",
     weight: "Peso",
     normal: "Normal",
     bold: "Negrita",
     style: "Estilo",
     italic: "Cursiva",
-    add: "Agregar",
-    add_text: "Agregar Texto",
+    add: "Añadir",
+    add_text: "Añadir texto",
     delete: "Eliminar",
     pen: "Lápiz",
-    pen_color: "Color del Lápiz",
-    pen_width: "Ancho del Lápiz",
-    download_image: "Descargar Imagen",
-    share_image: "Compartir Imagen",
+    pen_color: "Color del lápiz",
+    pen_width: "Ancho del lápiz",
+    download_image: "Descargar imagen",
+    share_image: "Compartir imagen",
     processing: "Procesando tu imagen… ¡por favor espera!",
-    tutorial: "Tutorial"
+    tutorial: "Tutorial",
+    enter_text: "Ingresar texto (opcional)",
+    extract_keywords: "Extraer palabras clave",
+    extracted_keywords: "Palabras clave extraídas",
+    copy_text: "Copiar texto",
+    download_txt: "Descargar como TXT"
   },
   nl: {
-    app_title: "App-localisatie",
-    app_subtitle: "Vertaal en verander de grootte van tekst in uw afbeeldingen naadloos",
+    app_title: "Apps-lokalisatie",
+    app_subtitle: "Vertaal en wijzig de grootte van tekst in je afbeeldingen naadloos",
     upload_image: "Afbeelding uploaden",
     target_language: "Doeltaal",
     output_resolution: "Uitvoerresolutie",
     original_size: "Originele grootte gebruiken",
-    translate_convert: "Vertalen en Converteren",
+    translate_convert: "Vertalen en converteren",
     font: "Lettertype",
     upload_font: "Lettertype uploaden (.ttf, .otf)",
     size: "Grootte",
@@ -1251,7 +1294,7 @@ const translations = {
     width: "Breedte",
     height: "Hoogte",
     bg_color: "Achtergrondkleur",
-    align: "Uitlijnen",
+    align: "Uitlijning",
     left: "Links",
     center: "Midden",
     right: "Rechts",
@@ -1259,7 +1302,7 @@ const translations = {
     none: "Geen",
     bounce: "Stuiteren",
     pulse: "Pulseren",
-    opacity: "Doorzichtigheid",
+    opacity: "Dekking",
     weight: "Gewicht",
     normal: "Normaal",
     bold: "Vet",
@@ -1270,94 +1313,109 @@ const translations = {
     delete: "Verwijderen",
     pen: "Pen",
     pen_color: "Penkleur",
-    pen_width: "Pendikte",
+    pen_width: "Penbreedte",
     download_image: "Afbeelding downloaden",
     share_image: "Afbeelding delen",
-    processing: "Uw afbeelding wordt verwerkt… even geduld!",
-    tutorial: "Handleiding"
+    processing: "Je afbeelding wordt verwerkt… even geduld!",
+    tutorial: "Handleiding",
+    enter_text: "Voer tekst in (optioneel)",
+    extract_keywords: "Trefwoorden extraheren",
+    extracted_keywords: "Geëxtraheerde trefwoorden",
+    copy_text: "Tekst kopiëren",
+    download_txt: "Downloaden als TXT"
   },
   it: {
-    app_title: "Localizzazione App",
+    app_title: "Localizzazione di applicazioni",
     app_subtitle: "Traduci e ridimensiona il testo nelle tue immagini senza problemi",
     upload_image: "Carica immagine",
     target_language: "Lingua di destinazione",
     output_resolution: "Risoluzione di output",
     original_size: "Usa dimensione originale",
-    translate_convert: "Traduci e Converti",
+    translate_convert: "Traduci e converti",
     font: "Carattere",
-    upload_font: "Carica Carattere (.ttf, .otf)",
+    upload_font: "Carica carattere (.ttf, .otf)",
     size: "Dimensione",
     color: "Colore",
     outline: "Contorno",
     width: "Larghezza",
     height: "Altezza",
-    bg_color: "Colore sfondo",
-    align: "Allinea",
+    bg_color: "Colore di sfondo",
+    align: "Allineamento",
     left: "Sinistra",
     center: "Centro",
     right: "Destra",
     animation: "Animazione",
     none: "Nessuna",
     bounce: "Rimbalzo",
-    pulse: "Impulso",
+    pulse: "Pulsazione",
     opacity: "Opacità",
-    weight: "Spessore",
+    weight: "Peso",
     normal: "Normale",
     bold: "Grassetto",
     style: "Stile",
     italic: "Corsivo",
     add: "Aggiungi",
-    add_text: "Aggiungi Testo",
+    add_text: "Aggiungi testo",
     delete: "Elimina",
     pen: "Penna",
-    pen_color: "Colore Penna",
-    pen_width: "Spessore Penna",
-    download_image: "Scarica Immagine",
-    share_image: "Condividi Immagine",
-    processing: "Elaborazione della tua immagine… attendi prego!",
-    tutorial: "Tutorial"
+    pen_color: "Colore della penna",
+    pen_width: "Larghezza della penna",
+    download_image: "Scarica immagine",
+    share_image: "Condividi immagine",
+    processing: "Elaborazione della tua immagine… attendi per favore!",
+    tutorial: "Tutorial",
+    enter_text: "Inserisci testo (opzionale)",
+    extract_keywords: "Estrai parole chiave",
+    extracted_keywords: "Parole chiave estratte",
+    copy_text: "Copia testo",
+    download_txt: "Scarica come TXT"
   },
   pt: {
-    app_title: "Localização de Apps",
-    app_subtitle: "Traduza e redimensione texto em suas imagens sem esforço",
+    app_title: "Localização de aplicativos",
+    app_subtitle: "Traduza e redimensione o texto nas suas imagens de forma fluida",
     upload_image: "Carregar imagem",
-    target_language: "Idioma alvo",
+    target_language: "Idioma de destino",
     output_resolution: "Resolução de saída",
-    original_size: "Usar Tamanho Original",
-    translate_convert: "Traduzir & Converter",
+    original_size: "Usar tamanho original",
+    translate_convert: "Traduzir e converter",
     font: "Fonte",
-    upload_font: "Carregar Fonte (.ttf, .otf)",
+    upload_font: "Carregar fonte (.ttf, .otf)",
     size: "Tamanho",
     color: "Cor",
     outline: "Contorno",
     width: "Largura",
     height: "Altura",
-    bg_color: "Cor de Fundo",
-    align: "Alinhar",
+    bg_color: "Cor de fundo",
+    align: "Alinhamento",
     left: "Esquerda",
     center: "Centro",
     right: "Direita",
     animation: "Animação",
     none: "Nenhuma",
-    bounce: "Salto",
-    pulse: "Pulso",
+    bounce: "Saltar",
+    pulse: "Pulsar",
     opacity: "Opacidade",
     weight: "Peso",
     normal: "Normal",
-    bold: "Negrita",
+    bold: "Negrito",
     style: "Estilo",
     italic: "Itálico",
     add: "Adicionar",
-    add_text: "Adicionar Texto",
+    add_text: "Adicionar texto",
     delete: "Excluir",
     pen: "Caneta",
-    pen_color: "Cor da Caneta",
-    pen_width: "Largura da Caneta",
-    download_image: "Baixar Imagem",
-    share_image: "Compartilhar Imagem",
-    processing: "Processando sua imagem… aguarde!",
-    tutorial: "Tutorial"
-  },
+    pen_color: "Cor da caneta",
+    pen_width: "Largura da caneta",
+    download_image: "Baixar imagem",
+    share_image: "Compartilhar imagem",
+    processing: "Processando sua imagem… por favor, aguarde!",
+    tutorial: "Tutorial",
+    enter_text: "Inserir texto (opcional)",
+    extract_keywords: "Extrair palavras-chave",
+    extracted_keywords: "Palavras-chave extraídas",
+    copy_text: "Copiar texto",
+    download_txt: "Baixar como TXT"
+  }
 };
 
 // Tab functionality
@@ -1784,6 +1842,92 @@ function fallbackShare(dataURL) {
   document.body.insertAdjacentHTML("beforeend", shareOptions);
 }
 
+// Handle Keywords Extractor Form
+document.addEventListener('DOMContentLoaded', () => {
+  const keywordsForm = document.getElementById('keywords-form');
+  if (keywordsForm) {
+    console.log('Keywords form found');
+    keywordsForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      console.log('Keywords Extractor form submitted');
+      const text = document.getElementById('input-text')?.value.trim();
+      const image = document.getElementById('input-image')?.files[0];
+      if (!text && !image) {
+        console.log('No text or image provided');
+        alert('Please provide either text or an image.');
+        return;
+      }
+      const formData = new FormData();
+      if (text) {
+        formData.append('text', text);
+        console.log('Text added to formData:', text);
+      }
+      if (image) {
+        formData.append('image', image);
+        console.log('Image added to formData:', image.name);
+      }
+      const processingOverlay = document.getElementById('processing-overlay');
+      if (processingOverlay) {
+        processingOverlay.style.display = 'flex';
+      } else {
+        console.error('Processing overlay not found');
+      }
+      try {
+        console.log('Sending fetch request to /extract_keywords');
+        const response = await fetch('/extract_keywords', {
+          method: 'POST',
+          body: formData
+        });
+        console.log('Response status:', response.status);
+        const data = await response.json();
+        console.log('Response data:', data);
+        if (!response.ok || !data.success) {
+          throw new Error(data.error || 'Failed to extract keywords');
+        }
+        const keywordsText = document.getElementById('keywords-text');
+        const keywordsResult = document.getElementById('keywords-result');
+        if (keywordsText && keywordsResult) {
+          keywordsText.innerText = data.keywords;
+          keywordsResult.style.display = 'block';
+        } else {
+          console.error('Keywords text or result element not found');
+        }
+      } catch (err) {
+        console.error('Error in fetch request:', err);
+        alert('Error: ' + err.message);
+      } finally {
+        if (processingOverlay) {
+          processingOverlay.style.display = 'none';
+        }
+      }
+    });
+  } else {
+    console.error('Keywords form not found');
+  }
+
+  // Copy Keywords Button
+  document.getElementById('copy-keywords')?.addEventListener('click', () => {
+    const text = document.getElementById('keywords-text').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Keywords copied to clipboard!');
+    }).catch(err => {
+      alert('Failed to copy: ' + err.message);
+    });
+  });
+
+  // Download Keywords as TXT
+  document.getElementById('download-keywords')?.addEventListener('click', () => {
+    const text = document.getElementById('keywords-text').innerText;
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'extracted_keywords.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+});
+
 // Image Text Translation Tab
 {% if success %}
 let canvas = null;
@@ -1794,243 +1938,240 @@ let redoHistory = [];
 let clipboard = null;
 let isPenActive = false;
 let customFontName = null;
-  function initCanvas() {
-      const fonts = [{% for font in fonts %}'{{ font }}'{% if not loop.last %},{% endif %}{% endfor %}];
-      const img = new Image();
-      img.src = "data:image/png;base64,{{ clean_image }}";
-      img.onload = () => {
-        try {
-          const maxWidth = Math.min(window.innerWidth * 0.9, 600);
-          scale = Math.min(maxWidth / img.width, 1);
-          canvas = new fabric.Canvas('canvas', {
-            width: img.width * scale,
-            height: img.height * scale,
-            preserveObjectStacking: true,
-            selection: true
+
+function initCanvas() {
+  const fonts = [{% for font in fonts %}'{{ font }}'{% if not loop.last %},{% endif %}{% endfor %}];
+  const img = new Image();
+  img.src = "data:image/png;base64,{{ clean_image }}";
+  img.onload = () => {
+    try {
+      const maxWidth = Math.min(window.innerWidth * 0.9, 600);
+      scale = Math.min(maxWidth / img.width, 1);
+      canvas = new fabric.Canvas('canvas', {
+        width: img.width * scale,
+        height: img.height * scale,
+        preserveObjectStacking: true,
+        selection: true
+      });
+      const fabricImg = new fabric.Image(img, {
+        scaleX: scale,
+        scaleY: scale,
+        selectable: false,
+        originX: 'left',
+        originY: 'top'
+      });
+      canvas.add(fabricImg);
+      canvas.sendToBack(fabricImg);
+      texts = JSON.parse('{{ texts_json | safe }}');
+      texts.forEach(text => {
+        const textObj = new fabric.Textbox(text.text, {
+          left: text.left * scale,
+          top: text.top * scale,
+          fontFamily: text.fontFamily || 'Inter',
+          fontSize: text.fontSize * scale,
+          fill: text.fill,
+          textAlign: text.textAlign || 'left',
+          lineHeight: text.lineHeight || 1.2,
+          width: (text.width || img.width) * scale,
+          selectable: true,
+          editable: true
+        });
+        canvas.add(textObj);
+      });
+      canvas.on('selection:created', updateControls);
+      canvas.on('selection:updated', updateControls);
+      canvas.on('selection:cleared', updateControls);
+      canvas.on('object:modified', saveState);
+      canvas.on('text:changed', (e) => {
+        if (e.target && e.target.type === 'textbox') {
+          saveState();
+        }
+      });
+      canvas.on('mouse:down', (o) => {
+        if (isPenActive) {
+          let isDrawing = true;
+          const pointer = canvas.getPointer(o.e);
+          const currentPath = new fabric.Path(`M ${pointer.x} ${pointer.y}`, {
+            stroke: document.getElementById('penColor').value,
+            strokeWidth: parseInt(document.getElementById('penWidth').value),
+            fill: null,
+            selectable: true,
+            strokeLineCap: 'round',
+            strokeLineJoin: 'round'
           });
-          const fabricImg = new fabric.Image(img, {
-            scaleX: scale,
-            scaleY: scale,
-            selectable: false,
-            originX: 'left',
-            originY: 'top'
-          });
-          canvas.add(fabricImg);
-          canvas.sendToBack(fabricImg);
-          texts = JSON.parse('{{ texts_json | safe }}');
-          texts.forEach(text => {
-            const textObj = new fabric.Textbox(text.text, {
-              left: text.left * scale,
-              top: text.top * scale,
-              fontFamily: text.fontFamily || 'NotoSansArabic',
-              fontSize: text.fontSize * scale,
-              fill: text.fill,
-              textAlign: text.textAlign || 'right',
-              lineHeight: text.lineHeight || 1.2,
-              width: (text.width || img.width) * scale,
-              selectable: true,
-              editable: true
-            });
-            canvas.add(textObj);
-          });
-          canvas.on('selection:created', updateControls);
-          canvas.on('selection:updated', updateControls);
-          canvas.on('selection:cleared', updateControls);
-          canvas.on('object:modified', () => {
-            saveState();
-          });
-          // Fixed text editing event handling
-          canvas.on('text:changed', (e) => {
-            if (e.target && e.target.type === 'textbox') {
-              saveState();
-            }
-          });
-          canvas.on('mouse:down', (o) => {
-            if (isPenActive) {
-              let isDrawing = true;
-              const pointer = canvas.getPointer(o.e);
-              const currentPath = new fabric.Path(`M ${pointer.x} ${pointer.y}`, {
-                stroke: document.getElementById('penColor').value,
-                strokeWidth: parseInt(document.getElementById('penWidth').value),
-                fill: null,
-                selectable: true,
-                strokeLineCap: 'round',
-                strokeLineJoin: 'round'
-              });
-              canvas.add(currentPath);
-              canvas.on('mouse:move', (o) => {
-                if (!isDrawing || !isPenActive) return;
-                const pointer = canvas.getPointer(o.e);
-                currentPath.path.push(['L', pointer.x, pointer.y]);
-                currentPath.set('dirty', true);
-                canvas.renderAll();
-              });
-              canvas.on('mouse:up', () => {
-                isDrawing = false;
-                canvas.off('mouse:move');
-                canvas.off('mouse:up');
-                saveState();
-              });
-            } else if (o.e.ctrlKey) {
-              const target = canvas.findTarget(o.e, false);
-              if (target && (target.type === 'textbox' || target.type === 'path')) {
-                const activeObjects = canvas.getActiveObjects();
-                if (activeObjects.includes(target)) {
-                  canvas.removeFromActiveSelection(target);
-                } else {
-                  canvas.addToActiveSelection(target);
-                }
-                canvas.renderAll();
-              }
-            }
-          });
-          document.addEventListener('keydown', (e) => {
-            // Prevent default behavior for keys we're handling
-            if ((e.ctrlKey && (e.key === 'z' || e.key === 'y' || e.key === 'a' || e.key === 'c' || e.key === 'x' || e.key === 'v')) ||
-                (e.key === 'Backspace' || e.key === 'Delete') && !e.target.isContentEditable) {
-              e.preventDefault();
-            }
-            if (e.ctrlKey && e.key === 'z') {
-              undo();
-            } else if (e.ctrlKey && e.key === 'y') {
-              redo();
-            }
-            if (e.ctrlKey && e.key === 'a') {
-              const textObjects = canvas.getObjects().filter(obj => obj.type === 'textbox');
-              if (textObjects.length > 0) {
-                canvas.setActiveObject(new fabric.ActiveSelection(textObjects, { canvas }));
-                updateControls();
-                canvas.renderAll();
-              }
-            }
-            if (e.ctrlKey && e.key === 'c') {
-              const activeObjects = canvas.getActiveObjects();
-              if (activeObjects.length > 0) {
-                clipboard = activeObjects.map(obj => obj.toObject(['animation']));
-              }
-            }
-            if (e.ctrlKey && e.key === 'x') {
-              const activeObjects = canvas.getActiveObjects();
-              if (activeObjects.length > 0) {
-                clipboard = activeObjects.map(obj => obj.toObject(['animation']));
-                activeObjects.forEach(obj => {
-                  canvas.remove(obj);
-                });
-                canvas.discardActiveObject();
-                updateControls();
-                canvas.renderAll();
-                saveState();
-              }
-            }
-            if (e.ctrlKey && e.key === 'v') {
-              if (clipboard) {
-                clipboard.forEach(item => {
-                  if (item.type === 'textbox') {
-                    const newText = new fabric.Textbox(item.text, {
-                      ...item,
-                      left: (item.left / scale + 10) * scale,
-                      top: (item.top / scale + 10) * scale,
-                      fontSize: item.fontSize,
-                      width: item.width,
-                      selectable: true,
-                      editable: true
-                    });
-                    canvas.add(newText);
-                  } else if (item.type === 'path') {
-                    const newPath = new fabric.Path(item.path, {
-                      ...item,
-                      left: (item.left / scale + 10) * scale,
-                      top: (item.top / scale + 10) * scale,
-                      selectable: true
-                    });
-                    canvas.add(newPath);
-                  }
-                });
-                canvas.renderAll();
-                saveState();
-                reconstructTexts();
-              }
-            }
-            if (e.key === 'Backspace' && !e.target.isContentEditable) {
-              e.preventDefault();
-              const activeObjects = canvas.getActiveObjects();
-              if (activeObjects.length > 0) {
-                activeObjects.forEach(obj => {
-                  if (obj.type === 'textbox') {
-                    const selectionStart = obj.selectionStart;
-                    const selectionEnd = obj.selectionEnd;
-                    let text = obj.text;
-                    if (selectionStart !== selectionEnd) {
-                      text = text.slice(0, selectionStart) + text.slice(selectionEnd);
-                      obj.selectionStart = obj.selectionEnd = selectionStart;
-                    } else if (selectionStart > 0) {
-                      text = text.slice(0, selectionStart - 1) + text.slice(selectionEnd);
-                      obj.selectionStart = obj.selectionEnd = selectionStart - 1;
-                    }
-                    obj.text = text;
-                    obj.set('dirty', true);
-                    canvas.requestRenderAll();
-                  } else {
-                    canvas.remove(obj);
-                  }
-                });
-                updateControls();
-                saveState();
-                reconstructTexts();
-              }
-            }
-            if (e.key === 'Delete' && !e.target.isContentEditable) {
-              const activeObjects = canvas.getActiveObjects();
-              if (activeObjects.length > 0) {
-                activeObjects.forEach(obj => {
-                  canvas.remove(obj);
-                });
-                canvas.discardActiveObject();
-                updateControls();
-                canvas.renderAll();
-                saveState();
-                reconstructTexts();
-              }
-            }
-          });
-          window.addEventListener('resize', () => {
-            const newMaxWidth = Math.min(window.innerWidth * 0.9, 600);
-            const newScale = Math.min(newMaxWidth / img.width, 1);
-            canvas.setDimensions({
-              width: img.width * newScale,
-              height: img.height * newScale
-            });
-            canvas.getObjects().forEach(obj => {
-              if (obj.type === 'image') {
-                obj.set({ scaleX: newScale, scaleY: newScale });
-              } else if (obj.type === 'textbox' || obj.type === 'path') {
-                obj.set({
-                  left: (obj.left / scale) * newScale,
-                  top: (obj.top / scale) * newScale,
-                  fontSize: obj.type === 'textbox' ? (obj.fontSize / scale) * newScale : obj.fontSize,
-                  width: obj.type === 'textbox' ? (obj.width / scale) * newScale : obj.width
-                });
-              }
-            });
-            scale = newScale;
+          canvas.add(currentPath);
+          canvas.on('mouse:move', (o) => {
+            if (!isDrawing || !isPenActive) return;
+            const pointer = canvas.getPointer(o.e);
+            currentPath.path.push(['L', pointer.x, pointer.y]);
+            currentPath.set('dirty', true);
             canvas.renderAll();
           });
-          canvas.renderAll();
-          saveState();
-          document.getElementById('processing-overlay').style.display = 'none';
-          preloadFonts(fonts);
-        } catch (err) {
-          console.error('Canvas initialization failed:', err);
-          alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
-          document.getElementById('processing-overlay').style.display = 'none';
+          canvas.on('mouse:up', () => {
+            isDrawing = false;
+            canvas.off('mouse:move');
+            canvas.off('mouse:up');
+            saveState();
+          });
+        } else if (o.e.ctrlKey) {
+          const target = canvas.findTarget(o.e, false);
+          if (target && (target.type === 'textbox' || target.type === 'path')) {
+            const activeObjects = canvas.getActiveObjects();
+            if (activeObjects.includes(target)) {
+              canvas.removeFromActiveSelection(target);
+            } else {
+              canvas.addToActiveSelection(target);
+            }
+            canvas.renderAll();
+          }
         }
-      };
-      img.onerror = () => {
-        console.error('Failed to load image');
-        alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
-        document.getElementById('processing-overlay').style.display = 'none';
-      };
+      });
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey && (e.key === 'z' || e.key === 'y' || e.key === 'a' || e.key === 'c' || e.key === 'x' || e.key === 'v')) ||
+            (e.key === 'Backspace' || e.key === 'Delete') && !e.target.isContentEditable) {
+          e.preventDefault();
+        }
+        if (e.ctrlKey && e.key === 'z') {
+          undo();
+        } else if (e.ctrlKey && e.key === 'y') {
+          redo();
+        }
+        if (e.ctrlKey && e.key === 'a') {
+          const textObjects = canvas.getObjects().filter(obj => obj.type === 'textbox');
+          if (textObjects.length > 0) {
+            canvas.setActiveObject(new fabric.ActiveSelection(textObjects, { canvas }));
+            updateControls();
+            canvas.renderAll();
+          }
+        }
+        if (e.ctrlKey && e.key === 'c') {
+          const activeObjects = canvas.getActiveObjects();
+          if (activeObjects.length > 0) {
+            clipboard = activeObjects.map(obj => obj.toObject(['animation']));
+          }
+        }
+        if (e.ctrlKey && e.key === 'x') {
+          const activeObjects = canvas.getActiveObjects();
+          if (activeObjects.length > 0) {
+            clipboard = activeObjects.map(obj => obj.toObject(['animation']));
+            activeObjects.forEach(obj => {
+              canvas.remove(obj);
+            });
+            canvas.discardActiveObject();
+            updateControls();
+            canvas.renderAll();
+            saveState();
+          }
+        }
+        if (e.ctrlKey && e.key === 'v') {
+          if (clipboard) {
+            clipboard.forEach(item => {
+              if (item.type === 'textbox') {
+                const newText = new fabric.Textbox(item.text, {
+                  ...item,
+                  left: (item.left / scale + 10) * scale,
+                  top: (item.top / scale + 10) * scale,
+                  fontSize: item.fontSize,
+                  width: item.width,
+                  selectable: true,
+                  editable: true
+                });
+                canvas.add(newText);
+              } else if (item.type === 'path') {
+                const newPath = new fabric.Path(item.path, {
+                  ...item,
+                  left: (item.left / scale + 10) * scale,
+                  top: (item.top / scale + 10) * scale,
+                  selectable: true
+                });
+                canvas.add(newPath);
+              }
+            });
+            canvas.renderAll();
+            saveState();
+            reconstructTexts();
+          }
+        }
+        if (e.key === 'Backspace' && !e.target.isContentEditable) {
+          const activeObjects = canvas.getActiveObjects();
+          if (activeObjects.length > 0) {
+            activeObjects.forEach(obj => {
+              if (obj.type === 'textbox') {
+                const selectionStart = obj.selectionStart;
+                const selectionEnd = obj.selectionEnd;
+                let text = obj.text;
+                if (selectionStart !== selectionEnd) {
+                  text = text.slice(0, selectionStart) + text.slice(selectionEnd);
+                  obj.selectionStart = obj.selectionEnd = selectionStart;
+                } else if (selectionStart > 0) {
+                  text = text.slice(0, selectionStart - 1) + text.slice(selectionEnd);
+                  obj.selectionStart = obj.selectionEnd = selectionStart - 1;
+                }
+                obj.text = text;
+                obj.set('dirty', true);
+                canvas.requestRenderAll();
+              } else {
+                canvas.remove(obj);
+              }
+            });
+            updateControls();
+            saveState();
+            reconstructTexts();
+          }
+        }
+        if (e.key === 'Delete' && !e.target.isContentEditable) {
+          const activeObjects = canvas.getActiveObjects();
+          if (activeObjects.length > 0) {
+            activeObjects.forEach(obj => {
+              canvas.remove(obj);
+            });
+            canvas.discardActiveObject();
+            updateControls();
+            canvas.renderAll();
+            saveState();
+            reconstructTexts();
+          }
+        }
+      });
+      window.addEventListener('resize', () => {
+        const newMaxWidth = Math.min(window.innerWidth * 0.9, 600);
+        const newScale = Math.min(newMaxWidth / img.width, 1);
+        canvas.setDimensions({
+          width: img.width * newScale,
+          height: img.height * newScale
+        });
+        canvas.getObjects().forEach(obj => {
+          if (obj.type === 'image') {
+            obj.set({ scaleX: newScale, scaleY: newScale });
+          } else if (obj.type === 'textbox' || obj.type === 'path') {
+            obj.set({
+              left: (obj.left / scale) * newScale,
+              top: (obj.top / scale) * newScale,
+              fontSize: obj.type === 'textbox' ? (obj.fontSize / scale) * newScale : obj.fontSize,
+              width: obj.type === 'textbox' ? (obj.width / scale) * newScale : obj.width
+            });
+          }
+        });
+        scale = newScale;
+        canvas.renderAll();
+      });
+      canvas.renderAll();
+      saveState();
+      document.getElementById('processing-overlay').style.display = 'none';
+      preloadFonts(fonts);
+    } catch (err) {
+      console.error('Canvas initialization failed:', err);
+      alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
+      document.getElementById('processing-overlay').style.display = 'none';
     }
+  };
+  img.onerror = () => {
+    console.error('Failed to load image');
+    alert('Error: Could not load the image. Please try another image as AI is unable to process it; it may be blurry or already processed.');
+    document.getElementById('processing-overlay').style.display = 'none';
+  };
+}
+
 function saveState() {
   const state = canvas.toJSON(['animation']);
   undoHistory.push(state);
@@ -2424,7 +2565,3 @@ initCanvas();
 </script>
 </body>
 </html>
-
-
-
-
