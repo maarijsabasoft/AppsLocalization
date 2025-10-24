@@ -562,6 +562,50 @@ def index():
                               success="Translation complete!")
     return render_template("index.html")
 
+@app.route('/extract_keywords', methods=['POST'])
+def extract_keywords():
+    start_time = time.time()
+    user_id = current_user.id if current_user.is_authenticated else "guest"
+    try:
+        text = request.form.get('text')
+        image_file = request.files.get('image')
+        
+        # Process image if provided
+        if image_file:
+            if not image_file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
+                return jsonify({'error': 'Unsupported file format. Use PNG, JPG, or BMP.'}), 400
+            user_filename = f"user_{user_id}_{uuid.uuid4().hex[:8]}.png"
+            in_path = os.path.join(app.config["UPLOAD_FOLDER"], user_filename)
+            try:
+                image_file.save(in_path)
+                texts = perform_ocr(in_path)
+                text = "\n".join([t[1] for t in texts]) if texts else ""
+                os.remove(in_path)
+            except Exception as e:
+                logger.error(f"Failed to process image: {str(e)}")
+                return jsonify({'error': f'Failed to process image: {str(e)}'}), 400
+        
+        # Validate input
+        if not text:
+            return jsonify({'error': 'No text provided or extracted from image'}), 400
+        
+        # Extract top 7 keywords (focus on overall text)
+        kw_extractor = yake.KeywordExtractor(lan="en", n=1, dedupLim=0.9, top=7, features=None)
+        keywords = kw_extractor.extract_keywords(text)
+        
+        # Keep only the keyword words (ignore scores)
+        keyword_list = [kw for kw, score in keywords]
+        keywords_str = "\n".join(keyword_list)
+        
+        logger.debug(f"Keyword extraction completed in {time.time() - start_time:.2f} seconds")
+        return jsonify({
+            'success': True,
+            'keywords': keywords_str
+        })
+    except Exception as e:
+        logger.error(f"Error extracting keywords: {str(e)}")
+        return jsonify({'error': f'Server error: {str(e)}'}), 500
+
 @app.route("/api/resize-image", methods=["POST"])
 def resize_image():
     start_time = time.time()
