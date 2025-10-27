@@ -122,7 +122,7 @@
     /* Enhanced Card Design */
     .card {
       width: 100%;
-      max-width: min(90vw, 1000px);
+      max-width: min(90vw, 1050px);
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       border-radius: 20px;
@@ -291,12 +291,6 @@
       max-width: min(90vw, 720px);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.2);
-        /* ✅ Center inner items */
-  display: flex;
-  flex-direction: column;
-  align-items: center;   /* center horizontally */
-  justify-content: center; /* center vertically (if height allows) */
-  gap: 1rem; /* optional spacing between items */
     }
     body.dark .result {
       background: rgba(36, 38, 54, 0.95);
@@ -767,7 +761,328 @@ body.dark .games-table a {
 .games-table a:hover {
   text-decoration: underline;
 }
+/* Filters Section */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: clamp(0.8rem, 1.5vw, 1.2rem);
+  width: 100%;
+  max-width: min(90vw, 900px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+body.dark .filters {
+  background: rgba(36, 38, 54, 0.95);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.filters label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  color: #333;
+  font-weight: 600;
+}
+body.dark .filters label {
+  color: #e0e0e0;
+}
+.filters select,
+.filters input[type="text"] {
+  width: 100%;
+  max-width: 200px;
+  padding: clamp(0.3rem, 1vw, 0.4rem);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  background: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+body.dark .filters select,
+body.dark .filters input[type="text"] {
+  background: rgba(42, 45, 58, 0.8);
+  color: #e0e0e0;
+  border: 1px solid #555;
+}
+.filters select:focus,
+.filters input[type="text"]:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  background: white;
+}
+body.dark .filters select:focus,
+body.dark .filters input[type="text"]:focus {
+  border-color: #00c6ff;
+  box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.2);
+  background: rgba(42, 45, 58, 1);
+}
 
+/* Apps Container and Table */
+.apps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.apps-section {
+  flex: 1;
+  min-width: 300px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.apps-table {
+  table-layout: auto;
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.apps-table th,
+.apps-table td {
+  padding: 6px 12px;   /* Reduce padding to tighten gaps */
+  width: 1%;           /* Helps auto layout compress columns */
+}
+
+body.dark .apps-table {
+  background: rgba(36, 38, 54, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+.apps-table th,
+.apps-table td {
+  padding: 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+body.dark .apps-table th,
+body.dark .apps-table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.apps-table th {
+  background: rgba(102, 126, 234, 0.1);
+  font-weight: 600;
+}
+.apps-table a {
+  color: #667eea;
+  text-decoration: none;
+}
+body.dark .apps-table a {
+  color: #4facfe;
+}
+.apps-table a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .filters select,
+  .filters input[type="text"] {
+    max-width: 100%;
+  }
+  .apps-table {
+    min-width: 800px; /* Adjusted for smaller screens */
+  }
+}
+@media (max-width: 480px) {
+  .filters select,
+  .filters input[type="text"] {
+    font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+  }
+  .apps-table {
+    min-width: 600px;
+  }
+  .apps-table th,
+  .apps-table td {
+    padding: 0.6rem;
+    font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+  }
+}
+/* Filters Section */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: clamp(0.8rem, 1.5vw, 1.2rem);
+  width: 100%;
+  max-width: min(90vw, 1000px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+body.dark .filters {
+  background: rgba(36, 38, 54, 0.95);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.filters label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  color: #333;
+  font-weight: 600;
+}
+body.dark .filters label {
+  color: #e0e0e0;
+}
+.filters select,
+.filters input[type="text"] {
+  width: 100%;
+  max-width: 200px;
+  padding: clamp(0.3rem, 1vw, 0.4rem);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  background: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+body.dark .filters select,
+body.dark .filters input[type="text"] {
+  background: rgba(42, 45, 58, 0.8);
+  color: #e0e0e0;
+  border: 1px solid #555;
+}
+.filters select:focus,
+.filters input[type="text"]:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  background: white;
+}
+body.dark .filters select:focus,
+body.dark .filters input[type="text"]:focus {
+  border-color: #00c6ff;
+  box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.2);
+  background: rgba(42, 45, 58, 1);
+}
+
+/* Apps Container and Table */
+.apps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.apps-section {
+  flex: 1;
+  min-width: 300px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.apps-table {
+  width: 100%;
+  min-width: 1000px; /* Adjusted for additional columns */
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+body.dark .apps-table {
+  background: rgba(36, 38, 54, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+.apps-table th,
+.apps-table td {
+  padding: 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+body.dark .apps-table th,
+body.dark .apps-table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.apps-table th {
+  background: rgba(102, 126, 234, 0.1);
+  font-weight: 600;
+}
+.apps-table a {
+  color: #667eea;
+  text-decoration: none;
+}
+body.dark .apps-table a {
+  color: #4facfe;
+}
+.apps-table a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .filters select,
+  .filters input[type="text"] {
+    max-width: 100%;
+  }
+  .apps-table {
+    min-width: 800px; /* Adjusted for smaller screens */
+  }
+}
+@media (max-width: 480px) {
+  .filters select,
+  .filters input[type="text"] {
+    font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+  }
+  .apps-table {
+    min-width: 600px;
+  }
+  .apps-table th,
+  .apps-table td {
+    padding: 0.6rem;
+    font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+  }
+}
+.apps-table th:nth-child(2),
+.apps-table td:nth-child(2),
+.apps-table th:nth-child(3),
+.apps-table td:nth-child(3) {
+  padding-left: 25px !important;   /* Reduce left padding */
+  padding-right: 25px !important;  /* Optional: tighten spacing */
+}
+.apps-table th:nth-child(2), .apps-table td:nth-child(2), .apps-table th:nth-child(3), .apps-table td:nth-child(3) {
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+}
+/* Default desktop styles (already in place) */
+/* No need to modify your current .filters inline style */
+
+/* Mobile view: align everything to the left */
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;     /* Stack filters vertically */
+    align-items: flex-start;    /* Align all to the left */
+    gap: 0.5rem;                /* Reduce spacing for compact look */
+  }
+
+  .filters > div {
+    width: 100%;                /* Make each filter full width */
+  }
+
+  .filters label,
+  .filters select,
+  .filters input {
+    width: 100%;                /* Ensure controls align neatly */
+    max-width: 100%;
+  }
+
+  .filters div[style*="margin-left"] {
+    margin-left: 0 !important;  /* Remove that 200px margin on mobile */
+  }
+}
 
   </style>
 </head>
@@ -1165,47 +1480,83 @@ body.dark .games-table a {
     </p>
   </div>
 </div>
-<!-- Top 100 Games Tab -->
-    <div id="top-100-games" class="tab-content">
-      <h2 data-i18n="top_100_games">Top 100 Games</h2>
-      <div class="games-container">
-        <!-- Play Store Section -->
-        <div class="games-section">
-          <h3 data-i18n="play_store_games">Google Play Store Top 100 Games</h3>
-          <table class="games-table" id="play-store-table">
-            <thead>
-              <tr>
-                <th data-i18n="rank">Rank</th>
-                <th data-i18n="title">Title</th>
-                <th data-i18n="developer">Developer</th>
-                <th data-i18n="rating">Rating</th>
-                <th data-i18n="reviews">Reviews</th>
-                <th data-i18n="downloads">Downloads</th>
-                <!-- <th data-i18n="download_link">Download</th> -->
-              </tr>
-            </thead>
-            <tbody id="play-store-games"></tbody>
-          </table>
-        </div>
-        <!-- App Store Section -->
-        <div class="games-section">
-          <h3 data-i18n="app_store_games">Apple App Store Top 100 Games</h3>
-          <table class="games-table" id="app-store-table">
-            <thead>
-              <tr>
-                <th data-i18n="rank">Rank</th>
-                <th data-i18n="title">Title</th>
-                <th data-i18n="developer">Developer</th>
-                <th data-i18n="rating">Rating</th>
-                <th data-i18n="reviews">Reviews</th>
-                <!-- <th data-i18n="download_link">Download</th> -->
-              </tr>
-            </thead>
-            <tbody id="app-store-games"></tbody>
-          </table>
-        </div>
-      </div>
+<!-- Top 100 Apps Tab -->
+<div id="top-100-games" class="tab-content">
+  <h2 data-i18n="top_100_apps">Top 100 Apps</h2>
+  <div class="filters" style="margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+    <div>
+      <label for="store-filter">Store</label>
+      <select id="store-filter">
+        <option value="both">Both Stores</option>
+        <option value="Play Store">Google Play Store</option>
+        <option value="App Store">Apple App Store</option>
+      </select>
     </div>
+    <div>
+      <label for="category-filter">Category</label>
+      <select id="category-filter">
+        <option value="all">All Categories</option>
+        <option value="action">Action</option>
+        <option value="puzzle">Puzzle</option>
+        <option value="strategy">Strategy</option>
+        <option value="casual">Casual</option>
+        <option value="social">Social</option>
+        <option value="productivity">Productivity</option>
+        <option value="health">Health & Fitness</option>
+        <option value="sports">Sports</option>
+      </select>
+    </div>
+    <div>
+      <label for="rating-filter">Rating</label>
+      <select id="rating-filter">
+        <option value="all">All Ratings</option>
+        <option value="4.0">4.0+</option>
+        <option value="4.1">4.1+</option>
+        <option value="4.2">4.2+</option>
+        <option value="4.3">4.3+</option>
+        <option value="4.4">4.4+</option>
+        <option value="4.5">4.5+</option>
+        <option value="4.6">4.6+</option>
+        <option value="4.7">4.7+</option>
+        <option value="4.8">4.8+</option>
+      </select>
+    </div>
+    <div>
+      <label for="price-filter">Price</label>
+      <select id="price-filter">
+        <option value="all">All</option>
+        <option value="free">Free</option>
+        <option value="paid">Paid</option>
+      </select>
+    </div>
+<div style="margin-left: 200px;">
+  <label for="search-input">Search</label>
+  <input type="text" id="search-input" placeholder="Search apps..." style="width: 200px;">
+</div>
+
+  </div>
+  <div class="apps-container">
+    <div class="apps-section">
+      <h3 data-i18n="top_apps">Top Apps</h3>
+      <table class="apps-table" id="apps-table">
+        <thead>
+          <tr>
+            <!-- <th data-i18n="rank">Rank</th> -->
+            <th data-i18n="title">Title</th>
+            <th data-i18n="developer">Developer</th>
+            <th data-i18n="category">Category</th>
+            <th data-i18n="rating">Rating</th>
+            <th data-i18n="reviews">Reviews</th>
+            <!-- <th data-i18n="downloads">Downloads</th> -->
+            <!-- <th data-i18n="price">Price</th> -->
+            <th data-i18n="store">Store</th>
+          </tr>
+        </thead>
+        <tbody id="apps-list"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
   </main>
   
   <div id="processing-overlay">
@@ -1608,228 +1959,329 @@ body.dark .games-table a {
         download_link: "Download"
       }
     };
-// Hardcoded top 100 games data
-  const playStoreGames = [
-    {"rank": 1, "title": "Free Fire", "developer": "Garena Free Fire", "rating": 4.2, "reviews": "50,000,000", "downloads": "1B+", "download_link": "https://play.google.com/store/apps/details?id=com.dts.freefireth"},
-    {"rank": 2, "title": "Roblox", "developer": "Roblox Corporation", "rating": 4.4, "reviews": "10,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.roblox.client"},
-    {"rank": 3, "title": "Candy Crush Saga", "developer": "King", "rating": 4.6, "reviews": "40,000,000", "downloads": "1B+", "download_link": "https://play.google.com/store/apps/details?id=com.king.candycrushsaga"},
-    {"rank": 4, "title": "PUBG Mobile", "developer": "PUBG Corporation", "rating": 4.1, "reviews": "20,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.tencent.ig"},
-    {"rank": 5, "title": "Call of Duty: Mobile", "developer": "Activision Publishing, Inc.", "rating": 4.3, "reviews": "15,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.activision.callofduty.shooter"},
-    {"rank": 6, "title": "Brawl Stars", "developer": "Supercell", "rating": 4.3, "reviews": "25,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.supercell.brawlstars"},
-    {"rank": 7, "title": "Coin Master", "developer": "Moon Active", "rating": 4.5, "reviews": "30,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.moonactive.coinmaster"},
-    {"rank": 8, "title": "Among Us", "developer": "Innersloth LLC", "rating": 4.0, "reviews": "5,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.innersloth.spacemafia"},
-    {"rank": 9, "title": "Clash of Clans", "developer": "Supercell", "rating": 4.6, "reviews": "50,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.supercell.clashofclans"},
-    {"rank": 10, "title": "Genshin Impact", "developer": "HoYoverse", "rating": 4.4, "reviews": "2,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.miHoYo.GenshinImpact"},
-    {"rank": 11, "title": "Minecraft", "developer": "Mojang Studios", "rating": 4.5, "reviews": "3,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.mojang.minecraftpe"},
-    {"rank": 12, "title": "Subway Surfers", "developer": "SYBO Games", "rating": 4.6, "reviews": "40,000,000", "downloads": "1B+", "download_link": "https://play.google.com/store/apps/details?id=com.kiloo.subwaysurf"},
-    {"rank": 13, "title": "Homescapes", "developer": "Playrix", "rating": 4.4, "reviews": "20,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.playrix.homescapes"},
-    {"rank": 14, "title": "Gardenscapes", "developer": "Playrix", "rating": 4.4, "reviews": "20,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.playrix.gardenscapes"},
-    {"rank": 15, "title": "8 Ball Pool", "developer": "Miniclip", "rating": 4.5, "reviews": "30,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.miniclip.8ballpool"},
-    {"rank": 16, "title": "My Talking Tom", "developer": "Outfit7", "rating": 4.4, "reviews": "25,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.outfit7.mytalkingtom"},
-    {"rank": 17, "title": "Ludo King", "developer": "Gametion", "rating": 4.3, "reviews": "10,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.ludo.king"},
-    {"rank": 18, "title": "Hill Climb Racing", "developer": "Fingersoft", "rating": 4.4, "reviews": "15,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.fingersoft.hillclimb"},
-    {"rank": 19, "title": "Temple Run 2", "developer": "Imangi Studios", "rating": 4.4, "reviews": "20,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.imangi.templerun2"},
-    {"rank": 20, "title": "Clash Royale", "developer": "Supercell", "rating": 4.2, "reviews": "20,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.supercell.clashroyale"},
-    {"rank": 21, "title": "Block Blast!", "developer": "Hungry Studio", "rating": 4.7, "reviews": "1,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.block.blast"},
-    {"rank": 22, "title": "Township", "developer": "Playrix", "rating": 4.6, "reviews": "5,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.playrix.township"},
-    {"rank": 23, "title": "Squid Game: Unleashed", "developer": "Netflix, Inc.", "rating": 4.5, "reviews": "500,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.netflix.squidgame"},
-    {"rank": 24, "title": "Solitaire", "developer": "MobilityWare", "rating": 4.7, "reviews": "10,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.mobilityware.solitaire"},
-    {"rank": 25, "title": "Pokémon GO", "developer": "Niantic, Inc.", "rating": 4.1, "reviews": "5,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.nianticlabs.pokemongo"},
-    {"rank": 26, "title": "Dungeons of Dreadrock", "developer": "Marcel Kultscher", "rating": 4.8, "reviews": "100,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.dungeonsofdreadrock"},
-    {"rank": 27, "title": "Creatures of the Deep", "developer": "Voodoo", "rating": 4.3, "reviews": "200,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.creatures"},
-    {"rank": 28, "title": "Beyond a Steel Sky", "developer": "Revolution Software", "rating": 4.6, "reviews": "50,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.revolution.beyondasteel sky"},
-    {"rank": 29, "title": "Grindstone", "developer": "Apple Arcade (via Google Play)", "rating": 4.7, "reviews": "100,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.apple.grindstone"},
-    {"rank": 30, "title": "Royal Match", "developer": "Dream Games", "rating": 4.5, "reviews": "2,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.dreamgames.royalmatch"},
-    {"rank": 31, "title": "Match Masters", "developer": "Candivore", "rating": 4.4, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.funtomic.matchmasters"},
-    {"rank": 32, "title": "Tangle Master 3D", "developer": "Rollic Games", "rating": 4.3, "reviews": "5,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.saygames.tangle"},
-    {"rank": 33, "title": "Wood Nuts & Bolts Puzzle", "developer": "ABI Studio Inc.", "rating": 4.6, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=wood.nuts.bolts.puzzle"},
-    {"rank": 34, "title": "Crowd City", "developer": "Voodoo", "rating": 4.2, "reviews": "2,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.crowd.city"},
-    {"rank": 35, "title": "Join Clash 3D", "developer": "Voodoo", "rating": 4.4, "reviews": "3,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.freeplay.joinclash3d"},
-    {"rank": 36, "title": "Aquapark.io", "developer": "Voodoo", "rating": 4.3, "reviews": "4,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.aquapark.io"},
-    {"rank": 37, "title": "Snake Rivals", "developer": "Supersolid", "rating": 4.1, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.supersolid.snakerivals"},
-    {"rank": 38, "title": "Helix Jump", "developer": "Voodoo", "rating": 4.2, "reviews": "5,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.h8games.helixjump"},
-    {"rank": 39, "title": "Hole.io", "developer": "Voodoo", "rating": 4.1, "reviews": "4,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=io.voodoo.holeio"},
-    {"rank": 40, "title": "Stack Ball", "developer": "Voodoo", "rating": 4.2, "reviews": "6,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.stackball"},
-    {"rank": 41, "title": "Run Race 3D", "developer": "Voodoo", "rating": 4.3, "reviews": "2,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.race3d.run"},
-    {"rank": 42, "title": "Going Balls", "developer": "Supersonic Studios LTD", "rating": 4.1, "reviews": "3,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.supersonic.goingballs"},
-    {"rank": 43, "title": "Tall Man Run", "developer": "Voodoo", "rating": 4.2, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.tallmanrun"},
-    {"rank": 44, "title": "Emoji Puzzle", "developer": "Loop Games", "rating": 4.5, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=emojipuzzle.emojigame"},
-    {"rank": 45, "title": "Red Ball 4", "developer": "FDG Entertainment GmbH & Co.KG", "rating": 4.4, "reviews": "2,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.fdg.redball4"},
-    {"rank": 46, "title": "Color Bump 3D", "developer": "Voodoo", "rating": 4.1, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.colorbump3d"},
-    {"rank": 47, "title": "Paint By Number", "developer": "Funly", "rating": 4.6, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.funnylife.paintbynumber"},
-    {"rank": 48, "title": "Project Makeover", "developer": "Magic Tavern, Inc.", "rating": 4.5, "reviews": "2,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.mti.projectmakeover"},
-    {"rank": 49, "title": "Love Nikki-Dress UP Queen", "developer": "Elex", "rating": 4.4, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.elex.lovenikki.en"},
-    {"rank": 50, "title": "Evony: The King's Return", "developer": "TOP GAMES INC.", "rating": 4.2, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.topgamesinc.evony"},
-    {"rank": 51, "title": "Idle Miner Tycoon", "developer": "Fluffy Fairy Games", "rating": 4.4, "reviews": "3,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.fluffyfairygames.idleminertycoon"},
-    {"rank": 52, "title": "AFK Arena", "developer": "Lilith Games", "rating": 4.5, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.lilithgame.hgame.gp"},
-    {"rank": 53, "title": "Rise of Kingdoms", "developer": "Lilith Games", "rating": 4.4, "reviews": "2,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.lilithgame.roc.gp"},
-    {"rank": 54, "title": "State of Survival", "developer": "KingsGroup Holdings", "rating": 4.3, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.kingsgroup.stateofsurvival"},
-    {"rank": 55, "title": "Lords Mobile", "developer": "IGG.COM", "rating": 4.2, "reviews": "2,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.igg.android.lordsmobile"},
-    {"rank": 56, "title": "Last Shelter: Survival", "developer": "Long Tech Network", "rating": 4.1, "reviews": "500,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.longtech.lastshelter.global"},
-    {"rank": 57, "title": "Survivor.io", "developer": "Habby", "rating": 4.4, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.dxx.firenow"},
-    {"rank": 58, "title": "Archero", "developer": "Habby", "rating": 4.3, "reviews": "2,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.habby.archero"},
-    {"rank": 59, "title": "Magic Tiles 3", "developer": "Yolo Games", "rating": 4.2, "reviews": "3,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.youmusic.magictiles"},
-    {"rank": 60, "title": "Tiles Hop: EDM Rush", "developer": "AMANOTES PTE. LTD.", "rating": 4.3, "reviews": "4,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.amantub.simple.game"},
-    {"rank": 61, "title": "Dancing Road: Color Ball Run", "developer": "AMANOTES PTE. LTD.", "rating": 4.2, "reviews": "2,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.amantub.dancing.road.color.ball.run"},
-    {"rank": 62, "title": "Sonic Dash", "developer": "SEGA", "rating": 4.4, "reviews": "1,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.sega.sonic.cd"},
-    {"rank": 63, "title": "Shadow Fight 2", "developer": "Nekki", "rating": 4.5, "reviews": "5,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.nekki.shadowfight"},
-    {"rank": 64, "title": "Dead by Daylight Mobile", "developer": "Behaviour Interactive", "rating": 4.1, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.behaviour.deadbydaylight"},
-    {"rank": 65, "title": "Identity V", "developer": "NetEase Games", "rating": 4.3, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.netease.idv.googleplay"},
-    {"rank": 66, "title": "Honkai: Star Rail", "developer": "HoYoverse", "rating": 4.6, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.HoYoverse.hkrpgoversea"},
-    {"rank": 67, "title": "Zenless Zone Zero", "developer": "HoYoverse", "rating": 4.5, "reviews": "200,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.HoYoverse.Nap"},
-    {"rank": 68, "title": "Wuthering Waves", "developer": "Kuro Games", "rating": 4.4, "reviews": "300,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.kurogame.wutheringwaves.global"},
-    {"rank": 69, "title": "Reverse: 1999", "developer": "BLUEPOCH", "rating": 4.5, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.bluepoch.r1999.google"},
-    {"rank": 70, "title": "Love and Deepspace", "developer": "Infold Games", "rating": 4.6, "reviews": "200,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.papegames.lysk.en"},
-    {"rank": 71, "title": "Figure Fantasy", "developer": "COM2US", "rating": 4.3, "reviews": "100,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.proximabeta.figurefantasy"},
-    {"rank": 72, "title": "Epic Seven", "developer": "Smilegate Megaport", "rating": 4.4, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.smilegate.epicseven"},
-    {"rank": 73, "title": "Summoners War", "developer": "Com2uS", "rating": 4.3, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.com2us.summonguardian.wglobal"},
-    {"rank": 74, "title": "Raid: Shadow Legends", "developer": "Plarium Global", "rating": 4.2, "reviews": "2,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.plarium.raidlegends"},
-    {"rank": 75, "title": "Marvel Future Fight", "developer": "Netmarble", "rating": 4.3, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.netmarble.mff"},
-    {"rank": 76, "title": "Seven Deadly Sins", "developer": "Netmarble", "rating": 4.2, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.netmarble.nanagb"},
-    {"rank": 77, "title": "Lineage 2M", "developer": "NCSOFT", "rating": 4.1, "reviews": "300,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.ncsoft.lineage2m"},
-    {"rank": 78, "title": "Black Desert Mobile", "developer": "PEARL ABYSS", "rating": 4.0, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.pearlabyss.blackdesertm.gl"},
-    {"rank": 79, "title": "Old School RuneScape", "developer": "Jagex", "rating": 4.3, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.jagex.oldscape.android"},
-    {"rank": 80, "title": "Albion Online", "developer": "Sandbox Interactive GmbH", "rating": 4.2, "reviews": "200,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.albiononline"},
-    {"rank": 81, "title": "Toram Online", "developer": "Asobimo, Inc.", "rating": 4.4, "reviews": "300,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.asobimo.toramonline"},
-    {"rank": 82, "title": "AdventureQuest 3D", "developer": "Artix Entertainment", "rating": 4.1, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.artixentertainment.aq3d"},
-    {"rank": 83, "title": "Villagers & Heroes", "developer": "Mad Otter Games", "rating": 4.3, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.madogames.villagersandheroes"},
-    {"rank": 84, "title": "Celtic Heroes", "developer": "Deca Games", "rating": 4.0, "reviews": "50,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.on5.celticheroes"},
-    {"rank": 85, "title": "Order & Chaos 2: Redemption", "developer": "Gameloft SE", "rating": 4.1, "reviews": "200,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.gameloft.android.ANMP.GloftO2HM"},
-    {"rank": 86, "title": "Rucoy Online", "developer": "RicardoGzz", "rating": 4.2, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.ricardogzz.rucoyonline"},
-    {"rank": 87, "title": "AnimA ARPG", "developer": "Redeev", "rating": 4.3, "reviews": "200,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.redeev.anima"},
-    {"rank": 88, "title": "The Greedy Cave 2: Time Gate", "developer": "Avalon Games Inc.", "rating": 4.4, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.avalon.greedy.cave2"},
-    {"rank": 89, "title": "Exiled Kingdoms", "developer": "4 Dimension Games", "rating": 4.5, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=net.exiledkingdoms"},
-    {"rank": 90, "title": "Titan Quest", "developer": "HandyGames", "rating": 4.3, "reviews": "200,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.hg.titanquestfull"},
-    {"rank": 91, "title": "Evoland", "developer": "Playdigious", "rating": 4.4, "reviews": "50,000", "downloads": "1M+", "download_link": "https://play.google.com/store/apps/details?id=net.frognation.evoland"},
-    {"rank": 92, "title": "80 Days", "developer": "inkle Ltd", "rating": 4.6, "reviews": "50,000", "downloads": "1M+", "download_link": "https://play.google.com/store/apps/details?id=com.inkle.eightydays"},
-    {"rank": 93, "title": "The Room Two", "developer": "Fireproof Games", "rating": 4.8, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.FireproofStudios.TheRoom2"},
-    {"rank": 94, "title": "Monument Valley", "developer": "ustwo games", "rating": 4.7, "reviews": "200,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.ustwo.monumentvalley"},
-    {"rank": 95, "title": "Alto's Odyssey", "developer": "Snowman", "rating": 4.6, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.noodlecake.altosodyssey"},
-    {"rank": 96, "title": "Lara Croft GO", "developer": "Square Enix Ltd", "rating": 4.7, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.squareenixmontreal.laracroftgo"},
-    {"rank": 97, "title": "Hitman GO", "developer": "Square Enix Ltd", "rating": 4.5, "reviews": "50,000", "downloads": "1M+", "download_link": "https://play.google.com/store/apps/details?id=com.squareenixmontreal.hitmango"},
-    {"rank": 98, "title": "Deus Ex GO", "developer": "Square Enix Ltd", "rating": 4.4, "reviews": "50,000", "downloads": "1M+", "download_link": "https://play.google.com/store/apps/details?id=com.squareenixmontreal.deusexgo"},
-    {"rank": 99, "title": "Explosion Detective", "developer": "Pastel Games", "rating": 4.6, "reviews": "50,000", "downloads": "1M+", "download_link": "https://play.google.com/store/apps/details?id=com.pastelgames.thewayoftheexplosiondetective"},
-    {"rank": 100, "title": "Mini Metro", "developer": "Codepoint Ltd", "rating": 4.7, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.codepoint.minimetro"}
-  ];
+// Updated app data with categories and price
+const playStoreApps = [
+  {"rank": 1, "title": "Free Fire", "developer": "Garena Free Fire", "category": "Action", "rating": 4.2, "reviews": "126M", "downloads": "1B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.dts.freefireth"},
+  {"rank": 2, "title": "Roblox", "developer": "Roblox Corporation", "category": "Action", "rating": 4.4, "reviews": "46M", "downloads": "1B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.roblox.client"},
+  {"rank": 3, "title": "Candy Crush Saga", "developer": "King", "category": "Puzzle", "rating": 4.6, "reviews": "39M", "downloads": "1B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.king.candycrushsaga"},
+  {"rank": 4, "title": "PUBG Mobile", "developer": "PUBG Corporation", "category": "Action", "rating": 4.3, "reviews": "47.6M", "downloads": "500M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.tencent.ig"},
+  {"rank": 5, "title": "Call of Duty: Mobile", "developer": "Activision Publishing, Inc.", "category": "Action", "rating": 4.3, "reviews": "16.4M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.activision.callofduty.shooter"},
+  {"rank": 6, "title": "Brawl Stars", "developer": "Supercell", "category": "Action", "rating": 4.2, "reviews": "25.2M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.supercell.brawlstars"},
+  {"rank": 7, "title": "Coin Master", "developer": "Moon Active", "category": "Casual", "rating": 4.8, "reviews": "10.2M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.moonactive.coinmaster"},
+  {"rank": 8, "title": "Among Us", "developer": "Innersloth LLC", "category": "Casual", "rating": 3.9, "reviews": "13.5M", "downloads": "500M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.innersloth.spacemafia"},
+  {"rank": 9, "title": "Clash of Clans", "developer": "Supercell", "category": "Strategy", "rating": 4.5, "reviews": "61.9M", "downloads": "500M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.supercell.clashofclans"},
+  {"rank": 10, "title": "Genshin Impact", "developer": "HoYoverse", "category": "Action", "rating": 3.5, "reviews": "5.03M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.miHoYo.GenshinImpact"},
+  {"rank": 11, "title": "Minecraft", "developer": "Mojang Studios", "category": "Action", "rating": 4.4, "reviews": "5.48M", "downloads": "50M+", "price": "Paid", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.mojang.minecraftpe"},
+  {"rank": 12, "title": "Subway Surfers", "developer": "SYBO Games", "category": "Action", "rating": 4.6, "reviews": "42.1M", "downloads": "1B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.kiloo.subwaysurf"},
+  {"rank": 13, "title": "Homescapes", "developer": "Playrix", "category": "Puzzle", "rating": 4.7, "reviews": "13.1M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.playrix.homescapes"},
+  {"rank": 14, "title": "Gardenscapes", "developer": "Playrix", "category": "Puzzle", "rating": 4.8, "reviews": "13.2M", "downloads": "500M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.playrix.gardenscapes"},
+  {"rank": 15, "title": "8 Ball Pool", "developer": "Miniclip", "category": "Sports", "rating": 4.5, "reviews": "30M", "downloads": "500M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.miniclip.8ballpool"},
+  {"rank": 16, "title": "My Talking Tom", "developer": "Outfit7", "category": "Casual", "rating": 4.4, "reviews": "25M", "downloads": "500M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.outfit7.mytalkingtom"},
+  {"rank": 17, "title": "Ludo King", "developer": "Gametion", "category": "Casual", "rating": 4.2, "reviews": "10.2M", "downloads": "1B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.ludo.king"},
+  {"rank": 18, "title": "Hill Climb Racing", "developer": "Fingersoft", "category": "Action", "rating": 4.2, "reviews": "10.9M", "downloads": "1B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.fingersoft.hillclimb"},
+  {"rank": 19, "title": "Temple Run 2", "developer": "Imangi Studios", "category": "Action", "rating": 4.1, "reviews": "10.1M", "downloads": "1B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.imangi.templerun2"},
+  {"rank": 20, "title": "Clash Royale", "developer": "Supercell", "category": "Strategy", "rating": 4.5, "reviews": "39.9M", "downloads": "500M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.supercell.clashroyale"},
+  {"rank": 21, "title": "Block Blast!", "developer": "Hungry Studio", "category": "Puzzle", "rating": 4.7, "reviews": "1M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.block.blast"},
+  {"rank": 22, "title": "Township", "developer": "Playrix", "category": "Casual", "rating": 4.8, "reviews": "12.3M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.playrix.township"},
+  {"rank": 23, "title": "Squid Game: Unleashed", "developer": "Netflix, Inc.", "category": "Action", "rating": 4.5, "reviews": "0.5M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.netflix.squidgame"},
+  {"rank": 24, "title": "Solitaire", "developer": "MobilityWare", "category": "Puzzle", "rating": 4.6, "reviews": "1.82M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.mobilityware.solitaire"},
+  {"rank": 25, "title": "Pokémon GO", "developer": "Niantic, Inc.", "category": "Action", "rating": 4.0, "reviews": "15.4M", "downloads": "500M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.nianticlabs.pokemongo"},
+  {"rank": 26, "title": "WhatsApp", "developer": "WhatsApp LLC", "category": "Social", "rating": 4.3, "reviews": "207M", "downloads": "5B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.whatsapp"},
+  {"rank": 27, "title": "Instagram", "developer": "Instagram", "category": "Social", "rating": 4.2, "reviews": "155M", "downloads": "1B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.instagram.android"},
+  {"rank": 28, "title": "Facebook", "developer": "Meta Platforms, Inc.", "category": "Social", "rating": 4.1, "reviews": "140M", "downloads": "5B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.facebook.katana"},
+  {"rank": 29, "title": "TikTok", "developer": "TikTok Pte. Ltd.", "category": "Social", "rating": 4.4, "reviews": "63M", "downloads": "1B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.zhiliaoapp.musically"},
+  {"rank": 30, "title": "Snapchat", "developer": "Snap Inc", "category": "Social", "rating": 4.1, "reviews": "35M", "downloads": "1B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.snapchat.android"},
+  {"rank": 31, "title": "Google Maps", "developer": "Google LLC", "category": "Productivity", "rating": 4.1, "reviews": "18M", "downloads": "5B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.google.android.apps.maps"},
+  {"rank": 32, "title": "Gmail", "developer": "Google LLC", "category": "Productivity", "rating": 4.2, "reviews": "14M", "downloads": "5B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.google.android.gm"},
+  {"rank": 33, "title": "Microsoft Word", "developer": "Microsoft Corporation", "category": "Productivity", "rating": 4.4, "reviews": "8M", "downloads": "1B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.microsoft.office.word"},
+  {"rank": 34, "title": "Google Drive", "developer": "Google LLC", "category": "Productivity", "rating": 4.3, "reviews": "10M", "downloads": "5B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.google.android.apps.docs"},
+  {"rank": 35, "title": "Zoom", "developer": "Zoom Video Communications", "category": "Productivity", "rating": 4.2, "reviews": "4M", "downloads": "1B+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=us.zoom.videomeetings"},
+  {"rank": 36, "title": "Fitbit", "developer": "Fitbit LLC", "category": "Health", "rating": 4.0, "reviews": "1M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.fitbit.FitbitMobile"},
+  {"rank": 37, "title": "MyFitnessPal", "developer": "MyFitnessPal, Inc.", "category": "Health", "rating": 4.1, "reviews": "2M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.myfitnesspal.android"},
+  {"rank": 38, "title": "Strava", "developer": "Strava, Inc.", "category": "Health", "rating": 4.3, "reviews": "0.8M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.strava"},
+  {"rank": 39, "title": "Calm", "developer": "Calm.com, Inc.", "category": "Health", "rating": 4.4, "reviews": "0.5M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.calm.android"},
+  {"rank": 40, "title": "Headspace", "developer": "Headspace Inc.", "category": "Health", "rating": 4.5, "reviews": "0.3M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.getsomeheadspace.android"},
+  {"rank": 41, "title": "ESPN", "developer": "ESPN Inc", "category": "Sports", "rating": 4.2, "reviews": "0.9M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.espn.score_center"},
+  {"rank": 42, "title": "NBC Sports", "developer": "NBCUniversal Media, LLC", "category": "Sports", "rating": 4.0, "reviews": "0.1M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.nbcsports.mobile"},
+  {"rank": 43, "title": "Yahoo Sports", "developer": "Yahoo", "category": "Sports", "rating": 4.1, "reviews": "0.2M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.yahoo.mobile.client.android.sportacular"},
+  {"rank": 44, "title": "FIFA Soccer", "developer": "ELECTRONIC ARTS", "category": "Sports", "rating": 4.5, "reviews": "8M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.ea.gp.fifamobile"},
+  {"rank": 45, "title": "NBA", "developer": "NBA Properties, Inc.", "category": "Sports", "rating": 4.3, "reviews": "0.5M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.nbadigital.gametime"},
+  {"rank": 46, "title": "Royal Match", "developer": "Dream Games", "category": "Puzzle", "rating": 4.6, "reviews": "9.46M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.dreamgames.royalmatch"},
+  {"rank": 47, "title": "Match Masters", "developer": "Candivore", "category": "Puzzle", "rating": 4.8, "reviews": "2.47M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.funtomic.matchmasters"},
+  {"rank": 48, "title": "Tangle Master 3D", "developer": "Rollic Games", "category": "Puzzle", "rating": 4.3, "reviews": "5M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.saygames.tangle"},
+  {"rank": 49, "title": "Wood Nuts & Bolts Puzzle", "developer": "ABI Studio Inc.", "category": "Puzzle", "rating": 4.6, "reviews": "0.5M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=wood.nuts.bolts.puzzle"},
+  {"rank": 50, "title": "Crowd City", "developer": "Voodoo", "category": "Action", "rating": 4.2, "reviews": "2M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.crowd.city"},
+  {"rank": 51, "title": "Join Clash 3D", "developer": "Voodoo", "category": "Action", "rating": 4.4, "reviews": "3M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.freeplay.joinclash3d"},
+  {"rank": 52, "title": "Aquapark.io", "developer": "Voodoo", "category": "Action", "rating": 4.3, "reviews": "4M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.aquapark.io"},
+  {"rank": 53, "title": "Snake Rivals", "developer": "Supersolid", "category": "Action", "rating": 4.1, "reviews": "1M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.supersolid.snakerivals"},
+  {"rank": 54, "title": "Helix Jump", "developer": "Voodoo", "category": "Action", "rating": 3.9, "reviews": "4.17M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.h8games.helixjump"},
+  {"rank": 55, "title": "Hole.io", "developer": "Voodoo", "category": "Action", "rating": 3.0, "reviews": "1.24M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=io.voodoo.holeio"},
+  {"rank": 56, "title": "Stack Ball", "developer": "Voodoo", "category": "Action", "rating": 4.2, "reviews": "6M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.stackball"},
+  {"rank": 57, "title": "Run Race 3D", "developer": "Voodoo", "category": "Action", "rating": 4.3, "reviews": "2M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.race3d.run"},
+  {"rank": 58, "title": "Going Balls", "developer": "Supersonic Studios LTD", "category": "Action", "rating": 4.1, "reviews": "3M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.supersonic.goingballs"},
+  {"rank": 59, "title": "Tall Man Run", "developer": "Voodoo", "category": "Action", "rating": 4.2, "reviews": "1M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.tallmanrun"},
+  {"rank": 60, "title": "Emoji Puzzle", "developer": "Loop Games", "category": "Puzzle", "rating": 4.5, "reviews": "0.5M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=emojipuzzle.emojigame"},
+  {"rank": 61, "title": "Red Ball 4", "developer": "FDG Entertainment GmbH & Co.KG", "category": "Action", "rating": 4.4, "reviews": "2M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.fdg.redball4"},
+  {"rank": 62, "title": "Color Bump 3D", "developer": "Voodoo", "category": "Action", "rating": 4.1, "reviews": "1M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.colorbump3d"},
+  {"rank": 63, "title": "Paint By Number", "developer": "Funly", "category": "Casual", "rating": 4.6, "reviews": "1M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.funnylife.paintbynumber"},
+  {"rank": 64, "title": "Project Makeover", "developer": "Magic Tavern, Inc.", "category": "Casual", "rating": 4.5, "reviews": "2M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.mti.projectmakeover"},
+  {"rank": 65, "title": "Love Nikki-Dress UP Queen", "developer": "Elex", "category": "Casual", "rating": 4.4, "reviews": "0.5M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.elex.lovenikki.en"},
+  {"rank": 66, "title": "Evony: The King's Return", "developer": "TOP GAMES INC.", "category": "Strategy", "rating": 4.0, "reviews": "815K", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.topgamesinc.evony"},
+  {"rank": 67, "title": "Idle Miner Tycoon", "developer": "Fluffy Fairy Games", "category": "Strategy", "rating": 4.5, "reviews": "5.6M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.fluffyfairygames.idleminertycoon"},
+  {"rank": 68, "title": "AFK Arena", "developer": "Lilith Games", "category": "Strategy", "rating": 4.5, "reviews": "3.7M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.lilithgame.hgame.gp"},
+  {"rank": 69, "title": "Rise of Kingdoms", "developer": "Lilith Games", "category": "Strategy", "rating": 4.5, "reviews": "2.5M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.lilithgame.roc.gp"},
+  {"rank": 70, "title": "State of Survival", "developer": "KingsGroup Holdings", "category": "Strategy", "rating": 4.3, "reviews": "1M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.kingsgroup.stateofsurvival"},
+  {"rank": 71, "title": "Lords Mobile", "developer": "IGG.COM", "category": "Strategy", "rating": 4.5, "reviews": "9.09M", "downloads": "500M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.igg.android.lordsmobile"},
+  {"rank": 72, "title": "Last Shelter: Survival", "developer": "Long Tech Network", "category": "Strategy", "rating": 4.1, "reviews": "0.5M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.longtech.lastshelter.global"},
+  {"rank": 73, "title": "Survivor.io", "developer": "Habby", "category": "Action", "rating": 4.5, "reviews": "1.11M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.dxx.firenow"},
+  {"rank": 74, "title": "Archero", "developer": "Habby", "category": "Action", "rating": 4.3, "reviews": "1.74M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.habby.archero"},
+  {"rank": 75, "title": "Magic Tiles 3", "developer": "Yolo Games", "category": "Casual", "rating": 4.6, "reviews": "3.37M", "downloads": "500M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.youmusic.magictiles"},
+  {"rank": 76, "title": "Tiles Hop: EDM Rush", "developer": "AMANOTES PTE. LTD.", "category": "Casual", "rating": 4.3, "reviews": "4M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.amantub.simple.game"},
+  {"rank": 77, "title": "Dancing Road: Color Ball Run", "developer": "AMANOTES PTE. LTD.", "category": "Casual", "rating": 4.2, "reviews": "2M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.amantub.dancing.road.color.ball.run"},
+  {"rank": 77, "title": "Sonic Dash", "developer": "SEGA", "category": "Action", "rating": 4.4, "reviews": "1M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.sega.sonic.cd"},
+  {"rank": 78, "title": "Shadow Fight 2", "developer": "Nekki", "category": "Action", "rating": 4.6, "reviews": "16.7M", "downloads": "100M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.nekki.shadowfight"},
+  {"rank": 79, "title": "Dead by Daylight Mobile", "developer": "Behaviour Interactive", "category": "Action", "rating": 4.1, "reviews": "0.5M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.behaviour.deadbydaylight"},
+  {"rank": 80, "title": "Identity V", "developer": "NetEase Games", "category": "Action", "rating": 3.4, "reviews": "799K", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.netease.idv.googleplay"},
+  {"rank": 81, "title": "Honkai: Star Rail", "developer": "HoYoverse", "category": "Action", "rating": 3.4, "reviews": "485K", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.HoYoverse.hkrpgoversea"},
+  {"rank": 82, "title": "Zenless Zone Zero", "developer": "HoYoverse", "category": "Action", "rating": 3.4, "reviews": "134K", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.HoYoverse.Nap"},
+  {"rank": 83, "title": "Wuthering Waves", "developer": "Kuro Games", "category": "Action", "rating": 4.4, "reviews": "402K", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.kurogame.wutheringwaves.global"},
+  {"rank": 84, "title": "Reverse: 1999", "developer": "BLUEPOCH", "category": "Strategy", "rating": 4.5, "reviews": "0.1M", "downloads": "5M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.bluepoch.r1999.google"},
+  {"rank": 85, "title": "Love and Deepspace", "developer": "Infold Games", "category": "Action", "rating": 4.7, "reviews": "135K", "downloads": "5M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.papegames.lysk.en"},
+  {"rank": 86, "title": "Figure Fantasy", "developer": "COM2US", "category": "Strategy", "rating": 4.3, "reviews": "0.1M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.proximabeta.figurefantasy"},
+  {"rank": 87, "title": "Epic Seven", "developer": "Smilegate Megaport", "category": "Strategy", "rating": 4.4, "reviews": "0.5M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.smilegate.epicseven"},
+  {"rank": 88, "title": "Summoners War", "developer": "Com2uS", "category": "Strategy", "rating": 4.3, "reviews": "1M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.com2us.summonguardian.wglobal"},
+  {"rank": 89, "title": "Raid: Shadow Legends", "developer": "Plarium Global", "category": "Strategy", "rating": 4.6, "reviews": "2.18M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.plarium.raidlegends"},
+  {"rank": 90, "title": "Marvel Future Fight", "developer": "Netmarble", "category": "Action", "rating": 4.3, "reviews": "1M", "downloads": "50M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.netmarble.mff"},
+  {"rank": 91, "title": "Seven Deadly Sins", "developer": "Netmarble", "category": "Action", "rating": 4.3, "reviews": "647K", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.netmarble.nanagb"},
+  {"rank": 92, "title": "Lineage 2M", "developer": "NCSOFT", "category": "Strategy", "rating": "N/A", "reviews": "N/A", "downloads": "100K+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.ncsoft.lineage2m"},
+  {"rank": 93, "title": "Black Desert Mobile", "developer": "PEARL ABYSS", "category": "Strategy", "rating": 4.0, "reviews": "438K", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.pearlabyss.blackdesertm.gl"},
+  {"rank": 94, "title": "Old School RuneScape", "developer": "Jagex", "category": "Strategy", "rating": 4.1, "reviews": "133K", "downloads": "5M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.jagex.oldscape.android"},
+  {"rank": 95, "title": "Albion Online", "developer": "Sandbox Interactive GmbH", "category": "Strategy", "rating": 4.5, "reviews": "362K", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.albiononline"},
+  {"rank": 96, "title": "Toram Online", "developer": "Asobimo, Inc.", "category": "Strategy", "rating": 4.5, "reviews": "1.02M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.asobimo.toramonline"},
+  {"rank": 97, "title": "AdventureQuest 3D", "developer": "Artix Entertainment", "category": "Strategy", "rating": 4.1, "reviews": "0.1M", "downloads": "5M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.artixentertainment.aq3d"},
+  {"rank": 98, "title": "Villagers & Heroes", "developer": "Mad Otter Games", "category": "Strategy", "rating": 4.3, "reviews": "0.1M", "downloads": "5M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.madogames.villagersandheroes"},
+  {"rank": 99, "title": "Celtic Heroes", "developer": "Deca Games", "category": "Strategy", "rating": 4.0, "reviews": "0.05M", "downloads": "5M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.on5.celticheroes"},
+  {"rank": 100, "title": "Order & Chaos 2: Redemption", "developer": "Gameloft SE", "category": "Strategy", "rating": 4.1, "reviews": "0.2M", "downloads": "10M+", "price": "Free", "store": "Play Store", "download_link": "https://play.google.com/store/apps/details?id=com.gameloft.android.ANMP.GloftO2HM"}
+];
 
-  const appStoreGames = [
-    {"rank": 1, "title": "Block Blast!", "developer": "Hungry Studio", "rating": 4.8, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/block-blast/id1607984880"},
-    {"rank": 2, "title": "MONOPOLY GO!", "developer": "Scopely", "rating": 4.7, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/monopoly-go/id1598464675"},
-    {"rank": 3, "title": "Roblox", "developer": "Roblox Corporation", "rating": 4.5, "reviews": "2,000,000", "download_link": "https://apps.apple.com/us/app/roblox/id431946152"},
-    {"rank": 4, "title": "Call of Duty: Warzone", "developer": "Activision Publishing, Inc.", "rating": 4.3, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/call-of-duty-warzone-mobile/id1605878371"},
-    {"rank": 5, "title": "Township", "developer": "Playrix", "rating": 4.7, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/township/id548342037"},
-    {"rank": 6, "title": "Squid Game: Unleashed", "developer": "Netflix, Inc.", "rating": 4.6, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/squid-game-unleashed/id6479351985"},
-    {"rank": 7, "title": "Subway Surfers", "developer": "SYBO Games", "rating": 4.6, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/subway-surfers/id512939461"},
-    {"rank": 8, "title": "8 Ball Pool", "developer": "Miniclip", "rating": 4.5, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/8-ball-pool/id543186831"},
-    {"rank": 9, "title": "Super Mario Run", "developer": "Nintendo", "rating": 4.3, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/super-mario-run/id1130385445"},
-    {"rank": 10, "title": "Solitaire", "developer": "MobilityWare", "rating": 4.7, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/solitaire/id235877737"},
-    {"rank": 11, "title": "Papa's Freezeria To Go!", "developer": "Flipline Studios", "rating": 4.8, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/papas-freezeria-to-go/id1609672492"},
-    {"rank": 12, "title": "Gardenscapes", "developer": "Playrix", "rating": 4.6, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/gardenscapes/id1102077672"},
-    {"rank": 13, "title": "Homescapes", "developer": "Playrix", "rating": 4.6, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/homescapes/id1195624328"},
-    {"rank": 14, "title": "Coin Master", "developer": "Moon Active", "rating": 4.6, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/coin-master/id1117335963"},
-    {"rank": 15, "title": "Pokémon GO", "developer": "Niantic, Inc.", "rating": 4.1, "reviews": "2,000,000", "download_link": "https://apps.apple.com/us/app/pok%C3%A9mon-go/id1094591345"},
-    {"rank": 16, "title": "Among Us", "developer": "Innersloth LLC", "rating": 4.2, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/among-us/id1351168404"},
-    {"rank": 17, "title": "Candy Crush Saga", "developer": "King", "rating": 4.6, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/candy-crush-saga/id553834731"},
-    {"rank": 18, "title": "Clash of Clans", "developer": "Supercell", "rating": 4.6, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/clash-of-clans/id529479190"},
-    {"rank": 19, "title": "Brawl Stars", "developer": "Supercell", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/brawl-stars/id1229016807"},
-    {"rank": 20, "title": "Genshin Impact", "developer": "HoYoverse", "rating": 4.5, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/genshin-impact/id1517783697"},
-    {"rank": 21, "title": "Free Fire", "developer": "Garena Free Fire", "rating": 4.2, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/free-fire/id1300146617"},
-    {"rank": 22, "title": "PUBG Mobile", "developer": "PUBG Corporation", "rating": 4.1, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/pubg-mobile/id1330123889"},
-    {"rank": 23, "title": "Call of Duty: Mobile", "developer": "Activision Publishing, Inc.", "rating": 4.3, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/call-of-duty-mobile/id1287282213"},
-    {"rank": 24, "title": "Minecraft", "developer": "Mojang Studios", "rating": 4.5, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/minecraft/id479516143"},
-    {"rank": 25, "title": "Subway Surfers", "developer": "SYBO Games", "rating": 4.6, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/subway-surfers/id512939461"},
-    {"rank": 26, "title": "Ludo King", "developer": "Gametion", "rating": 4.3, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/ludo-king/id993090598"},
-    {"rank": 27, "title": "Hill Climb Racing", "developer": "Fingersoft", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/hill-climb-racing/id544881288"},
-    {"rank": 28, "title": "Temple Run 2", "developer": "Imangi Studios", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/temple-run-2/id510464921"},
-    {"rank": 29, "title": "Clash Royale", "developer": "Supercell", "rating": 4.2, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/clash-royale/id1053012308"},
-    {"rank": 30, "title": "My Talking Tom", "developer": "Outfit7", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/my-talking-tom/id417099932"},
-    {"rank": 31, "title": "Royal Match", "developer": "Dream Games", "rating": 4.5, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/royal-match/id1486903783"},
-    {"rank": 32, "title": "Match Masters", "developer": "Candivore", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/match-masters/id1446749114"},
-    {"rank": 33, "title": "Tangle Master 3D", "developer": "Rollic Games", "rating": 4.3, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/tangle-master-3d/id1462330371"},
-    {"rank": 34, "title": "Wood Nuts & Bolts Puzzle", "developer": "ABI Studio Inc.", "rating": 4.6, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/wood-nuts-bolts-puzzle/id1661842867"},
-    {"rank": 35, "title": "Crowd City", "developer": "Voodoo", "rating": 4.2, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/crowd-city/id1462497260"},
-    {"rank": 36, "title": "Join Clash 3D", "developer": "Voodoo", "rating": 4.4, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/join-clash-3d/id1490400049"},
-    {"rank": 37, "title": "Aquapark.io", "developer": "Voodoo", "rating": 4.3, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/aquapark-io/id1463609632"},
-    {"rank": 38, "title": "Snake Rivals", "developer": "Supersolid", "rating": 4.1, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/snake-rivals-multiplayer/id1455278266"},
-    {"rank": 39, "title": "Helix Jump", "developer": "Voodoo", "rating": 4.2, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/helix-jump/id1330958189"},
-    {"rank": 40, "title": "Hole.io", "developer": "Voodoo", "rating": 4.1, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/hole-io/id1273206993"},
-    {"rank": 41, "title": "Stack Ball", "developer": "Voodoo", "rating": 4.2, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/stack-ball-3d/id1460058388"},
-    {"rank": 42, "title": "Run Race 3D", "developer": "Voodoo", "rating": 4.3, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/run-race-3d/id1488960177"},
-    {"rank": 43, "title": "Going Balls", "developer": "Supersonic Studios LTD", "rating": 4.1, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/going-balls/id1512779369"},
-    {"rank": 44, "title": "Tall Man Run", "developer": "Voodoo", "rating": 4.2, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/tall-man-run/id1583229112"},
-    {"rank": 45, "title": "Emoji Puzzle", "developer": "Loop Games", "rating": 4.5, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/emoji-puzzle/id1559747151"},
-    {"rank": 46, "title": "Red Ball 4", "developer": "FDG Entertainment GmbH & Co.KG", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/red-ball-4/id1466868754"},
-    {"rank": 47, "title": "Color Bump 3D", "developer": "Voodoo", "rating": 4.1, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/color-bump-3d/id1478441642"},
-    {"rank": 48, "title": "Paint By Number", "developer": "Funly", "rating": 4.6, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/paint-by-number/id1357088421"},
-    {"rank": 49, "title": "Project Makeover", "developer": "Magic Tavern, Inc.", "rating": 4.5, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/project-makeover/id1470671263"},
-    {"rank": 50, "title": "Love Nikki-Dress UP Queen", "developer": "Elex", "rating": 4.4, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/love-nikki-dress-up-queen/id1053049108"},
-    {"rank": 51, "title": "Evony: The King's Return", "developer": "TOP GAMES INC.", "rating": 4.2, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/evony/id1098157952"},
-    {"rank": 52, "title": "Idle Miner Tycoon", "developer": "Fluffy Fairy Games", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/idle-miner-tycoon-money/id1116645064"},
-    {"rank": 53, "title": "AFK Arena", "developer": "Lilith Games", "rating": 4.5, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/afk-arena/id1375427392"},
-    {"rank": 54, "title": "Rise of Kingdoms", "developer": "Lilith Games", "rating": 4.4, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/rise-of-kingdoms/id1459149935"},
-    {"rank": 55, "title": "State of Survival", "developer": "KingsGroup Holdings", "rating": 4.3, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/state-of-survival/id1460838705"},
-    {"rank": 56, "title": "Lords Mobile", "developer": "IGG.COM", "rating": 4.2, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/lords-mobile-pvp-io/id1071976327"},
-    {"rank": 57, "title": "Last Shelter: Survival", "developer": "Long Tech Network", "rating": 4.1, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/last-shelter-survival/id1440270779"},
-    {"rank": 58, "title": "Survivor.io", "developer": "Habby", "rating": 4.4, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/survivor-io/id1600780465"},
-    {"rank": 59, "title": "Archero", "developer": "Habby", "rating": 4.3, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/archero/id1448067797"},
-    {"rank": 60, "title": "Magic Tiles 3", "developer": "Yolo Games", "rating": 4.2, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/magic-tiles-3/id1082437499"},
-    {"rank": 61, "title": "Tiles Hop: EDM Rush", "developer": "AMANOTES PTE. LTD.", "rating": 4.3, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/tiles-hop-edm-rush/id1469479354"},
-    {"rank": 62, "title": "Dancing Road: Color Ball Run", "developer": "AMANOTES PTE. LTD.", "rating": 4.2, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/dancing-road-color-ball-run/id1467283493"},
-    {"rank": 63, "title": "Sonic Dash", "developer": "SEGA", "rating": 4.4, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/sonic-dash-endless-runner/id623203844"},
-    {"rank": 64, "title": "Shadow Fight 2", "developer": "Nekki", "rating": 4.5, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/shadow-fight-2/id696565994"},
-    {"rank": 65, "title": "Dead by Daylight Mobile", "developer": "Behaviour Interactive", "rating": 4.1, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/dead-by-daylight-mobile/id1564290223"},
-    {"rank": 66, "title": "Identity V", "developer": "NetEase Games", "rating": 4.3, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/identity-v/id1336435391"},
-    {"rank": 67, "title": "Honkai: Star Rail", "developer": "HoYoverse", "rating": 4.6, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/honkai-star-rail/id1599719154"},
-    {"rank": 68, "title": "Zenless Zone Zero", "developer": "HoYoverse", "rating": 4.5, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/zenless-zone-zero/id6476608458"},
-    {"rank": 69, "title": "Wuthering Waves", "developer": "Kuro Games", "rating": 4.4, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/wuthering-waves/id6475033368"},
-    {"rank": 70, "title": "Reverse: 1999", "developer": "BLUEPOCH", "rating": 4.5, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/reverse-1999/id1600403458"},
-    {"rank": 71, "title": "Love and Deepspace", "developer": "Infold Games", "rating": 4.6, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/love-and-deepspace/id6475706266"},
-    {"rank": 72, "title": "Figure Fantasy", "developer": "COM2US", "rating": 4.3, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/figure-fantasy/id1584651186"},
-    {"rank": 73, "title": "Epic Seven", "developer": "Smilegate Megaport", "rating": 4.4, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/epic-seven/id1444671653"},
-    {"rank": 74, "title": "Summoners War", "developer": "Com2uS", "rating": 4.3, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/summoners-war-sky-arena/id650106655"},
-    {"rank": 75, "title": "Raid: Shadow Legends", "developer": "Plarium Global", "rating": 4.2, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/raid-shadow-legends/id1498473577"},
-    {"rank": 76, "title": "Marvel Future Fight", "developer": "Netmarble", "rating": 4.3, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/marvel-future-fight/id888693048"},
-    {"rank": 77, "title": "Seven Deadly Sins", "developer": "Netmarble", "rating": 4.2, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/the-seven-deadly-sins/id1477860000"},
-    {"rank": 78, "title": "Lineage 2M", "developer": "NCSOFT", "rating": 4.1, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/lineage2m/id1445268744"},
-    {"rank": 79, "title": "Black Desert Mobile", "developer": "PEARL ABYSS", "rating": 4.0, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/black-desert-mobile/id1477186880"},
-    {"rank": 80, "title": "Old School RuneScape", "developer": "Jagex", "rating": 4.3, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/old-school-runescape/id1269648762"},
-    {"rank": 81, "title": "Albion Online", "developer": "Sandbox Interactive GmbH", "rating": 4.2, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/albion-online/id1202788573"},
-    {"rank": 82, "title": "Toram Online", "developer": "Asobimo, Inc.", "rating": 4.4, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/toram-online-mmorpg/id979256559"},
-    {"rank": 83, "title": "AdventureQuest 3D", "developer": "Artix Entertainment", "rating": 4.1, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/adventurequest-3d/id1168352621"},
-    {"rank": 84, "title": "Villagers & Heroes", "developer": "Mad Otter Games", "rating": 4.3, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/villagers-heroes-3d-mmorpg/id1107528960"},
-    {"rank": 85, "title": "Celtic Heroes", "developer": "Deca Games", "rating": 4.0, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/celtic-heroes-3d-mmorpg/id570320367"},
-    {"rank": 86, "title": "Order & Chaos 2: Redemption", "developer": "Gameloft SE", "rating": 4.1, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/order-chaos-2-redemption/id1058060051"},
-    {"rank": 87, "title": "Rucoy Online", "developer": "RicardoGzz", "rating": 4.2, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/rucoy-online/id1445230954"},
-    {"rank": 88, "title": "AnimA ARPG", "developer": "Redeev", "rating": 4.3, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/anima-arpg/id1356471869"},
-    {"rank": 89, "title": "The Greedy Cave 2: Time Gate", "developer": "Avalon Games Inc.", "rating": 4.4, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/the-greedy-cave-2-time-gate/id1447272006"},
-    {"rank": 90, "title": "Exiled Kingdoms", "developer": "4 Dimension Games", "rating": 4.5, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/exiled-kingdoms-rpg/id1500344243"},
-    {"rank": 91, "title": "Titan Quest", "developer": "HandyGames", "rating": 4.3, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/titan-quest-legendary-edition/id1483018137"},
-    {"rank": 92, "title": "Evoland", "developer": "Playdigious", "rating": 4.4, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/evoland/id1447990308"},
-    {"rank": 93, "title": "80 Days", "developer": "inkle Ltd", "rating": 4.6, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/80-days/id892812659"},
-    {"rank": 94, "title": "The Room Two", "developer": "Fireproof Games", "rating": 4.8, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/the-room-two/id592956935"},
-    {"rank": 95, "title": "Monument Valley", "developer": "ustwo games", "rating": 4.7, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/monument-valley/id728293409"},
-    {"rank": 96, "title": "Alto's Odyssey", "developer": "Snowman", "rating": 4.6, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/altos-odyssey/id1326018820"},
-    {"rank": 97, "title": "Lara Croft GO", "developer": "Square Enix Ltd", "rating": 4.7, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/lara-croft-go/id877702840"},
-    {"rank": 98, "title": "Hitman GO", "developer": "Square Enix Ltd", "rating": 4.5, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/hitman-go/id719585979"},
-    {"rank": 99, "title": "Deus Ex GO", "developer": "Square Enix Ltd", "rating": 4.4, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/deus-ex-go/id1080684260"},
-    {"rank": 100, "title": "The Way of the Explosion Detective", "developer": "Pastel Games", "rating": 4.6, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/the-way-of-the-explosion-detective/id6464373623"}
-  ];
+const appStoreApps = [
+  {"rank": 1, "title": "Block Blast!", "developer": "Hungry Studio", "category": "Puzzle", "rating": 4.8, "reviews": "1.37M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/block-blast/id1607984880"},
+  {"rank": 2, "title": "MONOPOLY GO!", "developer": "Scopely", "category": "Casual", "rating": 4.7, "reviews": "3.29M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/monopoly-go/id1598464675"},
+  {"rank": 3, "title": "Roblox", "developer": "Roblox Corporation", "category": "Action", "rating": 4.5, "reviews": "14.4M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/roblox/id431946152"},
+  {"rank": 4, "title": "Call of Duty: Warzone", "developer": "Activision Publishing, Inc.", "category": "Action", "rating": 4.6, "reviews": "796K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/call-of-duty-warzone-mobile/id1605878371"},
+  {"rank": 5, "title": "Township", "developer": "Playrix", "category": "Casual", "rating": 4.8, "reviews": "2.54M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/township/id548342037"},
+  {"rank": 6, "title": "Squid Game: Unleashed", "developer": "Netflix, Inc.", "category": "Action", "rating": 4.5, "reviews": "60.5K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/squid-game-unleashed/id6479351985"},
+  {"rank": 7, "title": "Subway Surfers", "developer": "SYBO Games", "category": "Action", "rating": 4.6, "reviews": "2.32M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/subway-surfers/id512939461"},
+  {"rank": 8, "title": "8 Ball Pool", "developer": "Miniclip", "category": "Sports", "rating": 4.6, "reviews": "1.82M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/8-ball-pool/id543186831"},
+  {"rank": 9, "title": "Super Mario Run", "developer": "Nintendo", "category": "Action", "rating": 3.9, "reviews": "1.88M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/super-mario-run/id1130385445"},
+  {"rank": 10, "title": "Solitaire", "developer": "MobilityWare", "category": "Puzzle", "rating": 4.6, "reviews": "1.39M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/solitaire/id235877737"},
+  {"rank": 11, "title": "Papa's Freezeria To Go!", "developer": "Flipline Studios", "category": "Casual", "rating": 4.6, "reviews": "52.4K", "downloads": "N/A", "price": "Paid", "store": "App Store", "download_link": "https://apps.apple.com/us/app/papas-freezeria-to-go/id1609672492"},
+  {"rank": 12, "title": "Gardenscapes", "developer": "Playrix", "category": "Puzzle", "rating": 4.7, "reviews": "1.51M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/gardenscapes/id1102077672"},
+  {"rank": 13, "title": "Homescapes", "developer": "Playrix", "category": "Puzzle", "rating": 4.6, "reviews": "1.46M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/homescapes/id1195624328"},
+  {"rank": 14, "title": "Coin Master", "developer": "Moon Active", "category": "Casual", "rating": 4.6, "reviews": "1.81M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/coin-master/id1117335963"},
+  {"rank": 15, "title": "Pokémon GO", "developer": "Niantic, Inc.", "category": "Action", "rating": 4.0, "reviews": "1.14M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/pok%C3%A9mon-go/id1094591345"},
+  {"rank": 16, "title": "WhatsApp", "developer": "WhatsApp LLC", "category": "Social", "rating": 4.6, "reviews": "8.5M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/whatsapp-messenger/id310633997"},
+  {"rank": 17, "title": "Instagram", "developer": "Instagram", "category": "Social", "rating": 4.7, "reviews": "28.2M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/instagram/id389801252"},
+  {"rank": 18, "title": "Facebook", "developer": "Meta Platforms, Inc.", "category": "Social", "rating": 4.2, "reviews": "8.5M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/facebook/id284882215"},
+  {"rank": 19, "title": "TikTok", "developer": "TikTok Pte. Ltd.", "category": "Social", "rating": 4.5, "reviews": "15.5M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/tiktok/id835599320"},
+  {"rank": 20, "title": "Snapchat", "developer": "Snap Inc", "category": "Social", "rating": 4.1, "reviews": "2.5M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/snapchat/id447188370"},
+  {"rank": 21, "title": "Google Maps", "developer": "Google LLC", "category": "Productivity", "rating": 4.7, "reviews": "1.8M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/google-maps/id585027354"},
+  {"rank": 22, "title": "Gmail", "developer": "Google LLC", "category": "Productivity", "rating": 4.5, "reviews": "1.2M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/gmail-email-by-google/id422689480"},
+  {"rank": 23, "title": "Microsoft Word", "developer": "Microsoft Corporation", "category": "Productivity", "rating": 4.7, "reviews": "1.9M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/microsoft-word/id586447913"},
+  {"rank": 24, "title": "Google Drive", "developer": "Google LLC", "category": "Productivity", "rating": 4.6, "reviews": "1.1M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/google-drive/id507874739"},
+  {"rank": 25, "title": "Zoom", "developer": "Zoom Video Communications", "category": "Productivity", "rating": 4.5, "reviews": "1.5M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/zoom-cloud-meetings/id546505307"},
+  {"rank": 26, "title": "Fitbit", "developer": "Fitbit LLC", "category": "Health", "rating": 4.2, "reviews": "0.3M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/fitbit-health-fitness/id462638897"},
+  {"rank": 27, "title": "MyFitnessPal", "developer": "MyFitnessPal, Inc.", "category": "Health", "rating": 4.4, "reviews": "1.6M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/myfitnesspal/id341232718"},
+  {"rank": 28, "title": "Strava", "developer": "Strava, Inc.", "category": "Health", "rating": 4.6, "reviews": "0.7M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/strava-running-and-cycling/id426826309"},
+  {"rank": 29, "title": "Calm", "developer": "Calm.com, Inc.", "category": "Health", "rating": 4.7, "reviews": "0.8M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/calm/id571800810"},
+  {"rank": 30, "title": "Headspace", "developer": "Headspace Inc.", "category": "Health", "rating": 4.8, "reviews": "0.9M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/headspace-meditation-sleep/id493145008"},
+  {"rank": 31, "title": "ESPN", "developer": "ESPN Inc", "category": "Sports", "rating": 4.5, "reviews": "0.9M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/espn-scorecenter/id317469184"},
+  {"rank": 32, "title": "NBC Sports", "developer": "NBCUniversal Media, LLC", "category": "Sports", "rating": 4.2, "reviews": "0.1M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/nbc-sports/id542511686"},
+  {"rank": 33, "title": "Yahoo Sports", "developer": "Yahoo", "category": "Sports", "rating": 4.4, "reviews": "0.2M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/yahoo-sports/id286058814"},
+  {"rank": 34, "title": "FIFA Soccer", "developer": "ELECTRONIC ARTS", "category": "Sports", "rating": 4.6, "reviews": "0.7M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/fifa-soccer/id1094935653"},
+  {"rank": 35, "title": "NBA", "developer": "NBA Properties, Inc.", "category": "Sports", "rating": 4.3, "reviews": "0.4M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/nba/id287904874"},
+  {"rank": 36, "title": "Among Us", "developer": "Innersloth LLC", "category": "Casual", "rating": 3.7, "reviews": "1.26M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/among-us/id1351168404"},
+  {"rank": 37, "title": "Candy Crush Saga", "developer": "King", "category": "Puzzle", "rating": 4.7, "reviews": "3.07M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/candy-crush-saga/id553834731"},
+  {"rank": 38, "title": "Clash of Clans", "developer": "Supercell", "category": "Strategy", "rating": 4.8, "reviews": "2.62M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/clash-of-clans/id529479190"},
+  {"rank": 39, "title": "Brawl Stars", "developer": "Supercell", "category": "Action", "rating": 4.7, "reviews": "1.87M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/brawl-stars/id1229016807"},
+  {"rank": 40, "title": "Genshin Impact", "developer": "HoYoverse", "category": "Action", "rating": 4.4, "reviews": "683K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/genshin-impact/id1517783697"},
+  {"rank": 41, "title": "Free Fire", "developer": "Garena Free Fire", "category": "Action", "rating": 4.3, "reviews": "2.65M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/free-fire/id1300146617"},
+  {"rank": 42, "title": "PUBG Mobile", "developer": "PUBG Corporation", "category": "Action", "rating": 4.3, "reviews": "1.95M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/pubg-mobile/id1330123889"},
+  {"rank": 43, "title": "Call of Duty: Mobile", "developer": "Activision Publishing, Inc.", "category": "Action", "rating": 4.6, "reviews": "1.99M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/call-of-duty-mobile/id1287282213"},
+  {"rank": 44, "title": "Minecraft", "developer": "Mojang Studios", "category": "Action", "rating": 4.5, "reviews": "611K", "downloads": "N/A", "price": "Paid", "store": "App Store", "download_link": "https://apps.apple.com/us/app/minecraft/id479516143"},
+  {"rank": 45, "title": "Ludo King", "developer": "Gametion", "category": "Casual", "rating": 4.0, "reviews": "81.6K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/ludo-king/id993090598"},
+  {"rank": 46, "title": "Hill Climb Racing", "developer": "Fingersoft", "category": "Action", "rating": 4.4, "reviews": "52K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/hill-climb-racing/id544881288"},
+  {"rank": 47, "title": "Temple Run 2", "developer": "Imangi Studios", "category": "Action", "rating": 4.3, "reviews": "453K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/temple-run-2/id510464921"},
+  {"rank": 48, "title": "Clash Royale", "developer": "Supercell", "category": "Strategy", "rating": 4.6, "reviews": "1.67M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/clash-royale/id1053012308"},
+  {"rank": 49, "title": "My Talking Tom", "developer": "Outfit7", "category": "Casual", "rating": 4.4, "reviews": "674K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/my-talking-tom/id417099932"},
+  {"rank": 50, "title": "Royal Match", "developer": "Dream Games", "category": "Puzzle", "rating": 4.6, "reviews": "2.63M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/royal-match/id1486903783"},
+  {"rank": 51, "title": "Match Masters", "developer": "Candivore", "category": "Puzzle", "rating": 4.8, "reviews": "1.53M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/match-masters/id1446749114"},
+  {"rank": 52, "title": "Tangle Master 3D", "developer": "Rollic Games", "category": "Puzzle", "rating": 4.4, "reviews": "479K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/tangle-master-3d/id1462330371"},
+  {"rank": 53, "title": "Wood Nuts & Bolts Puzzle", "developer": "ABI Studio Inc.", "category": "Puzzle", "rating": 4.7, "reviews": "295K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/wood-nuts-bolts-puzzle/id1661842867"},
+  {"rank": 54, "title": "Crowd City", "developer": "Voodoo", "category": "Action", "rating": 4.6, "reviews": "604K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/crowd-city/id1462497260"},
+  {"rank": 55, "title": "Join Clash 3D", "developer": "Voodoo", "category": "Action", "rating": 4.5, "reviews": "493K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/join-clash-3d/id1490400049"},
+  {"rank": 56, "title": "Aquapark.io", "developer": "Voodoo", "category": "Action", "rating": 4.6, "reviews": "1.06M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/aquapark-io/id1463609632"},
+  {"rank": 57, "title": "Snake Rivals", "developer": "Supersolid", "category": "Action", "rating": 4.4, "reviews": "58K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/snake-rivals-multiplayer/id1455278266"},
+  {"rank": 58, "title": "Helix Jump", "developer": "Voodoo", "category": "Action", "rating": 4.6, "reviews": "1.09M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/helix-jump/id1330958189"},
+  {"rank": 59, "title": "Hole.io", "developer": "Voodoo", "category": "Action", "rating": 4.4, "reviews": "1.15M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/hole-io/id1273206993"},
+  {"rank": 60, "title": "Stack Ball", "developer": "Voodoo", "category": "Action", "rating": 4.5, "reviews": "424K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/stack-ball-3d/id1460058388"},
+  {"rank": 61, "title": "Run Race 3D", "developer": "Voodoo", "category": "Action", "rating": 4.6, "reviews": "543K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/run-race-3d/id1488960177"},
+  {"rank": 62, "title": "Going Balls", "developer": "Supersonic Studios LTD", "category": "Action", "rating": 4.6, "reviews": "1.39M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/going-balls/id1512779369"},
+  {"rank": 63, "title": "Tall Man Run", "developer": "Voodoo", "category": "Action", "rating": 4.5, "reviews": "440K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/tall-man-run/id1583229112"},
+  {"rank": 64, "title": "Emoji Puzzle", "developer": "Loop Games", "category": "Puzzle", "rating": 4.4, "reviews": "68.9K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/emoji-puzzle/id1559747151"},
+  {"rank": 65, "title": "Red Ball 4", "developer": "FDG Entertainment GmbH & Co.KG", "category": "Action", "rating": 4.5, "reviews": "107K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/red-ball-4/id1466868754"},
+  {"rank": 66, "title": "Color Bump 3D", "developer": "Voodoo", "category": "Action", "rating": 4.5, "reviews": "162K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/color-bump-3d/id1478441642"},
+  {"rank": 67, "title": "Paint By Number", "developer": "Funly", "category": "Casual", "rating": 4.6, "reviews": "672K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/paint-by-number/id1357088421"},
+  {"rank": 68, "title": "Project Makeover", "developer": "Magic Tavern, Inc.", "category": "Casual", "rating": 4.5, "reviews": "1.01M", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/project-makeover/id1470671263"},
+  {"rank": 69, "title": "Love Nikki-Dress UP Queen", "developer": "Elex", "category": "Casual", "rating": 4.6, "reviews": "115K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/love-nikki-dress-up-queen/id1053049108"},
+  {"rank": 70, "title": "Evony: The King's Return", "developer": "TOP GAMES INC.", "category": "Strategy", "rating": 4.0, "reviews": "208K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/evony/id1098157952"},
+  {"rank": 71, "title": "Idle Miner Tycoon", "developer": "Fluffy Fairy Games", "category": "Strategy", "rating": 4.7, "reviews": "819K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/idle-miner-tycoon-money/id1116645064"},
+  {"rank": 72, "title": "AFK Arena", "developer": "Lilith Games", "category": "Strategy", "rating": 4.6, "reviews": "890K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/afk-arena/id1375427392"},
+  {"rank": 73, "title": "Rise of Kingdoms", "developer": "Lilith Games", "category": "Strategy", "rating": 4.5, "reviews": "767K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/rise-of-kingdoms/id1459149935"},
+  {"rank": 74, "title": "State of Survival", "developer": "KingsGroup Holdings", "category": "Strategy", "rating": 4.5, "reviews": "624K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/state-of-survival/id1460838705"},
+  {"rank": 75, "title": "Lords Mobile", "developer": "IGG.COM", "category": "Strategy", "rating": 4.5, "reviews": "496K", "downloads": "N/A", "price": "Free", "store": "App Store", "download_link": "https://apps.apple.com/us/app/lords-mobile-pvp-io/id1071976327"},
+  {"rank": 76, "title": "Marvel Future Fight", "developer": "Netmarble", "rating": 4.6, "reviews": "216K", "download_link": "https://apps.apple.com/us/app/marvel-future-fight/id888693048"},
+  
+  {"rank": 77, "title": "Seven Deadly Sins", "developer": "Netmarble", "rating": 4.6, "reviews": "192K", "download_link": "https://apps.apple.com/us/app/the-seven-deadly-sins/id1477860000"},
+  {"rank": 78, "title": "Lineage 2M", "developer": "NCSOFT", "rating": 3.6, "reviews": "6.6K", "download_link": "https://apps.apple.com/us/app/lineage2m/id1445268744"},
+  {"rank": 79, "title": "Black Desert Mobile", "developer": "PEARL ABYSS", "rating": 4.5, "reviews": "80.5K", "download_link": "https://apps.apple.com/us/app/black-desert-mobile/id1477186880"},
+  {"rank": 80, "title": "Old School RuneScape", "developer": "Jagex", "rating": 4.6, "reviews": "70.7K", "download_link": "https://apps.apple.com/us/app/old-school-runescape/id1269648762"},
+  {"rank": 81, "title": "Albion Online", "developer": "Sandbox Interactive GmbH", "rating": 4.5, "reviews": "37.6K", "download_link": "https://apps.apple.com/us/app/albion-online/id1202788573"},
+  {"rank": 82, "title": "Toram Online", "developer": "Asobimo, Inc.", "rating": 4.5, "reviews": "36.7K", "download_link": "https://apps.apple.com/us/app/toram-online-mmorpg/id979256559"},
+  {"rank": 83, "title": "AdventureQuest 3D", "developer": "Artix Entertainment", "rating": 4.3, "reviews": "10.5K", "download_link": "https://apps.apple.com/us/app/adventurequest-3d/id1168352621"},
+  {"rank": 84, "title": "Villagers & Heroes", "developer": "Mad Otter Games", "rating": 4.5, "reviews": "10.2K", "download_link": "https://apps.apple.com/us/app/villagers-heroes-3d-mmorpg/id1107528960"},
+  {"rank": 85, "title": "Celtic Heroes", "developer": "Deca Games", "rating": 4.0, "reviews": "7.8K", "download_link": "https://apps.apple.com/us/app/celtic-heroes-3d-mmorpg/id570320367"},
+  {"rank": 86, "title": "Order & Chaos 2: Redemption", "developer": "Gameloft SE", "rating": 3.9, "reviews": "12.8K", "download_link": "https://apps.apple.com/us/app/order-chaos-2-redemption/id1058060051"},
+  {"rank": 87, "title": "Rucoy Online", "developer": "RicardoGzz", "rating": 4.3, "reviews": "24.7K", "download_link": "https://apps.apple.com/us/app/rucoy-online/id1445230954"},
+  {"rank": 88, "title": "AnimA ARPG", "developer": "Redeev", "rating": 4.6, "reviews": "28.2K", "download_link": "https://apps.apple.com/us/app/anima-arpg/id1356471869"},
+  {"rank": 89, "title": "The Greedy Cave 2: Time Gate", "developer": "Avalon Games Inc.", "rating": 4.4, "reviews": "11.7K", "download_link": "https://apps.apple.com/us/app/the-greedy-cave-2-time-gate/id1447272006"},
+  {"rank": 90, "title": "Exiled Kingdoms", "developer": "4 Dimension Games", "rating": 4.6, "reviews": "8.9K", "download_link": "https://apps.apple.com/us/app/exiled-kingdoms-rpg/id1500344243"},
+  {"rank": 91, "title": "Titan Quest", "developer": "HandyGames", "rating": 3.9, "reviews": "6.2K", "download_link": "https://apps.apple.com/us/app/titan-quest-legendary-edition/id1483018137"},
+  {"rank": 92, "title": "Evoland", "developer": "Playdigious", "rating": 3.8, "reviews": "2.2K", "download_link": "https://apps.apple.com/us/app/evoland/id1447990308"},
+  {"rank": 93, "title": "80 Days", "developer": "inkle Ltd", "rating": 4.7, "reviews": "3.9K", "download_link": "https://apps.apple.com/us/app/80-days/id892812659"},
+  {"rank": 94, "title": "The Room Two", "developer": "Fireproof Games", "rating": 4.9, "reviews": "73.3K", "download_link": "https://apps.apple.com/us/app/the-room-two/id592956935"},
+  {"rank": 95, "title": "Monument Valley", "developer": "ustwo games", "rating": 4.8, "reviews": "178K", "download_link": "https://apps.apple.com/us/app/monument-valley/id728293409"},
+  {"rank": 96, "title": "Alto's Odyssey", "developer": "Snowman", "rating": 4.7, "reviews": "113K", "download_link": "https://apps.apple.com/us/app/altos-odyssey/id1326018820"},
+  {"rank": 97, "title": "Lara Croft GO", "developer": "Square Enix Ltd", "rating": 4.8, "reviews": "42.2K", "download_link": "https://apps.apple.com/us/app/lara-croft-go/id877702840"},
+  {"rank": 98, "title": "Hitman GO", "developer": "Square Enix Ltd", "rating": 4.7, "reviews": "23.6K", "download_link": "https://apps.apple.com/us/app/hitman-go/id719585979"},
+  {"rank": 99, "title": "Deus Ex GO", "developer": "Square Enix Ltd", "rating": 4.7, "reviews": "16.7K", "download_link": "https://apps.apple.com/us/app/deus-ex-go/id1080684260"},
+  {"rank": 100, "title": "The Way of the Explosion Detective", "developer": "Pastel Games", "rating": "N/A", "reviews": "N/A", "download_link": "https://apps.apple.com/us/app/the-way-of-the-explosion-detective/id6464373623"}
+];
+// Combine apps from both stores
+const allApps = [...playStoreApps, ...appStoreApps];
 
+// Function to populate apps table with filters
+function fetchApps() {
+  try {
+    const tbody = document.getElementById('apps-list');
+    tbody.innerHTML = '';
+    const storeFilter = document.getElementById('store-filter').value;
+    const categoryFilter = document.getElementById('category-filter').value;
+    const ratingFilter = document.getElementById('rating-filter').value;
+    const priceFilter = document.getElementById('price-filter').value;
+    const searchQuery = document.getElementById('search-input').value.toLowerCase();
 
-// Tab functionality
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      tab.classList.add('active');
-      const tabId = tab.getAttribute('data-tab');
-      document.getElementById(tabId).classList.add('active');
-      if (tabId === 'top-100-games') {
-        fetchPlayStoreGames();
-        fetchAppStoreGames();
+    let filteredApps = allApps;
+
+    // Apply store filter
+    if (storeFilter !== 'both') {
+      filteredApps = filteredApps.filter(app => app.store === storeFilter);
+    }
+
+    // Apply category filter
+    if (categoryFilter !== 'all') {
+      filteredApps = filteredApps.filter(app => app.category && app.category.toLowerCase() === categoryFilter);
+    }
+
+    // Apply rating filter
+    if (ratingFilter !== 'all') {
+      const minRating = parseFloat(ratingFilter);
+      filteredApps = filteredApps.filter(app => app.rating !== 'N/A' && parseFloat(app.rating) >= minRating);
+    }
+
+    // Apply price filter
+    if (priceFilter !== 'all') {
+      filteredApps = filteredApps.filter(app => app.price && app.price.toLowerCase() === priceFilter);
+    }
+
+    // Apply search filter
+    if (searchQuery) {
+      filteredApps = filteredApps.filter(app =>
+        app.title.toLowerCase().includes(searchQuery) ||
+        app.developer.toLowerCase().includes(searchQuery)
+      );
+    }
+
+    // Sort by rank and limit to 100
+    filteredApps = filteredApps.sort((a, b) => a.rank - b.rank).slice(0, 100);
+
+    // Ensure minimum 50 entries per category
+    const categoryCounts = {};
+    filteredApps.forEach(app => {
+      if (app.category) {
+        categoryCounts[app.category] = (categoryCounts[app.category] || 0) + 1;
       }
     });
+
+    // Log warnings for categories with fewer than 50 entries
+    Object.keys(categoryCounts).forEach(category => {
+      if (categoryCounts[category] < 50) {
+        console.warn(`Category ${category} has only ${categoryCounts[category]} entries, which is less than the required 50.`);
+      }
+    });
+
+    // Populate table
+    filteredApps.forEach(app => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><a href="${app.download_link}" target="_blank">${app.title}</a></td>
+        <td>${app.developer}</td>
+        <td>${app.category || 'N/A'}</td>
+        <td>${app.rating}</td>
+        <td>${app.reviews}</td>
+<td>${app.store}</td>
+      `;
+      tbody.appendChild(row);
+    });
+
+    // If no apps match filters, display message
+    if (filteredApps.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="9" class="error-msg">No apps match the selected filters.</td></tr>';
+    }
+  } catch (error) {
+    console.error('Error rendering apps:', error);
+    document.getElementById('apps-list').innerHTML = '<tr><td colspan="9" class="error-msg">Failed to load apps.</td></tr>';
+  }
+}
+
+// Add event listeners for filters
+document.getElementById('store-filter')?.addEventListener('change', fetchApps);
+document.getElementById('category-filter')?.addEventListener('change', fetchApps);
+document.getElementById('rating-filter')?.addEventListener('change', fetchApps);
+document.getElementById('price-filter')?.addEventListener('change', fetchApps);
+document.getElementById('search-input')?.addEventListener('input', fetchApps);
+
+// Update tab switching to initialize apps table
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    const tabContent = document.getElementById(tab.getAttribute('data-tab'));
+    tabContent.classList.add('active');
+    if (tab.getAttribute('data-tab') === 'top-100-games') {
+      fetchApps();
+    }
   });
+});
+
+// Initialize the apps table if the Top 100 Apps tab is active on page load
+document.addEventListener('DOMContentLoaded', () => {
+  const activeTab = document.querySelector('.tab.active');
+  if (activeTab && activeTab.getAttribute('data-tab') === 'top-100-games') {
+    fetchApps();
+  }
+});
 
 // Character counter for translate text tab
 const sourceText = document.getElementById('source-text');
@@ -2329,65 +2781,7 @@ document.addEventListener('DOMContentLoaded', () => {
     URL.revokeObjectURL(url);
   });
 });
-// Function to populate Play Store games table
-  function fetchPlayStoreGames() {
-    try {
-      const tbody = document.getElementById('play-store-games');
-      tbody.innerHTML = '';
-      playStoreGames.forEach((game) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${game.rank}</td>
-          <td>${game.title}</td>
-          <td>${game.developer}</td>
-          <td>${game.rating}</td>
-          <td>${game.reviews}</td>
-          <td>${game.downloads}</td>
-        `;
-        tbody.appendChild(row);
-      });
-    } catch (error) {
-      console.error('Error rendering Play Store games:', error);
-      document.getElementById('play-store-games').innerHTML = '<tr><td colspan="7" class="error-msg">Failed to load games.</td></tr>';
-    }
-  }
 
-  // Function to populate App Store games table
-  function fetchAppStoreGames() {
-    try {
-      const tbody = document.getElementById('app-store-games');
-      tbody.innerHTML = '';
-      appStoreGames.forEach((game) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${game.rank}</td>
-          <td>${game.title}</td>
-          <td>${game.developer}</td>
-          <td>${game.rating}</td>
-          <td>${game.reviews}</td>
-       `;
-        tbody.appendChild(row);
-      });
-    } catch (error) {
-      console.error('Error rendering App Store games:', error);
-      document.getElementById('app-store-games').innerHTML = '<tr><td colspan="6" class="error-msg">Failed to load games.</td></tr>';
-    }
-  }
-
-  // Tab switching and games table population
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      tab.classList.add('active');
-      const tabContent = document.getElementById(tab.getAttribute('data-tab'));
-      tabContent.classList.add('active');
-      if (tab.getAttribute('data-tab') === 'top-100-games') {
-        fetchPlayStoreGames();
-        fetchAppStoreGames();
-      }
-    });
-  });
 
 // Image Text Translation Tab
 {% if success %}
@@ -3026,4 +3420,3 @@ initCanvas();
 </script>
 </body>
 </html>
-
