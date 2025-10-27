@@ -1,7 +1,7 @@
 import os, io, base64
 import numpy as np
 import cv2
-from flask import Flask, render_template, request, send_file, redirect, url_for, flash, session, jsonify
+from flask import Flask, send_from_directory ,render_template, request, send_file, redirect, url_for, flash, session, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -19,13 +19,13 @@ from flask_session import Session
 from authlib.common.errors import AuthlibBaseError
 from datetime import datetime, timedelta
 import yake
+import pytesseract
 from PIL import Image
 from yake import KeywordExtractor
 from nltk.corpus import wordnet
 import nltk
 nltk.download('wordnet', quiet=True)
 nltk.download('omw-1.4', quiet=True)  # For multilingual support if needed
-from flask import send_from_directory
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -194,24 +194,19 @@ def translate_and_replace(path, target_lang):
     if cv_img is None:
         logger.error(f"Failed to load image at {path}")
         return None, None
-
     translator = GoogleTranslator(source="auto", target=target_lang)
     boxes = perform_ocr(path)
     mask = np.zeros(cv_img.shape[:2], np.uint8)
-
     for box, _ in boxes:
         cv2.fillPoly(mask, [np.array(box, np.int32)], 255)
-
     clean = cv2.inpaint(cv_img, mask, 3, cv2.INPAINT_TELEA)
     image = Image.fromarray(cv2.cvtColor(clean, cv2.COLOR_BGR2RGB)).convert("RGBA")
     draw = ImageDraw.Draw(image)
     font_path = "static/font/arial.ttf"
-
     texts_list = []
     for box, text in boxes:
         if not text:
             continue
-
         try:
             trans = translator.translate(text)
             if not trans or len(trans.strip()) < 1:
@@ -220,19 +215,16 @@ def translate_and_replace(path, target_lang):
         except Exception as e:
             logger.warning(f"Translation failed for '{text}': {str(e)}")
             trans = text
-
         x0, y0 = int(min(p[0] for p in box)), int(min(p[1] for p in box))
         x1, y1 = int(max(p[0] for p in box)), int(max(p[1] for p in box))
-        region = cv_img[y0:y1, x0:x1] if (y1 > y0 and x1 > x0) else np.zeros((10,10,3), np.uint8)
+        region = cv_img[y0:y1, x0:x1] if (y1 > y0 and x1 > x0) else np.zeros((10, 10, 3), np.uint8)
         color = choose_contrasting_color(region)
         bw, bh = x1 - x0, y1 - y0
-
         max_width = bw * 0.9
         font = ImageFont.truetype(font_path, 5)
         lines = []
         words = trans.split()
         current_line = []
-
         for word in words:
             test_line = " ".join(current_line + [word])
             tw, th = measure_text(draw, test_line, font)
@@ -244,7 +236,6 @@ def translate_and_replace(path, target_lang):
                 current_line = [word]
         if current_line:
             lines.append(" ".join(current_line))
-
         best_size = 5
         high = max(min(bw, bh), 10)
         for size in range(5, high + 1, 2):
@@ -259,7 +250,6 @@ def translate_and_replace(path, target_lang):
             except Exception as e:
                 logger.error(f"Failed to load font at size {size}: {str(e)}")
                 break
-
         line_height = measure_text(draw, "A", font)[1] * 1.2
         pos_y = y0
         for line in lines:
@@ -285,7 +275,6 @@ def translate_and_replace(path, target_lang):
                 'width': max_width
             })
             pos_y += line_height
-
     logger.debug(f"Translation and replacement completed in {time.time() - start_time:.2f} seconds")
     return image, texts_list
 
@@ -446,7 +435,7 @@ def github_auth_callback():
 def serve_template_files(filename):
     base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
     return send_from_directory(base_dir, filename)
-    
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -568,50 +557,6 @@ def index():
                               success="Translation complete!")
     return render_template("index.html")
 
-@app.route('/extract_keywords', methods=['POST'])
-def extract_keywords():
-    start_time = time.time()
-    user_id = current_user.id if current_user.is_authenticated else "guest"
-    try:
-        text = request.form.get('text')
-        image_file = request.files.get('image')
-        
-        # Process image if provided
-        if image_file:
-            if not image_file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
-                return jsonify({'error': 'Unsupported file format. Use PNG, JPG, or BMP.'}), 400
-            user_filename = f"user_{user_id}_{uuid.uuid4().hex[:8]}.png"
-            in_path = os.path.join(app.config["UPLOAD_FOLDER"], user_filename)
-            try:
-                image_file.save(in_path)
-                texts = perform_ocr(in_path)
-                text = "\n".join([t[1] for t in texts]) if texts else ""
-                os.remove(in_path)
-            except Exception as e:
-                logger.error(f"Failed to process image: {str(e)}")
-                return jsonify({'error': f'Failed to process image: {str(e)}'}), 400
-        
-        # Validate input
-        if not text:
-            return jsonify({'error': 'No text provided or extracted from image'}), 400
-        
-        # Extract top 7 keywords (focus on overall text)
-        kw_extractor = yake.KeywordExtractor(lan="en", n=1, dedupLim=0.9, top=7, features=None)
-        keywords = kw_extractor.extract_keywords(text)
-        
-        # Keep only the keyword words (ignore scores)
-        keyword_list = [kw for kw, score in keywords]
-        keywords_str = "\n".join(keyword_list)
-        
-        logger.debug(f"Keyword extraction completed in {time.time() - start_time:.2f} seconds")
-        return jsonify({
-            'success': True,
-            'keywords': keywords_str
-        })
-    except Exception as e:
-        logger.error(f"Error extracting keywords: {str(e)}")
-        return jsonify({'error': f'Server error: {str(e)}'}), 500
-
 @app.route("/api/resize-image", methods=["POST"])
 def resize_image():
     start_time = time.time()
@@ -682,6 +627,49 @@ def resize_image():
     except Exception as e:
         logger.error(f"Error resizing image: {str(e)}")
         return jsonify({"error": "Failed to resize image"}), 500
+@app.route('/extract_keywords', methods=['POST'])
+def extract_keywords():
+    start_time = time.time()
+    user_id = current_user.id if current_user.is_authenticated else "guest"
+    try:
+        text = request.form.get('text')
+        image_file = request.files.get('image')
+        
+        # Process image if provided
+        if image_file:
+            if not image_file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
+                return jsonify({'error': 'Unsupported file format. Use PNG, JPG, or BMP.'}), 400
+            user_filename = f"user_{user_id}_{uuid.uuid4().hex[:8]}.png"
+            in_path = os.path.join(app.config["UPLOAD_FOLDER"], user_filename)
+            try:
+                image_file.save(in_path)
+                texts = perform_ocr(in_path)
+                text = "\n".join([t[1] for t in texts]) if texts else ""
+                os.remove(in_path)
+            except Exception as e:
+                logger.error(f"Failed to process image: {str(e)}")
+                return jsonify({'error': f'Failed to process image: {str(e)}'}), 400
+        
+        # Validate input
+        if not text:
+            return jsonify({'error': 'No text provided or extracted from image'}), 400
+        
+        # Extract top 7 keywords (focus on overall text)
+        kw_extractor = yake.KeywordExtractor(lan="en", n=1, dedupLim=0.9, top=7, features=None)
+        keywords = kw_extractor.extract_keywords(text)
+        
+        # Keep only the keyword words (ignore scores)
+        keyword_list = [kw for kw, score in keywords]
+        keywords_str = "\n".join(keyword_list)
+        
+        logger.debug(f"Keyword extraction completed in {time.time() - start_time:.2f} seconds")
+        return jsonify({
+            'success': True,
+            'keywords': keywords_str
+        })
+    except Exception as e:
+        logger.error(f"Error extracting keywords: {str(e)}")
+        return jsonify({'error': f'Server error: {str(e)}'}), 500
 
 @app.route("/api/extract-text", methods=["POST"])
 def extract_text():
