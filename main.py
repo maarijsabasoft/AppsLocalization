@@ -381,6 +381,11 @@ def google_auth_callback():
         flash(f"Google login failed: {str(e)}", "error")
         return redirect(url_for("login"))
 
+
+@app.route('/google8c1160341f6a72b4.html')
+def google_verification():
+    return send_from_directory('.', 'google8c1160341f6a72b4.html')
+
 @app.route("/github-login")
 def github_login():
     callback_url = url_for('github_auth_callback', _external=True)
