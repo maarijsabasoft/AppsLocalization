@@ -291,6 +291,12 @@
       max-width: min(90vw, 720px);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.2);
+        /* ✅ Center inner items */
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* center horizontally */
+  justify-content: center; /* center vertically (if height allows) */
+  gap: 1rem; /* optional spacing between items */
     }
     body.dark .result {
       background: rgba(36, 38, 54, 0.95);
@@ -3020,3 +3026,4 @@ initCanvas();
 </script>
 </body>
 </html>
+
