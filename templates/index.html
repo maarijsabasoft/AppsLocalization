@@ -47,10 +47,11 @@
     /* Enhanced Tab Styles */
     .tabs {
       display: flex;
+      margin-top:60px;
       gap: 0.5rem;
       margin-bottom: 1.5rem;
       width: 100%;
-      max-width: min(90vw, 720px);
+      max-width: min(90vw, 1020px);
       flex-wrap: wrap;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
@@ -121,7 +122,7 @@
     /* Enhanced Card Design */
     .card {
       width: 100%;
-      max-width: min(90vw, 720px);
+      max-width: min(90vw, 1000px);
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       border-radius: 20px;
@@ -321,6 +322,12 @@
       animation: spin 1s linear infinite;
       margin-bottom: 1rem;
     }
+    .games-container {
+  display: flex;
+  flex-direction: column; /* Stack vertically instead of side-by-side */
+  gap: 40px; /* Add spacing between the two sections */
+}
+
     @keyframes spin {
       to {
         transform: rotate(360deg);
@@ -448,7 +455,7 @@
       border-radius: 16px;
       padding: clamp(0.8rem, 1.5vw, 1.2rem);
       width: 100%;
-      max-width: min(90vw, 720px);
+      max-width: min(90vw, 900px);
       transition: background 0.4s ease;
       position: sticky;
       top: 0;
@@ -695,6 +702,67 @@
     .language-flag {
       font-size: 16px;
     }
+   .games-container {
+  display: flex;
+  flex-direction: column; /* stack vertically */
+  gap: 1.5rem;
+}
+
+/* Each section stays full width */
+.games-section {
+  flex: 1;
+  min-width: 300px;
+  overflow-x: auto;                  /* allow scroll */
+  -webkit-overflow-scrolling: touch; /* smooth on iOS */
+}
+
+/* Keep table layout intact */
+.games-table {
+  width: 100%;
+  min-width: 900px; /* <– ensures the table is wide enough to scroll */
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  white-space: nowrap; /* prevents columns from breaking into multiple lines */
+}
+
+body.dark .games-table {
+  background: rgba(36, 38, 54, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.games-table th,
+.games-table td {
+  padding: 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.dark .games-table th,
+body.dark .games-table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.games-table th {
+  background: rgba(102, 126, 234, 0.1);
+  font-weight: 600;
+}
+
+.games-table a {
+  color: #667eea;
+  text-decoration: none;
+}
+
+body.dark .games-table a {
+  color: #4facfe;
+}
+
+.games-table a:hover {
+  text-decoration: underline;
+}
+
+
   </style>
 </head>
 <body class="light">
@@ -773,6 +841,12 @@
     </svg>
     Keywords Extractor
   </button>
+  <button class="tab" data-tab="top-100-games">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px;">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v2h-2zm0 4h2v6h-2z" stroke="currentColor" stroke-width="2"/>
+      </svg>
+      Top 100 Games
+    </button>
 </div>
   
   <main class="card">
@@ -1085,6 +1159,47 @@
     </p>
   </div>
 </div>
+<!-- Top 100 Games Tab -->
+    <div id="top-100-games" class="tab-content">
+      <h2 data-i18n="top_100_games">Top 100 Games</h2>
+      <div class="games-container">
+        <!-- Play Store Section -->
+        <div class="games-section">
+          <h3 data-i18n="play_store_games">Google Play Store Top 100 Games</h3>
+          <table class="games-table" id="play-store-table">
+            <thead>
+              <tr>
+                <th data-i18n="rank">Rank</th>
+                <th data-i18n="title">Title</th>
+                <th data-i18n="developer">Developer</th>
+                <th data-i18n="rating">Rating</th>
+                <th data-i18n="reviews">Reviews</th>
+                <th data-i18n="downloads">Downloads</th>
+                <!-- <th data-i18n="download_link">Download</th> -->
+              </tr>
+            </thead>
+            <tbody id="play-store-games"></tbody>
+          </table>
+        </div>
+        <!-- App Store Section -->
+        <div class="games-section">
+          <h3 data-i18n="app_store_games">Apple App Store Top 100 Games</h3>
+          <table class="games-table" id="app-store-table">
+            <thead>
+              <tr>
+                <th data-i18n="rank">Rank</th>
+                <th data-i18n="title">Title</th>
+                <th data-i18n="developer">Developer</th>
+                <th data-i18n="rating">Rating</th>
+                <th data-i18n="reviews">Reviews</th>
+                <!-- <th data-i18n="download_link">Download</th> -->
+              </tr>
+            </thead>
+            <tbody id="app-store-games"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </main>
   
   <div id="processing-overlay">
@@ -1093,341 +1208,622 @@
   </div>
 <script>
 // Translations
-const translations = {
-  en: {
-    app_title: "Apps Localization",
-    app_subtitle: "Translate & resize text in your images seamlessly",
-    upload_image: "Upload image",
-    target_language: "Target language",
-    output_resolution: "Output resolution",
-    original_size: "Use Original Size",
-    translate_convert: "Translate & Convert",
-    font: "Font",
-    upload_font: "Upload Font (.ttf, .otf)",
-    size: "Size",
-    color: "Color",
-    outline: "Outline",
-    width: "Width",
-    height: "Height",
-    bg_color: "Bg Color",
-    align: "Align",
-    left: "Left",
-    center: "Center",
-    right: "Right",
-    animation: "Animation",
-    none: "None",
-    bounce: "Bounce",
-    pulse: "Pulse",
-    opacity: "Opacity",
-    weight: "Weight",
-    normal: "Normal",
-    bold: "Bold",
-    style: "Style",
-    italic: "Italic",
-    add: "Add",
-    add_text: "Add Text",
-    delete: "Delete",
-    pen: "Pen",
-    pen_color: "Pen Color",
-    pen_width: "Pen Width",
-    download_image: "Download Image",
-    share_image: "Share Image",
-    processing: "Processing your image… please wait!",
-    tutorial: "Tutorial",
-    enter_text: "Enter Text (optional)",
-    extract_keywords: "Extract Keywords",
-    extracted_keywords: "Extracted Keywords",
-    copy_text: "Copy Text",
-    download_txt: "Download as TXT"
-  },
-  fr: {
-    app_title: "Localisation d'applications",
-    app_subtitle: "Traduisez et redimensionnez le texte dans vos images sans effort",
-    upload_image: "Télécharger une image",
-    target_language: "Langue cible",
-    output_resolution: "Résolution de sortie",
-    original_size: "Utiliser la taille originale",
-    translate_convert: "Traduire et convertir",
-    font: "Police",
-    upload_font: "Télécharger une police (.ttf, .otf)",
-    size: "Taille",
-    color: "Couleur",
-    outline: "Contour",
-    width: "Largeur",
-    height: "Hauteur",
-    bg_color: "Couleur de fond",
-    align: "Alignement",
-    left: "Gauche",
-    center: "Centre",
-    right: "Droite",
-    animation: "Animation",
-    none: "Aucune",
-    bounce: "Rebond",
-    pulse: "Pulsation",
-    opacity: "Opacité",
-    weight: "Poids",
-    normal: "Normal",
-    bold: "Gras",
-    style: "Style",
-    italic: "Italique",
-    add: "Ajouter",
-    add_text: "Ajouter du texte",
-    delete: "Supprimer",
-    pen: "Stylo",
-    pen_color: "Couleur du stylo",
-    pen_width: "Largeur du stylo",
-    download_image: "Télécharger l'image",
-    share_image: "Partager l'image",
-    processing: "Traitement de votre image… veuillez patienter !",
-    tutorial: "Tutoriel",
-    enter_text: "Entrer du texte (facultatif)",
-    extract_keywords: "Extraire les mots-clés",
-    extracted_keywords: "Mots-clés extraits",
-    copy_text: "Copier le texte",
-    download_txt: "Télécharger en TXT"
-  },
-  de: {
-    app_title: "Apps-Lokalisierung",
-    app_subtitle: "Text in Ihren Bildern nahtlos übersetzen und skalieren",
-    upload_image: "Bild hochladen",
-    target_language: "Zielsprache",
-    output_resolution: "Ausgabeauflösung",
-    original_size: "Originalgröße verwenden",
-    translate_convert: "Übersetzen und konvertieren",
-    font: "Schriftart",
-    upload_font: "Schriftart hochladen (.ttf, .otf)",
-    size: "Größe",
-    color: "Farbe",
-    outline: "Umriss",
-    width: "Breite",
-    height: "Höhe",
-    bg_color: "Hintergrundfarbe",
-    align: "Ausrichtung",
-    left: "Links",
-    center: "Zentriert",
-    right: "Rechts",
-    animation: "Animation",
-    none: "Keine",
-    bounce: "Hüpfen",
-    pulse: "Pulsieren",
-    opacity: "Deckkraft",
-    weight: "Gewicht",
-    normal: "Normal",
-    bold: "Fett",
-    style: "Stil",
-    italic: "Kursiv",
-    add: "Hinzufügen",
-    add_text: "Text hinzufügen",
-    delete: "Löschen",
-    pen: "Stift",
-    pen_color: "Stiftfarbe",
-    pen_width: "Stiftbreite",
-    download_image: "Bild herunterladen",
-    share_image: "Bild teilen",
-    processing: "Ihr Bild wird verarbeitet… bitte warten!",
-    tutorial: "Anleitung",
-    enter_text: "Text eingeben (optional)",
-    extract_keywords: "Schlüsselwörter extrahieren",
-    extracted_keywords: "Extrahierte Schlüsselwörter",
-    copy_text: "Text kopieren",
-    download_txt: "Als TXT herunterladen"
-  },
-  es: {
-    app_title: "Localización de aplicaciones",
-    app_subtitle: "Traduce y redimensiona el texto en tus imágenes sin problemas",
-    upload_image: "Subir imagen",
-    target_language: "Idioma objetivo",
-    output_resolution: "Resolución de salida",
-    original_size: "Usar tamaño original",
-    translate_convert: "Traducir y convertir",
-    font: "Fuente",
-    upload_font: "Subir fuente (.ttf, .otf)",
-    size: "Tamaño",
-    color: "Color",
-    outline: "Contorno",
-    width: "Ancho",
-    height: "Alto",
-    bg_color: "Color de fondo",
-    align: "Alineación",
-    left: "Izquierda",
-    center: "Centro",
-    right: "Derecha",
-    animation: "Animación",
-    none: "Ninguna",
-    bounce: "Rebotar",
-    pulse: "Pulsar",
-    opacity: "Opacidad",
-    weight: "Peso",
-    normal: "Normal",
-    bold: "Negrita",
-    style: "Estilo",
-    italic: "Cursiva",
-    add: "Añadir",
-    add_text: "Añadir texto",
-    delete: "Eliminar",
-    pen: "Lápiz",
-    pen_color: "Color del lápiz",
-    pen_width: "Ancho del lápiz",
-    download_image: "Descargar imagen",
-    share_image: "Compartir imagen",
-    processing: "Procesando tu imagen… ¡por favor espera!",
-    tutorial: "Tutorial",
-    enter_text: "Ingresar texto (opcional)",
-    extract_keywords: "Extraer palabras clave",
-    extracted_keywords: "Palabras clave extraídas",
-    copy_text: "Copiar texto",
-    download_txt: "Descargar como TXT"
-  },
-  nl: {
-    app_title: "Apps-lokalisatie",
-    app_subtitle: "Vertaal en wijzig de grootte van tekst in je afbeeldingen naadloos",
-    upload_image: "Afbeelding uploaden",
-    target_language: "Doeltaal",
-    output_resolution: "Uitvoerresolutie",
-    original_size: "Originele grootte gebruiken",
-    translate_convert: "Vertalen en converteren",
-    font: "Lettertype",
-    upload_font: "Lettertype uploaden (.ttf, .otf)",
-    size: "Grootte",
-    color: "Kleur",
-    outline: "Omtrek",
-    width: "Breedte",
-    height: "Hoogte",
-    bg_color: "Achtergrondkleur",
-    align: "Uitlijning",
-    left: "Links",
-    center: "Midden",
-    right: "Rechts",
-    animation: "Animatie",
-    none: "Geen",
-    bounce: "Stuiteren",
-    pulse: "Pulseren",
-    opacity: "Dekking",
-    weight: "Gewicht",
-    normal: "Normaal",
-    bold: "Vet",
-    style: "Stijl",
-    italic: "Cursief",
-    add: "Toevoegen",
-    add_text: "Tekst toevoegen",
-    delete: "Verwijderen",
-    pen: "Pen",
-    pen_color: "Penkleur",
-    pen_width: "Penbreedte",
-    download_image: "Afbeelding downloaden",
-    share_image: "Afbeelding delen",
-    processing: "Je afbeelding wordt verwerkt… even geduld!",
-    tutorial: "Handleiding",
-    enter_text: "Voer tekst in (optioneel)",
-    extract_keywords: "Trefwoorden extraheren",
-    extracted_keywords: "Geëxtraheerde trefwoorden",
-    copy_text: "Tekst kopiëren",
-    download_txt: "Downloaden als TXT"
-  },
-  it: {
-    app_title: "Localizzazione di applicazioni",
-    app_subtitle: "Traduci e ridimensiona il testo nelle tue immagini senza problemi",
-    upload_image: "Carica immagine",
-    target_language: "Lingua di destinazione",
-    output_resolution: "Risoluzione di output",
-    original_size: "Usa dimensione originale",
-    translate_convert: "Traduci e converti",
-    font: "Carattere",
-    upload_font: "Carica carattere (.ttf, .otf)",
-    size: "Dimensione",
-    color: "Colore",
-    outline: "Contorno",
-    width: "Larghezza",
-    height: "Altezza",
-    bg_color: "Colore di sfondo",
-    align: "Allineamento",
-    left: "Sinistra",
-    center: "Centro",
-    right: "Destra",
-    animation: "Animazione",
-    none: "Nessuna",
-    bounce: "Rimbalzo",
-    pulse: "Pulsazione",
-    opacity: "Opacità",
-    weight: "Peso",
-    normal: "Normale",
-    bold: "Grassetto",
-    style: "Stile",
-    italic: "Corsivo",
-    add: "Aggiungi",
-    add_text: "Aggiungi testo",
-    delete: "Elimina",
-    pen: "Penna",
-    pen_color: "Colore della penna",
-    pen_width: "Larghezza della penna",
-    download_image: "Scarica immagine",
-    share_image: "Condividi immagine",
-    processing: "Elaborazione della tua immagine… attendi per favore!",
-    tutorial: "Tutorial",
-    enter_text: "Inserisci testo (opzionale)",
-    extract_keywords: "Estrai parole chiave",
-    extracted_keywords: "Parole chiave estratte",
-    copy_text: "Copia testo",
-    download_txt: "Scarica come TXT"
-  },
-  pt: {
-    app_title: "Localização de aplicativos",
-    app_subtitle: "Traduza e redimensione o texto nas suas imagens de forma fluida",
-    upload_image: "Carregar imagem",
-    target_language: "Idioma de destino",
-    output_resolution: "Resolução de saída",
-    original_size: "Usar tamanho original",
-    translate_convert: "Traduzir e converter",
-    font: "Fonte",
-    upload_font: "Carregar fonte (.ttf, .otf)",
-    size: "Tamanho",
-    color: "Cor",
-    outline: "Contorno",
-    width: "Largura",
-    height: "Altura",
-    bg_color: "Cor de fundo",
-    align: "Alinhamento",
-    left: "Esquerda",
-    center: "Centro",
-    right: "Direita",
-    animation: "Animação",
-    none: "Nenhuma",
-    bounce: "Saltar",
-    pulse: "Pulsar",
-    opacity: "Opacidade",
-    weight: "Peso",
-    normal: "Normal",
-    bold: "Negrito",
-    style: "Estilo",
-    italic: "Itálico",
-    add: "Adicionar",
-    add_text: "Adicionar texto",
-    delete: "Excluir",
-    pen: "Caneta",
-    pen_color: "Cor da caneta",
-    pen_width: "Largura da caneta",
-    download_image: "Baixar imagem",
-    share_image: "Compartilhar imagem",
-    processing: "Processando sua imagem… por favor, aguarde!",
-    tutorial: "Tutorial",
-    enter_text: "Inserir texto (opcional)",
-    extract_keywords: "Extrair palavras-chave",
-    extracted_keywords: "Palavras-chave extraídas",
-    copy_text: "Copiar texto",
-    download_txt: "Baixar como TXT"
-  }
-};
+    const translations = {
+      en: {
+        app_title: "Apps Localization",
+        app_subtitle: "Translate & resize text in your images seamlessly",
+        upload_image: "Upload image",
+        target_language: "Target language",
+        output_resolution: "Output resolution",
+        original_size: "Use Original Size",
+        translate_convert: "Translate & Convert",
+        font: "Font",
+        upload_font: "Upload Font (.ttf, .otf)",
+        size: "Size",
+        color: "Color",
+        outline: "Outline",
+        width: "Width",
+        height: "Height",
+        bg_color: "Bg Color",
+        align: "Align",
+        left: "Left",
+        center: "Center",
+        right: "Right",
+        animation: "Animation",
+        none: "None",
+        bounce: "Bounce",
+        pulse: "Pulse",
+        opacity: "Opacity",
+        weight: "Weight",
+        normal: "Normal",
+        bold: "Bold",
+        style: "Style",
+        italic: "Italic",
+        add: "Add",
+        add_text: "Add Text",
+        delete: "Delete",
+        pen: "Pen",
+        pen_color: "Pen Color",
+        pen_width: "Pen Width",
+        download_image: "Download Image",
+        share_image: "Share Image",
+        processing: "Processing your image… please wait!",
+        tutorial: "Tutorial",
+        enter_text: "Enter Text (optional)",
+        extract_keywords: "Extract Keywords",
+        extracted_keywords: "Extracted Keywords",
+        copy_text: "Copy Text",
+        download_txt: "Download as TXT",
+        top_100_games: "Top 100 Games",
+        play_store_games: "Google Play Store Top 100 Games",
+        app_store_games: "Apple App Store Top 100 Games",
+        rank: "Rank",
+        title: "Title",
+        developer: "Developer",
+        rating: "Rating",
+        reviews: "Reviews",
+        downloads: "Downloads",
+        download_link: "Download"
+      },
+      fr: {
+        app_title: "Localisation d'applications",
+        app_subtitle: "Traduisez et redimensionnez le texte dans vos images sans effort",
+        upload_image: "Télécharger une image",
+        target_language: "Langue cible",
+        output_resolution: "Résolution de sortie",
+        original_size: "Utiliser la taille originale",
+        translate_convert: "Traduire et convertir",
+        font: "Police",
+        upload_font: "Télécharger une police (.ttf, .otf)",
+        size: "Taille",
+        color: "Couleur",
+        outline: "Contour",
+        width: "Largeur",
+        height: "Hauteur",
+        bg_color: "Couleur de fond",
+        align: "Alignement",
+        left: "Gauche",
+        center: "Centre",
+        right: "Droite",
+        animation: "Animation",
+        none: "Aucune",
+        bounce: "Rebond",
+        pulse: "Pulsation",
+        opacity: "Opacité",
+        weight: "Poids",
+        normal: "Normal",
+        bold: "Gras",
+        style: "Stil",
+        italic: "Italique",
+        add: "Ajouter",
+        add_text: "Ajouter du texte",
+        delete: "Supprimer",
+        pen: "Stylo",
+        pen_color: "Couleur du stylo",
+        pen_width: "Largeur du stylo",
+        download_image: "Télécharger l'image",
+        share_image: "Partager l'image",
+        processing: "Traitement de votre image… veuillez patienter !",
+        tutorial: "Tutoriel",
+        enter_text: "Entrer du texte (facultatif)",
+        extract_keywords: "Extraire les mots-clés",
+        extracted_keywords: "Mots-clés extraits",
+        copy_text: "Copier le texte",
+        download_txt: "Télécharger en TXT",
+        top_100_games: "Top 100 des jeux",
+        play_store_games: "Top 100 des jeux Google Play Store",
+        app_store_games: "Top 100 des jeux Apple App Store",
+        rank: "Rang",
+        title: "Titre",
+        developer: "Développeur",
+        rating: "Note",
+        reviews: "Avis",
+        downloads: "Téléchargements",
+        download_link: "Télécharger"
+      },
+      de: {
+        app_title: "Apps-Lokalisierung",
+        app_subtitle: "Text in Ihren Bildern nahtlos übersetzen und skalieren",
+        upload_image: "Bild hochladen",
+        target_language: "Zielsprache",
+        output_resolution: "Ausgabeauflösung",
+        original_size: "Originalgröße verwenden",
+        translate_convert: "Übersetzen und konvertieren",
+        font: "Schriftart",
+        upload_font: "Schriftart hochladen (.ttf, .otf)",
+        size: "Größe",
+        color: "Farbe",
+        outline: "Umriss",
+        width: "Breite",
+        height: "Höhe",
+        bg_color: "Hintergrundfarbe",
+        align: "Ausrichtung",
+        left: "Links",
+        center: "Zentriert",
+        right: "Rechts",
+        animation: "Animation",
+        none: "Keine",
+        bounce: "Hüpfen",
+        pulse: "Pulsieren",
+        opacity: "Deckkraft",
+        weight: "Gewicht",
+        normal: "Normal",
+        bold: "Fett",
+        style: "Stil",
+        italic: "Kursiv",
+        add: "Hinzufügen",
+        add_text: "Text hinzufügen",
+        delete: "Löschen",
+        pen: "Stift",
+        pen_color: "Stiftfarbe",
+        pen_width: "Stiftbreite",
+        download_image: "Bild herunterladen",
+        share_image: "Bild teilen",
+        processing: "Ihr Bild wird verarbeitet… bitte warten!",
+        tutorial: "Anleitung",
+        enter_text: "Text eingeben (optional)",
+        extract_keywords: "Schlüsselwörter extrahieren",
+        extracted_keywords: "Extrahierte Schlüsselwörter",
+        copy_text: "Text kopieren",
+        download_txt: "Als TXT herunterladen",
+        top_100_games: "Top 100 Spiele",
+        play_store_games: "Google Play Store Top 100 Spiele",
+        app_store_games: "Apple App Store Top 100 Spiele",
+        rank: "Rang",
+        title: "Titel",
+        developer: "Entwickler",
+        rating: "Bewertung",
+        reviews: "Rezensionen",
+        downloads: "Downloads",
+        download_link: "Download"
+      },
+      es: {
+        app_title: "Localización de aplicaciones",
+        app_subtitle: "Traduce y redimensiona el texto en tus imágenes sin problemas",
+        upload_image: "Subir imagen",
+        target_language: "Idioma objetivo",
+        output_resolution: "Resolución de salida",
+        original_size: "Usar tamaño original",
+        translate_convert: "Traducir y convertir",
+        font: "Fuente",
+        upload_font: "Subir fuente (.ttf, .otf)",
+        size: "Tamaño",
+        color: "Color",
+        outline: "Contorno",
+        width: "Ancho",
+        height: "Alto",
+        bg_color: "Color de fondo",
+        align: "Alineación",
+        left: "Izquierda",
+        center: "Centro",
+        right: "Derecha",
+        animation: "Animación",
+        none: "Ninguna",
+        bounce: "Rebotar",
+        pulse: "Pulsar",
+        opacity: "Opacidad",
+        weight: "Peso",
+        normal: "Normal",
+        bold: "Negrita",
+        style: "Estilo",
+        italic: "Cursiva",
+        add: "Añadir",
+        add_text: "Añadir texto",
+        delete: "Eliminar",
+        pen: "Lápiz",
+        pen_color: "Color del lápiz",
+        pen_width: "Ancho del lápiz",
+        download_image: "Descargar imagen",
+        share_image: "Compartir imagen",
+        processing: "Procesando tu imagen… ¡por favor espera!",
+        tutorial: "Tutorial",
+        enter_text: "Ingresar texto (opcional)",
+        extract_keywords: "Extraer palabras clave",
+        extracted_keywords: "Palabras clave extraídas",
+        copy_text: "Copiar texto",
+        download_txt: "Descargar como TXT",
+        top_100_games: "Top 100 Juegos",
+        play_store_games: "Google Play Store Top 100 Juegos",
+        app_store_games: "Apple App Store Top 100 Juegos",
+        rank: "Rango",
+        title: "Título",
+        developer: "Desarrollador",
+        rating: "Calificación",
+        reviews: "Reseñas",
+        downloads: "Descargas",
+        download_link: "Descargar"
+      },
+      nl: {
+        app_title: "Apps-lokalisatie",
+        app_subtitle: "Vertaal en wijzig de grootte van tekst in je afbeeldingen naadloos",
+        upload_image: "Afbeelding uploaden",
+        target_language: "Doeltaal",
+        output_resolution: "Uitvoerresolutie",
+        original_size: "Originele grootte gebruiken",
+        translate_convert: "Vertalen en converteren",
+        font: "Lettertype",
+        upload_font: "Lettertype uploaden (.ttf, .otf)",
+        size: "Grootte",
+        color: "Kleur",
+        outline: "Omtrek",
+        width: "Breedte",
+        height: "Hoogte",
+        bg_color: "Achtergrondkleur",
+        align: "Uitlijning",
+        left: "Links",
+        center: "Midden",
+        right: "Rechts",
+        animation: "Animatie",
+        none: "Geen",
+        bounce: "Stuiteren",
+        pulse: "Pulseren",
+        opacity: "Dekking",
+        weight: "Gewicht",
+        normal: "Normaal",
+        bold: "Vet",
+        style: "Stijl",
+        italic: "Cursief",
+        add: "Toevoegen",
+        add_text: "Tekst toevoegen",
+        delete: "Verwijderen",
+        pen: "Pen",
+        pen_color: "Penkleur",
+        pen_width: "Penbreedte",
+        download_image: "Afbeelding downloaden",
+        share_image: "Afbeelding delen",
+        processing: "Je afbeelding wordt verwerkt… even geduld!",
+        tutorial: "Handleiding",
+        enter_text: "Voer tekst in (optioneel)",
+        extract_keywords: "Trefwoorden extraheren",
+        extracted_keywords: "Geëxtraheerde trefwoorden",
+        copy_text: "Tekst kopiëren",
+        download_txt: "Downloaden als TXT",
+        top_100_games: "Top 100 Spellen",
+        play_store_games: "Google Play Store Top 100 Spellen",
+        app_store_games: "Apple App Store Top 100 Spellen",
+        rank: "Rang",
+        title: "Titel",
+        developer: "Ontwikkelaar",
+        rating: "Beoordeling",
+        reviews: "Recensies",
+        downloads: "Downloads",
+        download_link: "Download"
+      },
+      it: {
+        app_title: "Localizzazione di applicazioni",
+        app_subtitle: "Traduci e ridimensiona il testo nelle tue immagini senza problemi",
+        upload_image: "Carica immagine",
+        target_language: "Lingua di destinazione",
+        output_resolution: "Risoluzione di output",
+        original_size: "Usa dimensione originale",
+        translate_convert: "Traduci e converti",
+        font: "Carattere",
+        upload_font: "Carica carattere (.ttf, .otf)",
+        size: "Dimensione",
+        color: "Colore",
+        outline: "Contorno",
+        width: "Larghezza",
+        height: "Altezza",
+        bg_color: "Colore di sfondo",
+        align: "Allineamento",
+        left: "Sinistra",
+        center: "Centro",
+        right: "Destra",
+        animation: "Animazione",
+        none: "Nessuna",
+        bounce: "Rimbalzo",
+        pulse: "Pulsazione",
+        opacity: "Opacità",
+        weight: "Peso",
+        normal: "Normale",
+        bold: "Grassetto",
+        style: "Stile",
+        italic: "Corsivo",
+        add: "Aggiungi",
+        add_text: "Aggiungi testo",
+        delete: "Elimina",
+        pen: "Penna",
+        pen_color: "Colore della penna",
+        pen_width: "Larghezza della penna",
+        download_image: "Scarica immagine",
+        share_image: "Condividi immagine",
+        processing: "Elaborazione della tua immagine… attendi per favore!",
+        tutorial: "Tutorial",
+        enter_text: "Inserisci testo (opzionale)",
+        extract_keywords: "Estrai parole chiave",
+        extracted_keywords: "Parole chiave estratte",
+        copy_text: "Copia testo",
+        download_txt: "Scarica come TXT",
+        top_100_games: "Top 100 Giochi",
+        play_store_games: "Google Play Store Top 100 Giochi",
+        app_store_games: "Apple App Store Top 100 Giochi",
+        rank: "Classifica",
+        title: "Titolo",
+        developer: "Sviluppatore",
+        rating: "Valutazione",
+        reviews: "Recensioni",
+        downloads: "Download",
+        download_link: "Scarica"
+      },
+      pt: {
+        app_title: "Localização de aplicativos",
+        app_subtitle: "Traduza e redimensione o texto nas suas imagens de forma fluida",
+        upload_image: "Carregar imagem",
+        target_language: "Idioma de destino",
+        output_resolution: "Resolução de saída",
+        original_size: "Usar tamanho original",
+        translate_convert: "Traduzir e converter",
+        font: "Fonte",
+        upload_font: "Carregar fonte (.ttf, .otf)",
+        size: "Tamanho",
+        color: "Cor",
+        outline: "Contorno",
+        width: "Largura",
+        height: "Altura",
+        bg_color: "Cor de fundo",
+        align: "Alinhamento",
+        left: "Esquerda",
+        center: "Centro",
+        right: "Direita",
+        animation: "Animação",
+        none: "Nenhuma",
+        bounce: "Saltar",
+        pulse: "Pulsar",
+        opacity: "Opacidade",
+        weight: "Peso",
+        normal: "Normal",
+        bold: "Negrito",
+        style: "Estilo",
+        italic: "Itálico",
+        add: "Adicionar",
+        add_text: "Adicionar texto",
+        delete: "Excluir",
+        pen: "Caneta",
+        pen_color: "Cor da caneta",
+        pen_width: "Largura da caneta",
+        download_image: "Baixar imagem",
+        share_image: "Compartilhar imagem",
+        processing: "Processando sua imagem… por favor, aguarde!",
+        tutorial: "Tutorial",
+        enter_text: "Inserir texto (opcional)",
+        extract_keywords: "Extrair palavras-chave",
+        extracted_keywords: "Palavras-chave extraídas",
+        copy_text: "Copiar texto",
+        download_txt: "Baixar como TXT",
+        top_100_games: "Top 100 Jogos",
+        play_store_games: "Google Play Store Top 100 Jogos",
+        app_store_games: "Apple App Store Top 100 Jogos",
+        rank: "Rank",
+        title: "Título",
+        developer: "Desenvolvedor",
+        rating: "Avaliação",
+        reviews: "Revisões",
+        downloads: "Downloads",
+        download_link: "Download"
+      }
+    };
+// Hardcoded top 100 games data
+  const playStoreGames = [
+    {"rank": 1, "title": "Free Fire", "developer": "Garena Free Fire", "rating": 4.2, "reviews": "50,000,000", "downloads": "1B+", "download_link": "https://play.google.com/store/apps/details?id=com.dts.freefireth"},
+    {"rank": 2, "title": "Roblox", "developer": "Roblox Corporation", "rating": 4.4, "reviews": "10,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.roblox.client"},
+    {"rank": 3, "title": "Candy Crush Saga", "developer": "King", "rating": 4.6, "reviews": "40,000,000", "downloads": "1B+", "download_link": "https://play.google.com/store/apps/details?id=com.king.candycrushsaga"},
+    {"rank": 4, "title": "PUBG Mobile", "developer": "PUBG Corporation", "rating": 4.1, "reviews": "20,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.tencent.ig"},
+    {"rank": 5, "title": "Call of Duty: Mobile", "developer": "Activision Publishing, Inc.", "rating": 4.3, "reviews": "15,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.activision.callofduty.shooter"},
+    {"rank": 6, "title": "Brawl Stars", "developer": "Supercell", "rating": 4.3, "reviews": "25,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.supercell.brawlstars"},
+    {"rank": 7, "title": "Coin Master", "developer": "Moon Active", "rating": 4.5, "reviews": "30,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.moonactive.coinmaster"},
+    {"rank": 8, "title": "Among Us", "developer": "Innersloth LLC", "rating": 4.0, "reviews": "5,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.innersloth.spacemafia"},
+    {"rank": 9, "title": "Clash of Clans", "developer": "Supercell", "rating": 4.6, "reviews": "50,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.supercell.clashofclans"},
+    {"rank": 10, "title": "Genshin Impact", "developer": "HoYoverse", "rating": 4.4, "reviews": "2,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.miHoYo.GenshinImpact"},
+    {"rank": 11, "title": "Minecraft", "developer": "Mojang Studios", "rating": 4.5, "reviews": "3,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.mojang.minecraftpe"},
+    {"rank": 12, "title": "Subway Surfers", "developer": "SYBO Games", "rating": 4.6, "reviews": "40,000,000", "downloads": "1B+", "download_link": "https://play.google.com/store/apps/details?id=com.kiloo.subwaysurf"},
+    {"rank": 13, "title": "Homescapes", "developer": "Playrix", "rating": 4.4, "reviews": "20,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.playrix.homescapes"},
+    {"rank": 14, "title": "Gardenscapes", "developer": "Playrix", "rating": 4.4, "reviews": "20,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.playrix.gardenscapes"},
+    {"rank": 15, "title": "8 Ball Pool", "developer": "Miniclip", "rating": 4.5, "reviews": "30,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.miniclip.8ballpool"},
+    {"rank": 16, "title": "My Talking Tom", "developer": "Outfit7", "rating": 4.4, "reviews": "25,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.outfit7.mytalkingtom"},
+    {"rank": 17, "title": "Ludo King", "developer": "Gametion", "rating": 4.3, "reviews": "10,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.ludo.king"},
+    {"rank": 18, "title": "Hill Climb Racing", "developer": "Fingersoft", "rating": 4.4, "reviews": "15,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.fingersoft.hillclimb"},
+    {"rank": 19, "title": "Temple Run 2", "developer": "Imangi Studios", "rating": 4.4, "reviews": "20,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.imangi.templerun2"},
+    {"rank": 20, "title": "Clash Royale", "developer": "Supercell", "rating": 4.2, "reviews": "20,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.supercell.clashroyale"},
+    {"rank": 21, "title": "Block Blast!", "developer": "Hungry Studio", "rating": 4.7, "reviews": "1,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.block.blast"},
+    {"rank": 22, "title": "Township", "developer": "Playrix", "rating": 4.6, "reviews": "5,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.playrix.township"},
+    {"rank": 23, "title": "Squid Game: Unleashed", "developer": "Netflix, Inc.", "rating": 4.5, "reviews": "500,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.netflix.squidgame"},
+    {"rank": 24, "title": "Solitaire", "developer": "MobilityWare", "rating": 4.7, "reviews": "10,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.mobilityware.solitaire"},
+    {"rank": 25, "title": "Pokémon GO", "developer": "Niantic, Inc.", "rating": 4.1, "reviews": "5,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.nianticlabs.pokemongo"},
+    {"rank": 26, "title": "Dungeons of Dreadrock", "developer": "Marcel Kultscher", "rating": 4.8, "reviews": "100,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.dungeonsofdreadrock"},
+    {"rank": 27, "title": "Creatures of the Deep", "developer": "Voodoo", "rating": 4.3, "reviews": "200,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.creatures"},
+    {"rank": 28, "title": "Beyond a Steel Sky", "developer": "Revolution Software", "rating": 4.6, "reviews": "50,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.revolution.beyondasteel sky"},
+    {"rank": 29, "title": "Grindstone", "developer": "Apple Arcade (via Google Play)", "rating": 4.7, "reviews": "100,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.apple.grindstone"},
+    {"rank": 30, "title": "Royal Match", "developer": "Dream Games", "rating": 4.5, "reviews": "2,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.dreamgames.royalmatch"},
+    {"rank": 31, "title": "Match Masters", "developer": "Candivore", "rating": 4.4, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.funtomic.matchmasters"},
+    {"rank": 32, "title": "Tangle Master 3D", "developer": "Rollic Games", "rating": 4.3, "reviews": "5,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.saygames.tangle"},
+    {"rank": 33, "title": "Wood Nuts & Bolts Puzzle", "developer": "ABI Studio Inc.", "rating": 4.6, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=wood.nuts.bolts.puzzle"},
+    {"rank": 34, "title": "Crowd City", "developer": "Voodoo", "rating": 4.2, "reviews": "2,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.crowd.city"},
+    {"rank": 35, "title": "Join Clash 3D", "developer": "Voodoo", "rating": 4.4, "reviews": "3,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.freeplay.joinclash3d"},
+    {"rank": 36, "title": "Aquapark.io", "developer": "Voodoo", "rating": 4.3, "reviews": "4,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.aquapark.io"},
+    {"rank": 37, "title": "Snake Rivals", "developer": "Supersolid", "rating": 4.1, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.supersolid.snakerivals"},
+    {"rank": 38, "title": "Helix Jump", "developer": "Voodoo", "rating": 4.2, "reviews": "5,000,000", "downloads": "500M+", "download_link": "https://play.google.com/store/apps/details?id=com.h8games.helixjump"},
+    {"rank": 39, "title": "Hole.io", "developer": "Voodoo", "rating": 4.1, "reviews": "4,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=io.voodoo.holeio"},
+    {"rank": 40, "title": "Stack Ball", "developer": "Voodoo", "rating": 4.2, "reviews": "6,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.stackball"},
+    {"rank": 41, "title": "Run Race 3D", "developer": "Voodoo", "rating": 4.3, "reviews": "2,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.race3d.run"},
+    {"rank": 42, "title": "Going Balls", "developer": "Supersonic Studios LTD", "rating": 4.1, "reviews": "3,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.supersonic.goingballs"},
+    {"rank": 43, "title": "Tall Man Run", "developer": "Voodoo", "rating": 4.2, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.tallmanrun"},
+    {"rank": 44, "title": "Emoji Puzzle", "developer": "Loop Games", "rating": 4.5, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=emojipuzzle.emojigame"},
+    {"rank": 45, "title": "Red Ball 4", "developer": "FDG Entertainment GmbH & Co.KG", "rating": 4.4, "reviews": "2,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.fdg.redball4"},
+    {"rank": 46, "title": "Color Bump 3D", "developer": "Voodoo", "rating": 4.1, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.voodoo.colorbump3d"},
+    {"rank": 47, "title": "Paint By Number", "developer": "Funly", "rating": 4.6, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.funnylife.paintbynumber"},
+    {"rank": 48, "title": "Project Makeover", "developer": "Magic Tavern, Inc.", "rating": 4.5, "reviews": "2,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.mti.projectmakeover"},
+    {"rank": 49, "title": "Love Nikki-Dress UP Queen", "developer": "Elex", "rating": 4.4, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.elex.lovenikki.en"},
+    {"rank": 50, "title": "Evony: The King's Return", "developer": "TOP GAMES INC.", "rating": 4.2, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.topgamesinc.evony"},
+    {"rank": 51, "title": "Idle Miner Tycoon", "developer": "Fluffy Fairy Games", "rating": 4.4, "reviews": "3,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.fluffyfairygames.idleminertycoon"},
+    {"rank": 52, "title": "AFK Arena", "developer": "Lilith Games", "rating": 4.5, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.lilithgame.hgame.gp"},
+    {"rank": 53, "title": "Rise of Kingdoms", "developer": "Lilith Games", "rating": 4.4, "reviews": "2,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.lilithgame.roc.gp"},
+    {"rank": 54, "title": "State of Survival", "developer": "KingsGroup Holdings", "rating": 4.3, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.kingsgroup.stateofsurvival"},
+    {"rank": 55, "title": "Lords Mobile", "developer": "IGG.COM", "rating": 4.2, "reviews": "2,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.igg.android.lordsmobile"},
+    {"rank": 56, "title": "Last Shelter: Survival", "developer": "Long Tech Network", "rating": 4.1, "reviews": "500,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.longtech.lastshelter.global"},
+    {"rank": 57, "title": "Survivor.io", "developer": "Habby", "rating": 4.4, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.dxx.firenow"},
+    {"rank": 58, "title": "Archero", "developer": "Habby", "rating": 4.3, "reviews": "2,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.habby.archero"},
+    {"rank": 59, "title": "Magic Tiles 3", "developer": "Yolo Games", "rating": 4.2, "reviews": "3,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.youmusic.magictiles"},
+    {"rank": 60, "title": "Tiles Hop: EDM Rush", "developer": "AMANOTES PTE. LTD.", "rating": 4.3, "reviews": "4,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.amantub.simple.game"},
+    {"rank": 61, "title": "Dancing Road: Color Ball Run", "developer": "AMANOTES PTE. LTD.", "rating": 4.2, "reviews": "2,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.amantub.dancing.road.color.ball.run"},
+    {"rank": 62, "title": "Sonic Dash", "developer": "SEGA", "rating": 4.4, "reviews": "1,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.sega.sonic.cd"},
+    {"rank": 63, "title": "Shadow Fight 2", "developer": "Nekki", "rating": 4.5, "reviews": "5,000,000", "downloads": "100M+", "download_link": "https://play.google.com/store/apps/details?id=com.nekki.shadowfight"},
+    {"rank": 64, "title": "Dead by Daylight Mobile", "developer": "Behaviour Interactive", "rating": 4.1, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.behaviour.deadbydaylight"},
+    {"rank": 65, "title": "Identity V", "developer": "NetEase Games", "rating": 4.3, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.netease.idv.googleplay"},
+    {"rank": 66, "title": "Honkai: Star Rail", "developer": "HoYoverse", "rating": 4.6, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.HoYoverse.hkrpgoversea"},
+    {"rank": 67, "title": "Zenless Zone Zero", "developer": "HoYoverse", "rating": 4.5, "reviews": "200,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.HoYoverse.Nap"},
+    {"rank": 68, "title": "Wuthering Waves", "developer": "Kuro Games", "rating": 4.4, "reviews": "300,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.kurogame.wutheringwaves.global"},
+    {"rank": 69, "title": "Reverse: 1999", "developer": "BLUEPOCH", "rating": 4.5, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.bluepoch.r1999.google"},
+    {"rank": 70, "title": "Love and Deepspace", "developer": "Infold Games", "rating": 4.6, "reviews": "200,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.papegames.lysk.en"},
+    {"rank": 71, "title": "Figure Fantasy", "developer": "COM2US", "rating": 4.3, "reviews": "100,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.proximabeta.figurefantasy"},
+    {"rank": 72, "title": "Epic Seven", "developer": "Smilegate Megaport", "rating": 4.4, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.smilegate.epicseven"},
+    {"rank": 73, "title": "Summoners War", "developer": "Com2uS", "rating": 4.3, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.com2us.summonguardian.wglobal"},
+    {"rank": 74, "title": "Raid: Shadow Legends", "developer": "Plarium Global", "rating": 4.2, "reviews": "2,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.plarium.raidlegends"},
+    {"rank": 75, "title": "Marvel Future Fight", "developer": "Netmarble", "rating": 4.3, "reviews": "1,000,000", "downloads": "50M+", "download_link": "https://play.google.com/store/apps/details?id=com.netmarble.mff"},
+    {"rank": 76, "title": "Seven Deadly Sins", "developer": "Netmarble", "rating": 4.2, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.netmarble.nanagb"},
+    {"rank": 77, "title": "Lineage 2M", "developer": "NCSOFT", "rating": 4.1, "reviews": "300,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.ncsoft.lineage2m"},
+    {"rank": 78, "title": "Black Desert Mobile", "developer": "PEARL ABYSS", "rating": 4.0, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.pearlabyss.blackdesertm.gl"},
+    {"rank": 79, "title": "Old School RuneScape", "developer": "Jagex", "rating": 4.3, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.jagex.oldscape.android"},
+    {"rank": 80, "title": "Albion Online", "developer": "Sandbox Interactive GmbH", "rating": 4.2, "reviews": "200,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.albiononline"},
+    {"rank": 81, "title": "Toram Online", "developer": "Asobimo, Inc.", "rating": 4.4, "reviews": "300,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.asobimo.toramonline"},
+    {"rank": 82, "title": "AdventureQuest 3D", "developer": "Artix Entertainment", "rating": 4.1, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.artixentertainment.aq3d"},
+    {"rank": 83, "title": "Villagers & Heroes", "developer": "Mad Otter Games", "rating": 4.3, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.madogames.villagersandheroes"},
+    {"rank": 84, "title": "Celtic Heroes", "developer": "Deca Games", "rating": 4.0, "reviews": "50,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.on5.celticheroes"},
+    {"rank": 85, "title": "Order & Chaos 2: Redemption", "developer": "Gameloft SE", "rating": 4.1, "reviews": "200,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.gameloft.android.ANMP.GloftO2HM"},
+    {"rank": 86, "title": "Rucoy Online", "developer": "RicardoGzz", "rating": 4.2, "reviews": "500,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.ricardogzz.rucoyonline"},
+    {"rank": 87, "title": "AnimA ARPG", "developer": "Redeev", "rating": 4.3, "reviews": "200,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.redeev.anima"},
+    {"rank": 88, "title": "The Greedy Cave 2: Time Gate", "developer": "Avalon Games Inc.", "rating": 4.4, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.avalon.greedy.cave2"},
+    {"rank": 89, "title": "Exiled Kingdoms", "developer": "4 Dimension Games", "rating": 4.5, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=net.exiledkingdoms"},
+    {"rank": 90, "title": "Titan Quest", "developer": "HandyGames", "rating": 4.3, "reviews": "200,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.hg.titanquestfull"},
+    {"rank": 91, "title": "Evoland", "developer": "Playdigious", "rating": 4.4, "reviews": "50,000", "downloads": "1M+", "download_link": "https://play.google.com/store/apps/details?id=net.frognation.evoland"},
+    {"rank": 92, "title": "80 Days", "developer": "inkle Ltd", "rating": 4.6, "reviews": "50,000", "downloads": "1M+", "download_link": "https://play.google.com/store/apps/details?id=com.inkle.eightydays"},
+    {"rank": 93, "title": "The Room Two", "developer": "Fireproof Games", "rating": 4.8, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.FireproofStudios.TheRoom2"},
+    {"rank": 94, "title": "Monument Valley", "developer": "ustwo games", "rating": 4.7, "reviews": "200,000", "downloads": "10M+", "download_link": "https://play.google.com/store/apps/details?id=com.ustwo.monumentvalley"},
+    {"rank": 95, "title": "Alto's Odyssey", "developer": "Snowman", "rating": 4.6, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.noodlecake.altosodyssey"},
+    {"rank": 96, "title": "Lara Croft GO", "developer": "Square Enix Ltd", "rating": 4.7, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.squareenixmontreal.laracroftgo"},
+    {"rank": 97, "title": "Hitman GO", "developer": "Square Enix Ltd", "rating": 4.5, "reviews": "50,000", "downloads": "1M+", "download_link": "https://play.google.com/store/apps/details?id=com.squareenixmontreal.hitmango"},
+    {"rank": 98, "title": "Deus Ex GO", "developer": "Square Enix Ltd", "rating": 4.4, "reviews": "50,000", "downloads": "1M+", "download_link": "https://play.google.com/store/apps/details?id=com.squareenixmontreal.deusexgo"},
+    {"rank": 99, "title": "Explosion Detective", "developer": "Pastel Games", "rating": 4.6, "reviews": "50,000", "downloads": "1M+", "download_link": "https://play.google.com/store/apps/details?id=com.pastelgames.thewayoftheexplosiondetective"},
+    {"rank": 100, "title": "Mini Metro", "developer": "Codepoint Ltd", "rating": 4.7, "reviews": "100,000", "downloads": "5M+", "download_link": "https://play.google.com/store/apps/details?id=com.codepoint.minimetro"}
+  ];
+
+  const appStoreGames = [
+    {"rank": 1, "title": "Block Blast!", "developer": "Hungry Studio", "rating": 4.8, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/block-blast/id1607984880"},
+    {"rank": 2, "title": "MONOPOLY GO!", "developer": "Scopely", "rating": 4.7, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/monopoly-go/id1598464675"},
+    {"rank": 3, "title": "Roblox", "developer": "Roblox Corporation", "rating": 4.5, "reviews": "2,000,000", "download_link": "https://apps.apple.com/us/app/roblox/id431946152"},
+    {"rank": 4, "title": "Call of Duty: Warzone", "developer": "Activision Publishing, Inc.", "rating": 4.3, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/call-of-duty-warzone-mobile/id1605878371"},
+    {"rank": 5, "title": "Township", "developer": "Playrix", "rating": 4.7, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/township/id548342037"},
+    {"rank": 6, "title": "Squid Game: Unleashed", "developer": "Netflix, Inc.", "rating": 4.6, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/squid-game-unleashed/id6479351985"},
+    {"rank": 7, "title": "Subway Surfers", "developer": "SYBO Games", "rating": 4.6, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/subway-surfers/id512939461"},
+    {"rank": 8, "title": "8 Ball Pool", "developer": "Miniclip", "rating": 4.5, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/8-ball-pool/id543186831"},
+    {"rank": 9, "title": "Super Mario Run", "developer": "Nintendo", "rating": 4.3, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/super-mario-run/id1130385445"},
+    {"rank": 10, "title": "Solitaire", "developer": "MobilityWare", "rating": 4.7, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/solitaire/id235877737"},
+    {"rank": 11, "title": "Papa's Freezeria To Go!", "developer": "Flipline Studios", "rating": 4.8, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/papas-freezeria-to-go/id1609672492"},
+    {"rank": 12, "title": "Gardenscapes", "developer": "Playrix", "rating": 4.6, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/gardenscapes/id1102077672"},
+    {"rank": 13, "title": "Homescapes", "developer": "Playrix", "rating": 4.6, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/homescapes/id1195624328"},
+    {"rank": 14, "title": "Coin Master", "developer": "Moon Active", "rating": 4.6, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/coin-master/id1117335963"},
+    {"rank": 15, "title": "Pokémon GO", "developer": "Niantic, Inc.", "rating": 4.1, "reviews": "2,000,000", "download_link": "https://apps.apple.com/us/app/pok%C3%A9mon-go/id1094591345"},
+    {"rank": 16, "title": "Among Us", "developer": "Innersloth LLC", "rating": 4.2, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/among-us/id1351168404"},
+    {"rank": 17, "title": "Candy Crush Saga", "developer": "King", "rating": 4.6, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/candy-crush-saga/id553834731"},
+    {"rank": 18, "title": "Clash of Clans", "developer": "Supercell", "rating": 4.6, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/clash-of-clans/id529479190"},
+    {"rank": 19, "title": "Brawl Stars", "developer": "Supercell", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/brawl-stars/id1229016807"},
+    {"rank": 20, "title": "Genshin Impact", "developer": "HoYoverse", "rating": 4.5, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/genshin-impact/id1517783697"},
+    {"rank": 21, "title": "Free Fire", "developer": "Garena Free Fire", "rating": 4.2, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/free-fire/id1300146617"},
+    {"rank": 22, "title": "PUBG Mobile", "developer": "PUBG Corporation", "rating": 4.1, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/pubg-mobile/id1330123889"},
+    {"rank": 23, "title": "Call of Duty: Mobile", "developer": "Activision Publishing, Inc.", "rating": 4.3, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/call-of-duty-mobile/id1287282213"},
+    {"rank": 24, "title": "Minecraft", "developer": "Mojang Studios", "rating": 4.5, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/minecraft/id479516143"},
+    {"rank": 25, "title": "Subway Surfers", "developer": "SYBO Games", "rating": 4.6, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/subway-surfers/id512939461"},
+    {"rank": 26, "title": "Ludo King", "developer": "Gametion", "rating": 4.3, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/ludo-king/id993090598"},
+    {"rank": 27, "title": "Hill Climb Racing", "developer": "Fingersoft", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/hill-climb-racing/id544881288"},
+    {"rank": 28, "title": "Temple Run 2", "developer": "Imangi Studios", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/temple-run-2/id510464921"},
+    {"rank": 29, "title": "Clash Royale", "developer": "Supercell", "rating": 4.2, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/clash-royale/id1053012308"},
+    {"rank": 30, "title": "My Talking Tom", "developer": "Outfit7", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/my-talking-tom/id417099932"},
+    {"rank": 31, "title": "Royal Match", "developer": "Dream Games", "rating": 4.5, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/royal-match/id1486903783"},
+    {"rank": 32, "title": "Match Masters", "developer": "Candivore", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/match-masters/id1446749114"},
+    {"rank": 33, "title": "Tangle Master 3D", "developer": "Rollic Games", "rating": 4.3, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/tangle-master-3d/id1462330371"},
+    {"rank": 34, "title": "Wood Nuts & Bolts Puzzle", "developer": "ABI Studio Inc.", "rating": 4.6, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/wood-nuts-bolts-puzzle/id1661842867"},
+    {"rank": 35, "title": "Crowd City", "developer": "Voodoo", "rating": 4.2, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/crowd-city/id1462497260"},
+    {"rank": 36, "title": "Join Clash 3D", "developer": "Voodoo", "rating": 4.4, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/join-clash-3d/id1490400049"},
+    {"rank": 37, "title": "Aquapark.io", "developer": "Voodoo", "rating": 4.3, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/aquapark-io/id1463609632"},
+    {"rank": 38, "title": "Snake Rivals", "developer": "Supersolid", "rating": 4.1, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/snake-rivals-multiplayer/id1455278266"},
+    {"rank": 39, "title": "Helix Jump", "developer": "Voodoo", "rating": 4.2, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/helix-jump/id1330958189"},
+    {"rank": 40, "title": "Hole.io", "developer": "Voodoo", "rating": 4.1, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/hole-io/id1273206993"},
+    {"rank": 41, "title": "Stack Ball", "developer": "Voodoo", "rating": 4.2, "reviews": "1,000,000", "download_link": "https://apps.apple.com/us/app/stack-ball-3d/id1460058388"},
+    {"rank": 42, "title": "Run Race 3D", "developer": "Voodoo", "rating": 4.3, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/run-race-3d/id1488960177"},
+    {"rank": 43, "title": "Going Balls", "developer": "Supersonic Studios LTD", "rating": 4.1, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/going-balls/id1512779369"},
+    {"rank": 44, "title": "Tall Man Run", "developer": "Voodoo", "rating": 4.2, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/tall-man-run/id1583229112"},
+    {"rank": 45, "title": "Emoji Puzzle", "developer": "Loop Games", "rating": 4.5, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/emoji-puzzle/id1559747151"},
+    {"rank": 46, "title": "Red Ball 4", "developer": "FDG Entertainment GmbH & Co.KG", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/red-ball-4/id1466868754"},
+    {"rank": 47, "title": "Color Bump 3D", "developer": "Voodoo", "rating": 4.1, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/color-bump-3d/id1478441642"},
+    {"rank": 48, "title": "Paint By Number", "developer": "Funly", "rating": 4.6, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/paint-by-number/id1357088421"},
+    {"rank": 49, "title": "Project Makeover", "developer": "Magic Tavern, Inc.", "rating": 4.5, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/project-makeover/id1470671263"},
+    {"rank": 50, "title": "Love Nikki-Dress UP Queen", "developer": "Elex", "rating": 4.4, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/love-nikki-dress-up-queen/id1053049108"},
+    {"rank": 51, "title": "Evony: The King's Return", "developer": "TOP GAMES INC.", "rating": 4.2, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/evony/id1098157952"},
+    {"rank": 52, "title": "Idle Miner Tycoon", "developer": "Fluffy Fairy Games", "rating": 4.4, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/idle-miner-tycoon-money/id1116645064"},
+    {"rank": 53, "title": "AFK Arena", "developer": "Lilith Games", "rating": 4.5, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/afk-arena/id1375427392"},
+    {"rank": 54, "title": "Rise of Kingdoms", "developer": "Lilith Games", "rating": 4.4, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/rise-of-kingdoms/id1459149935"},
+    {"rank": 55, "title": "State of Survival", "developer": "KingsGroup Holdings", "rating": 4.3, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/state-of-survival/id1460838705"},
+    {"rank": 56, "title": "Lords Mobile", "developer": "IGG.COM", "rating": 4.2, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/lords-mobile-pvp-io/id1071976327"},
+    {"rank": 57, "title": "Last Shelter: Survival", "developer": "Long Tech Network", "rating": 4.1, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/last-shelter-survival/id1440270779"},
+    {"rank": 58, "title": "Survivor.io", "developer": "Habby", "rating": 4.4, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/survivor-io/id1600780465"},
+    {"rank": 59, "title": "Archero", "developer": "Habby", "rating": 4.3, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/archero/id1448067797"},
+    {"rank": 60, "title": "Magic Tiles 3", "developer": "Yolo Games", "rating": 4.2, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/magic-tiles-3/id1082437499"},
+    {"rank": 61, "title": "Tiles Hop: EDM Rush", "developer": "AMANOTES PTE. LTD.", "rating": 4.3, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/tiles-hop-edm-rush/id1469479354"},
+    {"rank": 62, "title": "Dancing Road: Color Ball Run", "developer": "AMANOTES PTE. LTD.", "rating": 4.2, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/dancing-road-color-ball-run/id1467283493"},
+    {"rank": 63, "title": "Sonic Dash", "developer": "SEGA", "rating": 4.4, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/sonic-dash-endless-runner/id623203844"},
+    {"rank": 64, "title": "Shadow Fight 2", "developer": "Nekki", "rating": 4.5, "reviews": "500,000", "download_link": "https://apps.apple.com/us/app/shadow-fight-2/id696565994"},
+    {"rank": 65, "title": "Dead by Daylight Mobile", "developer": "Behaviour Interactive", "rating": 4.1, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/dead-by-daylight-mobile/id1564290223"},
+    {"rank": 66, "title": "Identity V", "developer": "NetEase Games", "rating": 4.3, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/identity-v/id1336435391"},
+    {"rank": 67, "title": "Honkai: Star Rail", "developer": "HoYoverse", "rating": 4.6, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/honkai-star-rail/id1599719154"},
+    {"rank": 68, "title": "Zenless Zone Zero", "developer": "HoYoverse", "rating": 4.5, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/zenless-zone-zero/id6476608458"},
+    {"rank": 69, "title": "Wuthering Waves", "developer": "Kuro Games", "rating": 4.4, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/wuthering-waves/id6475033368"},
+    {"rank": 70, "title": "Reverse: 1999", "developer": "BLUEPOCH", "rating": 4.5, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/reverse-1999/id1600403458"},
+    {"rank": 71, "title": "Love and Deepspace", "developer": "Infold Games", "rating": 4.6, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/love-and-deepspace/id6475706266"},
+    {"rank": 72, "title": "Figure Fantasy", "developer": "COM2US", "rating": 4.3, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/figure-fantasy/id1584651186"},
+    {"rank": 73, "title": "Epic Seven", "developer": "Smilegate Megaport", "rating": 4.4, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/epic-seven/id1444671653"},
+    {"rank": 74, "title": "Summoners War", "developer": "Com2uS", "rating": 4.3, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/summoners-war-sky-arena/id650106655"},
+    {"rank": 75, "title": "Raid: Shadow Legends", "developer": "Plarium Global", "rating": 4.2, "reviews": "300,000", "download_link": "https://apps.apple.com/us/app/raid-shadow-legends/id1498473577"},
+    {"rank": 76, "title": "Marvel Future Fight", "developer": "Netmarble", "rating": 4.3, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/marvel-future-fight/id888693048"},
+    {"rank": 77, "title": "Seven Deadly Sins", "developer": "Netmarble", "rating": 4.2, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/the-seven-deadly-sins/id1477860000"},
+    {"rank": 78, "title": "Lineage 2M", "developer": "NCSOFT", "rating": 4.1, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/lineage2m/id1445268744"},
+    {"rank": 79, "title": "Black Desert Mobile", "developer": "PEARL ABYSS", "rating": 4.0, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/black-desert-mobile/id1477186880"},
+    {"rank": 80, "title": "Old School RuneScape", "developer": "Jagex", "rating": 4.3, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/old-school-runescape/id1269648762"},
+    {"rank": 81, "title": "Albion Online", "developer": "Sandbox Interactive GmbH", "rating": 4.2, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/albion-online/id1202788573"},
+    {"rank": 82, "title": "Toram Online", "developer": "Asobimo, Inc.", "rating": 4.4, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/toram-online-mmorpg/id979256559"},
+    {"rank": 83, "title": "AdventureQuest 3D", "developer": "Artix Entertainment", "rating": 4.1, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/adventurequest-3d/id1168352621"},
+    {"rank": 84, "title": "Villagers & Heroes", "developer": "Mad Otter Games", "rating": 4.3, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/villagers-heroes-3d-mmorpg/id1107528960"},
+    {"rank": 85, "title": "Celtic Heroes", "developer": "Deca Games", "rating": 4.0, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/celtic-heroes-3d-mmorpg/id570320367"},
+    {"rank": 86, "title": "Order & Chaos 2: Redemption", "developer": "Gameloft SE", "rating": 4.1, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/order-chaos-2-redemption/id1058060051"},
+    {"rank": 87, "title": "Rucoy Online", "developer": "RicardoGzz", "rating": 4.2, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/rucoy-online/id1445230954"},
+    {"rank": 88, "title": "AnimA ARPG", "developer": "Redeev", "rating": 4.3, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/anima-arpg/id1356471869"},
+    {"rank": 89, "title": "The Greedy Cave 2: Time Gate", "developer": "Avalon Games Inc.", "rating": 4.4, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/the-greedy-cave-2-time-gate/id1447272006"},
+    {"rank": 90, "title": "Exiled Kingdoms", "developer": "4 Dimension Games", "rating": 4.5, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/exiled-kingdoms-rpg/id1500344243"},
+    {"rank": 91, "title": "Titan Quest", "developer": "HandyGames", "rating": 4.3, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/titan-quest-legendary-edition/id1483018137"},
+    {"rank": 92, "title": "Evoland", "developer": "Playdigious", "rating": 4.4, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/evoland/id1447990308"},
+    {"rank": 93, "title": "80 Days", "developer": "inkle Ltd", "rating": 4.6, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/80-days/id892812659"},
+    {"rank": 94, "title": "The Room Two", "developer": "Fireproof Games", "rating": 4.8, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/the-room-two/id592956935"},
+    {"rank": 95, "title": "Monument Valley", "developer": "ustwo games", "rating": 4.7, "reviews": "200,000", "download_link": "https://apps.apple.com/us/app/monument-valley/id728293409"},
+    {"rank": 96, "title": "Alto's Odyssey", "developer": "Snowman", "rating": 4.6, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/altos-odyssey/id1326018820"},
+    {"rank": 97, "title": "Lara Croft GO", "developer": "Square Enix Ltd", "rating": 4.7, "reviews": "100,000", "download_link": "https://apps.apple.com/us/app/lara-croft-go/id877702840"},
+    {"rank": 98, "title": "Hitman GO", "developer": "Square Enix Ltd", "rating": 4.5, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/hitman-go/id719585979"},
+    {"rank": 99, "title": "Deus Ex GO", "developer": "Square Enix Ltd", "rating": 4.4, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/deus-ex-go/id1080684260"},
+    {"rank": 100, "title": "The Way of the Explosion Detective", "developer": "Pastel Games", "rating": 4.6, "reviews": "50,000", "download_link": "https://apps.apple.com/us/app/the-way-of-the-explosion-detective/id6464373623"}
+  ];
+
 
 // Tab functionality
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    tab.classList.add('active');
-    const tabId = tab.getAttribute('data-tab');
-    document.getElementById(tabId).classList.add('active');
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      const tabId = tab.getAttribute('data-tab');
+      document.getElementById(tabId).classList.add('active');
+      if (tabId === 'top-100-games') {
+        fetchPlayStoreGames();
+        fetchAppStoreGames();
+      }
+    });
   });
-});
 
 // Character counter for translate text tab
 const sourceText = document.getElementById('source-text');
@@ -1927,6 +2323,65 @@ document.addEventListener('DOMContentLoaded', () => {
     URL.revokeObjectURL(url);
   });
 });
+// Function to populate Play Store games table
+  function fetchPlayStoreGames() {
+    try {
+      const tbody = document.getElementById('play-store-games');
+      tbody.innerHTML = '';
+      playStoreGames.forEach((game) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${game.rank}</td>
+          <td>${game.title}</td>
+          <td>${game.developer}</td>
+          <td>${game.rating}</td>
+          <td>${game.reviews}</td>
+          <td>${game.downloads}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    } catch (error) {
+      console.error('Error rendering Play Store games:', error);
+      document.getElementById('play-store-games').innerHTML = '<tr><td colspan="7" class="error-msg">Failed to load games.</td></tr>';
+    }
+  }
+
+  // Function to populate App Store games table
+  function fetchAppStoreGames() {
+    try {
+      const tbody = document.getElementById('app-store-games');
+      tbody.innerHTML = '';
+      appStoreGames.forEach((game) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${game.rank}</td>
+          <td>${game.title}</td>
+          <td>${game.developer}</td>
+          <td>${game.rating}</td>
+          <td>${game.reviews}</td>
+       `;
+        tbody.appendChild(row);
+      });
+    } catch (error) {
+      console.error('Error rendering App Store games:', error);
+      document.getElementById('app-store-games').innerHTML = '<tr><td colspan="6" class="error-msg">Failed to load games.</td></tr>';
+    }
+  }
+
+  // Tab switching and games table population
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      const tabContent = document.getElementById(tab.getAttribute('data-tab'));
+      tabContent.classList.add('active');
+      if (tab.getAttribute('data-tab') === 'top-100-games') {
+        fetchPlayStoreGames();
+        fetchAppStoreGames();
+      }
+    });
+  });
 
 // Image Text Translation Tab
 {% if success %}
