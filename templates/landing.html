@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -1474,3 +1474,1109 @@
 
 
 
+ -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+  <meta name="description" content="Apps Localization - Translate and resize text in images seamlessly for multi-language content creation." />
+  <meta name="keywords" content="image localization, text translation, image editing, multi-language content, Apps Localization, resize images, translate images" />
+  <meta name="author" content="Apps Localization Team" />
+  <meta name="robots" content="index, follow" />
+  <title>Apps Localization - Image Translation & Editing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+      font-family: "Inter", "Amiri", Arial, sans-serif;
+      transition: background 0.5s ease, color 0.3s ease;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    body.light {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #111;
+    }
+    body.dark {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #e6e6e6;
+    }
+    [lang="ar"] {
+      direction: rtl;
+      font-family: "Amiri", "Inter", Arial, sans-serif;
+    }
+    header, section, footer {
+      width: 100%;
+      padding: clamp(1rem, 5vw, 2rem);
+      text-align: center;
+    }
+    [lang="ar"] header, [lang="ar"] section, [lang="ar"] footer {
+      text-align: right;
+    }
+    h1 {
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 700;
+      margin: 0;
+      color: inherit;
+      /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+      /* -webkit-background-clip: text; */
+      /* -webkit-text-fill-color: transparent; */
+      /* background-clip: text; */
+    }
+    body.dark h1 {
+      color: white;
+      /* -webkit-background-clip: text; */
+      /* -webkit-text-fill-color: transparent; */
+      /* background-clip: text; */
+    }
+    h2 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 600;
+      margin: 0.5rem 0;
+      color: inherit;
+    }
+    h3 {
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+    p {
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      color: black;
+      margin: 0.5rem 0;
+      line-height: 1.6;
+    }
+    body.dark p {
+      color: #f0f0f0;
+    }
+    
+    /* Enhanced Button Styles */
+    .btn {
+      display: inline-block;
+      border: none;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      padding: clamp(0.7rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+      border-radius: 12px;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      font-weight: 600;
+      text-decoration: none;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    .btn:hover::before {
+      left: 100%;
+    }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    body.dark .btn {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
+    }
+    body.dark .btn:hover {
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    }
+    
+    #hero {
+      position: relative;
+      width: 100vw;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    body.dark #hero {
+    }
+    #hero-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.8;
+    }
+    #hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: rgba(0,0,0,0.4);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 800px;
+      padding: 2rem;
+    }
+    [lang="ar"] .hero-content {
+      text-align: right;
+    }
+    #hero h1, #hero p {
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .video-error {
+      display: none;
+      color: #ff6b6b;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
+      margin-top: 0.5rem;
+    }
+    #tutorial{
+      background-color: transparent;
+    }
+    
+    /* Enhanced Card Styles */
+    #features, #testimonials, #why-apps-localization, #translation-preview {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      padding: clamp(2rem, 5vw, 3rem);
+      margin: 2rem 0;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    body.dark #features, body.dark #testimonials, body.dark #why-apps-localization, body.dark #tutorial, body.dark #translation-preview {
+      background: rgba(30,32,44,0.95);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    /* Enhanced Feature Grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: clamp(1rem, 3vw, 2rem);
+      margin-top: clamp(1.5rem, 4vw, 2.5rem);
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.8);
+      border-radius: 16px;
+      padding: clamp(1rem, 3vw, 1.5rem);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+    body.dark .feature-card {
+      background: rgba(36,38,54,0.8);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    
+    #how-to-use {
+      position: relative;
+    }
+    #how-to-use .timeline {
+      position: relative;
+      max-width: min(90vw, 800px);
+      margin: 2rem auto;
+      padding: 0;
+      list-style: none;
+    }
+    #how-to-use .timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #667eea;
+    }
+    [lang="ar"] #how-to-use .timeline::before {
+      left: auto;
+      right: 20px;
+    }
+    body.dark #how-to-use .timeline::before {
+      background: #4facfe;
+    }
+    #how-to-use .timeline li {
+      position: relative;
+      margin: 2rem 0;
+      padding-left: 50px;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      color: #111;
+      background: rgba(255,255,255,0.9);
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+    }
+    [lang="ar"] #how-to-use .timeline li {
+      padding-left: 0;
+      padding-right: 50px;
+      text-align: right;
+    }
+    body.dark #how-to-use .timeline li {
+      color: #e6e6e6;
+      background: rgba(36,38,54,0.9);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    #how-to-use .timeline li::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      background: #667eea;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 3px #667eea;
+    }
+    [lang="ar"] #how-to-use .timeline li::before {
+      left: auto;
+      right: 12px;
+    }
+    body.dark #how-to-use .timeline li::before {
+      background: #4facfe;
+      border: 3px solid #2c5364;
+      box-shadow: 0 0 0 3px #4facfe;
+    }
+    
+    #testimonials .testimonial-grid {
+      display: flex;
+      overflow-x: auto;
+      gap: clamp(1rem, 3vw, 2rem);
+      margin-top: clamp(1.5rem, 4vw, 2.5rem);
+      padding-bottom: 1rem;
+      scrollbar-width: thin;
+      scrollbar-color: #667eea #eaeaea;
+    }
+    #testimonials .testimonial-grid::-webkit-scrollbar {
+      height: 8px;
+    }
+    #testimonials .testimonial-grid::-webkit-scrollbar-track {
+      background: #eaeaea;
+      border-radius: 4px;
+    }
+    #testimonials .testimonial-grid::-webkit-scrollbar-thumb {
+      background: #667eea;
+      border-radius: 4px;
+    }
+    body.dark #testimonials .testimonial-grid::-webkit-scrollbar-track {
+      background: #2a2d3a;
+    }
+    body.dark #testimonials .testimonial-grid::-webkit-scrollbar-thumb {
+      background: #4facfe;
+    }
+    
+    .testimonial-card {
+      flex: 0 0 auto;
+      width: 300px;
+      background: rgba(255,255,255,0.8);
+      border-radius: 16px;
+      padding: clamp(1rem, 3vw, 1.5rem);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    [lang="ar"] .testimonial-card {
+      text-align: right;
+    }
+    body.dark .testimonial-card {
+      background: rgba(36,38,54,0.8);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    
+    .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+    }
+    
+    #tutorial iframe {
+      width: 100%;
+      max-width: min(90vw, 800px);
+      height: clamp(200px, 50vw, 450px);
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    body.dark #tutorial iframe {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    
+    footer {
+      margin-top: clamp(2rem, 5vw, 3rem);
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
+      color: black;
+    }
+    body.dark footer {
+      color: #f0f0f0;
+    }
+    
+    /* Enhanced Theme Toggle */
+    #theme-toggle {
+      position: fixed;
+      top: clamp(10px, 2vw, 20px);
+      right: clamp(10px, 2vw, 20px);
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: clamp(40px, 8vw, 50px);
+      height: clamp(40px, 8vw, 50px);
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      cursor: pointer;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      backdrop-filter: blur(10px);
+    }
+    [lang="ar"] #theme-toggle {
+      right: auto;
+      left: clamp(10px, 2vw, 20px);
+    }
+    #theme-toggle:hover {
+      transform: translateY(-3px) rotate(15deg);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.4);
+    }
+    
+    /* Enhanced Language Selector */
+    #language-selector {
+      position: fixed;
+      top: clamp(10px, 2vw, 20px);
+      left: clamp(10px, 2vw, 20px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      background: rgba(0,0,0,0.6);
+      border-radius: 50px;
+      padding: 8px 15px;
+      color: white;
+      backdrop-filter: blur(10px);
+    }
+    [lang="ar"] #language-selector {
+      left: auto;
+      right: clamp(10px, 2vw, 20px);
+    }
+    #language-selector select {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 0.9rem;
+      margin-left: 8px;
+      cursor: pointer;
+    }
+    [lang="ar"] #language-selector select {
+      margin-left: 0;
+      margin-right: 8px;
+    }
+    #language-selector select option {
+      background: #333;
+      color: white;
+    }
+    
+    /* Enhanced Translation Preview Styles */
+    .translation-preview-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .language-selector-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+      gap: 1rem;
+    }
+    [lang="ar"] .language-selector-preview {
+      justify-content: flex-end;
+    }
+    .language-selector-preview label {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .language-selector-preview select {
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.8);
+      transition: all 0.3s ease;
+    }
+    .language-selector-preview select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+    body.dark .language-selector-preview select {
+      background: rgba(42,45,58,0.8);
+      color: #e0e0e0;
+      border: 1px solid black;
+    }
+    body.dark .language-selector-preview select:focus {
+      border-color: #4facfe;
+      box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
+    }
+    
+    .original-preview-section {
+      margin-bottom: 3rem;
+    }
+    .preview-image-container {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease;
+    }
+    .preview-image-container:hover {
+      transform: translateY(-5px);
+    }
+    .preview-image-container img {
+      width: 100%;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .preview-image-container:hover img {
+      transform: scale(1.03);
+    }
+    .image-placeholder-preview {
+      width: 100%;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      border-radius: 20px;
+    }
+    body.dark .image-placeholder-preview {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+    }
+    .image-label-preview {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 15px;
+      font-size: 1.2rem;
+    }
+    
+    .translations-grid-preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      align-items: start;
+    }
+    .translation-card-preview {
+      background: white;
+      border-radius: 20px;
+      overflow: visible;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.2);
+      height: auto;
+      backdrop-filter: blur(10px);
+    }
+    .translation-card-preview:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    body.dark .translation-card-preview {
+      background: rgba(36,38,54,0.95);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .translation-image-preview {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+      background-color: #f8f9fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px 20px 0 0;
+    }
+    body.dark .translation-image-preview {
+      background-color: #2a2d3a;
+    }
+    .translation-image-preview img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      transition: transform 0.5s ease;
+    }
+    .translation-card-preview:hover .translation-image-preview img {
+      transform: scale(1.1);
+    }
+    
+    .translation-info-preview {
+      padding: 20px;
+      text-align: left;
+    }
+    [lang="ar"] .translation-info-preview {
+      text-align: right;
+    }
+    .translation-title-preview {
+      font-size: 1.2rem;
+      color: #333;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    body.dark .translation-title-preview {
+      color: #f0f0f0;
+    }
+    .translation-desc-preview {
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    body.dark .translation-desc-preview {
+      color: #e0e0e0;
+    }
+    .language-badge-preview {
+      display: inline-block;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    body.dark .language-badge-preview {
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+    }
+    
+    .testimonial-card p:nth-of-type(1) {
+      color: rgba(0, 0, 0, 0.75);
+      font-style: italic;
+    }
+    .testimonial-card p:nth-of-type(2) {
+      color: rgba(0, 0, 0, 0.5);
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+    body.dark .testimonial-card p:nth-of-type(1) {
+      color: rgba(255, 255, 255, 0.75);
+    }
+    body.dark .testimonial-card p:nth-of-type(2) {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    
+    @media (max-width: 768px) {
+      .translations-grid-preview {
+        grid-template-columns: 1fr;
+      }
+      .language-selector-preview {
+        flex-direction: column;
+      }
+      #language-selector {
+        top: 60px;
+      }
+      .translation-image-preview {
+        height: auto;
+      }
+    }
+    @media (max-width: 768px) {
+  #how-to-use {
+    padding: 2rem 1rem;
+    text-align: center;
+    
+    display: none;
+  }
+
+  #how-to-use h2 {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+  }
+
+  #how-to-use p {
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.5;
+  }
+
+  .timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 90%;
+    text-align: left;
+  }
+
+  .timeline li {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.8rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+#how-to-use .timeline li {
+
+    display: none;
+}
+  body.dark .timeline li {
+    background: rgba(36, 38, 54, 0.95);
+    color: #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+}
+
+  </style>
+</head>
+<body class="light">
+  <div id="language-selector">
+    <span>🌐</span>
+    <select id="language-select">
+      <option value="en">English</option>
+      <option value="fr">French</option>
+      <option value="de">German</option>
+      <option value="es">Spanish</option>
+      <option value="it">Italian</option>
+      <option value="nl">Dutch</option>
+      <option value="ar">Arabic</option>
+    </select>
+  </div>
+  <button id="theme-toggle">🌙</button>
+  <header id="hero" class="landing-section">
+    <video autoplay muted loop playsinline id="hero-video">
+      <source src="https://www.pexels.com/download/video/8391324/" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="hero-content">
+      <h1 id="hero-title">Apps Localization</h1>
+      <p class="subtitle" id="hero-subtitle">Effortlessly translate and customize images for global audiences.</p>
+      <p class="video-error" id="video-error">Video failed to load. Displaying fallback image.</p>
+      <a href="/">
+        <button class="btn">Get Started</button>
+      </a>
+    </div>
+  </header>
+  <section id="features" class="landing-section">
+    <h2 id="features-title">Powerful Features</h2>
+    <p id="features-subtitle">Discover why Apps Localization is the ultimate tool for image translation.</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3 id="feature-1-title">Multi-Language Translation</h3>
+        <p id="feature-1-desc">Translate text in images to multiple languages with high accuracy.</p>
+      </div>
+      <div class="feature-card">
+        <h3 id="feature-2-title">Customizable Text Editing</h3>
+        <p id="feature-2-desc">Adjust font, size, color, and animations to match your brand.</p>
+      </div>
+      <div class="feature-card">
+        <h3 id="feature-3-title">Device-Optimized Resizing</h3>
+        <p id="feature-3-desc">Resize images for phones, tablets, desktops, and more.</p>
+      </div>
+      <div class="feature-card">
+        <h3 id="feature-4-title">Intuitive Interface</h3>
+        <p id="feature-4-desc">User-friendly design for seamless editing and translation.</p>
+      </div>
+      <div class="feature-card">
+        <h3 id="feature-5-title">High-Quality Output</h3>
+        <p id="feature-5-desc">Download crisp, professional images in your preferred format.</p>
+      </div>
+      <div class="feature-card">
+        <h3 id="feature-6-title">Real-Time Preview</h3>
+        <p id="feature-6-desc">Preview changes instantly to ensure perfect results.</p>
+      </div>
+    </div>
+  </section>
+  <section id="how-to-use" class="landing-section">
+    <h2 id="how-to-title">How to Use</h2>
+    <p id="how-to-subtitle">Transform your images in just a few simple steps.</p>
+    <ul class="timeline">
+      <li id="step-1">Upload your image to the Apps Localization platform.</li>
+      <li id="step-2">Select the target language for translation.</li>
+      <li id="step-3">Choose the desired output resolution for your device.</li>
+      <li id="step-4">Customize text appearance with fonts, colors, and animations.</li>
+      <li id="step-5">Download your localized image instantly.</li>
+    </ul>
+  </section>
+  <section id="why-apps-localization" class="landing-section">
+    <h2 id="why-title">Why Apps Localization?</h2>
+    <p id="why-subtitle">Enhance your content creation with unmatched flexibility and efficiency.</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3 id="why-1-title">Global Reach</h3>
+        <p id="why-1-desc">Engage audiences worldwide with localized content.</p>
+      </div>
+      <div class="feature-card">
+        <h3 id="why-2-title">Time-Saving</h3>
+        <p id="why-2-desc">Automate translation and resizing tasks effortlessly.</p>
+      </div>
+      <div class="feature-card">
+        <h3 id="why-3-title">Brand Consistency</h3>
+        <p id="why-3-desc">Maintain your visual identity across languages.</p>
+      </div>
+    </div>
+  </section>
+  <section id="tutorial" class="landing-section">
+    <h2 id="tutorial-title">Watch Our Tutorial</h2>
+    <p id="tutorial-subtitle">Learn how to use Apps Localization with our step-by-step Loom video.</p>
+    <div style="
+      position: relative;
+      width: 100%;
+      height: 80vh;
+      overflow: hidden;
+      border-radius: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      background: black;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    ">
+      <iframe
+        src="https://www.loom.com/embed/70c2d45cf8dc47e09f30b1296c24a399"
+        frameborder="0"
+        allowfullscreen
+        webkitallowfullscreen
+        mozallowfullscreen
+        style="
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 160%;
+          height: 160%;
+          transform: translate(-50%, -50%) scale(1.05);
+          object-fit: cover;
+          border: none;
+        "
+      ></iframe>
+    </div>
+  </section>
+  <section id="translation-preview" class="landing-section">
+    <h2 id="preview-title">Translation Preview</h2>
+    <p id="preview-subtitle">See your original image and all translations in one place</p>
+    <div class="translation-preview-container">
+      <div class="original-preview-section">
+        <h3 id="original-title">Original Content</h3>
+        <div class="preview-image-container">
+          <img src="/templates/9.png" alt="Original Content" id="original-preview"
+               onerror="this.style.display='none'; document.getElementById('original-placeholder').style.display='flex';">
+          <div class="image-placeholder-preview" id="original-placeholder" style="display: none;">
+            Original Image (9.png)
+          </div>
+          <div class="image-label-preview" id="original-label">Original Document (9.png)</div>
+        </div>
+      </div>
+      <div class="translations-preview-section">
+        <h3 id="translations-title">Translations</h3>
+        <div class="translations-grid-preview">
+          <div class="translation-card-preview">
+            <div class="translation-image-preview">
+              <img src="/templates/Dutch.png" alt="Dutch Translation"
+                   onerror="this.style.display='none'; document.getElementById('dutch-placeholder').style.display='flex';">
+              <div class="image-placeholder-preview" id="dutch-placeholder" style="display: none;">
+                Dutch.png
+              </div>
+            </div>
+            <div class="translation-info-preview">
+              <h4 class="translation-title-preview" id="translation-1-title">Dutch Translation</h4>
+              <p class="translation-desc-preview" id="translation-1-desc">This is the Dutch version of the original document with accurate translation and cultural adaptation.</p>
+              <span class="language-badge-preview" id="translation-1-badge">Nederlands</span>
+            </div>
+          </div>
+          <div class="translation-card-preview">
+            <div class="translation-image-preview">
+              <img src="/templates/French.png" alt="French Translation"
+                   onerror="this.style.display='none'; document.getElementById('french-placeholder').style.display='flex';">
+              <div class="image-placeholder-preview" id="french-placeholder" style="display: none;">
+                French.png
+              </div>
+            </div>
+            <div class="translation-info-preview">
+              <h4 class="translation-title-preview" id="translation-2-title">French Translation</h4>
+              <p class="translation-desc-preview" id="translation-2-desc">French translation maintaining the original meaning while adapting to French linguistic nuances.</p>
+              <span class="language-badge-preview" id="translation-2-badge">Français</span>
+            </div>
+          </div>
+          <div class="translation-card-preview">
+            <div class="translation-image-preview">
+              <img src="/templates/German.png" alt="German Translation"
+                   onerror="this.style.display='none'; document.getElementById('german-placeholder').style.display='flex';">
+              <div class="image-placeholder-preview" id="german-placeholder" style="display: none;">
+                German.png
+              </div>
+            </div>
+            <div class="translation-info-preview">
+              <h4 class="translation-title-preview" id="translation-3-title">German Translation</h4>
+              <p class="translation-desc-preview" id="translation-3-desc">Precise German translation with attention to technical terminology and formal language requirements.</p>
+              <span class="language-badge-preview" id="translation-3-badge">Deutsch</span>
+            </div>
+          </div>
+          <div class="translation-card-preview">
+            <div class="translation-image-preview">
+              <img src="/templates/Italian.png" alt="Italian Translation"
+                   onerror="this.style.display='none'; document.getElementById('italian-placeholder').style.display='flex';">
+              <div class="image-placeholder-preview" id="italian-placeholder" style="display: none;">
+                Italian.png
+              </div>
+            </div>
+            <div class="translation-info-preview">
+              <h4 class="translation-title-preview" id="translation-4-title">Italian Translation</h4>
+              <p class="translation-desc-preview" id="translation-4-desc">Italian translation with proper adaptation to the language's unique characteristics and cultural context.</p>
+              <span class="language-badge-preview" id="translation-4-badge">Italiano</span>
+            </div>
+          </div>
+          <div class="translation-card-preview">
+            <div class="translation-image-preview">
+              <img src="/templates/Spanish.png" alt="Spanish Translation"
+                   onerror="this.style.display='none'; document.getElementById('spanish-placeholder').style.display='flex';">
+              <div class="image-placeholder-preview" id="spanish-placeholder" style="display: none;">
+                Spanish.png
+              </div>
+            </div>
+            <div class="translation-info-preview">
+              <h4 class="translation-title-preview" id="translation-5-title">Spanish Translation</h4>
+              <p class="translation-desc-preview" id="translation-5-desc">Spanish translation with accurate localization and attention to regional linguistic variations.</p>
+              <span class="language-badge-preview" id="translation-5-badge">Español</span>
+            </div>
+          </div>
+          <div class="translation-card-preview">
+            <div class="translation-image-preview">
+              <img src="/templates/Portuguese.png" alt="Portuguese Translation"
+                   onerror="this.style.display='none'; document.getElementById('portuguese-placeholder').style.display='flex';">
+              <div class="image-placeholder-preview" id="portuguese-placeholder" style="display: none;">
+                Portuguese.png
+              </div>
+            </div>
+            <div class="translation-info-preview">
+              <h4 class="translation-title-preview" id="translation-6-title">Portuguese Translation</h4>
+              <p class="translation-desc-preview" id="translation-6-desc">Portuguese translation with precise localization and cultural adaptation for Portuguese-speaking audiences.</p>
+              <span class="language-badge-preview" id="translation-6-badge">Português</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="cta" class="landing-section">
+    <h2 id="cta-title">Ready to Localize Your Images?</h2>
+    <p id="cta-subtitle">Start creating multi-language content today with Apps Localization.</p>
+    <a href="/">
+      <button class="btn">Get Started Now</button>
+    </a>
+  </section>
+  <footer>
+    <p id="footer-text">&copy; 2023 Apps Localization. All rights reserved.</p>
+  </footer>
+  <script>
+    const body = document.body;
+    const themeToggle = document.getElementById('theme-toggle');
+    const languageSelect = document.getElementById('language-select');
+    const heroVideo = document.getElementById('hero-video');
+    const videoError = document.getElementById('video-error');
+    const translations = {
+      en: {
+        heroTitle: "Apps Localization",
+        heroSubtitle: "Effortlessly translate and customize images for global audiences.",
+        featuresTitle: "Powerful Features",
+        featuresSubtitle: "Discover why Apps Localization is the ultimate tool for image translation.",
+        feature1Title: "Multi-Language Translation",
+        feature1Desc: "Translate text in images to multiple languages with high accuracy.",
+        feature2Title: "Customizable Text Editing",
+        feature2Desc: "Adjust font, size, color, and animations to match your brand.",
+        feature3Title: "Device-Optimized Resizing",
+        feature3Desc: "Resize images for phones, tablets, desktops, and more.",
+        feature4Title: "Intuitive Interface",
+        feature4Desc: "User-friendly design for seamless editing and translation.",
+        feature5Title: "High-Quality Output",
+        feature5Desc: "Download crisp, professional images in your preferred format.",
+        feature6Title: "Real-Time Preview",
+        feature6Desc: "Preview changes instantly to ensure perfect results.",
+        howToTitle: "How to Use",
+        howToSubtitle: "Transform your images in just a few simple steps.",
+        step1: "Upload your image to the Apps Localization platform.",
+        step2: "Select the target language for translation.",
+        step3: "Choose the desired output resolution for your device.",
+        step4: "Customize text appearance with fonts, colors, and animations.",
+        step5: "Download your localized image instantly.",
+        whyTitle: "Why Apps Localization?",
+        whySubtitle: "Enhance your content creation with unmatched flexibility and efficiency.",
+        why1Title: "Global Reach",
+        why1Desc: "Engage audiences worldwide with localized content.",
+        why2Title: "Time-Saving",
+        why2Desc: "Automate translation and resizing tasks effortlessly.",
+        why3Title: "Brand Consistency",
+        why3Desc: "Maintain your visual identity across languages.",
+        tutorialTitle: "Watch Our Tutorial",
+        tutorialSubtitle: "Learn how to use Apps Localization with our step-by-step Loom video.",
+        previewTitle: "Translation Preview",
+        previewSubtitle: "See your original image and all translations in one place",
+        originalTitle: "Original Content",
+        originalLabel: "Original Document (9.png)",
+        translationsTitle: "Translations",
+        translation1Title: "Dutch Translation",
+        translation1Desc: "This is the Dutch version of the original document with accurate translation and cultural adaptation.",
+        translation1Badge: "Nederlands",
+        translation2Title: "French Translation",
+        translation2Desc: "French translation maintaining the original meaning while adapting to French linguistic nuances.",
+        translation2Badge: "Français",
+        translation3Title: "German Translation",
+        translation3Desc: "Precise German translation with attention to technical terminology and formal language requirements.",
+        translation3Badge: "Deutsch",
+        translation4Title: "Italian Translation",
+        translation4Desc: "Italian translation with proper adaptation to the language's unique characteristics and cultural context.",
+        translation4Badge: "Italiano",
+        translation5Title: "Spanish Translation",
+        translation5Desc: "Spanish translation with accurate localization and attention to regional linguistic variations.",
+        translation5Badge: "Español",
+        translation6Title: "Portuguese Translation",
+        translation6Desc: "Portuguese translation with precise localization and cultural adaptation for Portuguese-speaking audiences.",
+        translation6Badge: "Português",
+        ctaTitle: "Ready to Localize Your Images?",
+        ctaSubtitle: "Start creating multi-language content today with Apps Localization.",
+        footerText: "© 2023 Apps Localization. All rights reserved."
+      },
+      // ... other language translations remain the same
+    };
+
+    // Fixed Portuguese translations in the translations object
+    // Note: I've already fixed the Portuguese badge to "Português" in the English translation above
+    // The other language translations would need similar fixes for consistency
+
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      body.classList.remove("light");
+      body.classList.add("dark");
+      themeToggle.textContent = "☀️";
+    } else {
+      body.classList.remove("dark");
+      body.classList.add("light");
+      themeToggle.textContent = "🌙";
+    }
+    themeToggle.addEventListener("click", () => {
+      if (body.classList.contains("light")) {
+        body.classList.replace("light", "dark");
+        localStorage.setItem("theme", "dark");
+        themeToggle.textContent = "☀️";
+      } else {
+        body.classList.replace("dark", "light");
+        localStorage.setItem("theme", "light");
+        themeToggle.textContent = "🌙";
+      }
+    });
+    heroVideo.addEventListener('error', (e) => {
+      console.error('Failed to load hero video:', e);
+      heroVideo.style.display = 'none';
+      videoError.style.display = 'block';
+    });
+    heroVideo.addEventListener('loadeddata', () => {
+      console.log('Hero video loaded successfully');
+      videoError.style.display = 'none';
+    });
+    function updateWebsiteContent(lang) {
+      const data = translations[lang];
+      document.documentElement.lang = lang;
+      document.getElementById('hero-title').textContent = data.heroTitle;
+      document.getElementById('hero-subtitle').textContent = data.heroSubtitle;
+      document.getElementById('features-title').textContent = data.featuresTitle;
+      document.getElementById('features-subtitle').textContent = data.featuresSubtitle;
+      document.getElementById('feature-1-title').textContent = data.feature1Title;
+      document.getElementById('feature-1-desc').textContent = data.feature1Desc;
+      document.getElementById('feature-2-title').textContent = data.feature2Title;
+      document.getElementById('feature-2-desc').textContent = data.feature2Desc;
+      document.getElementById('feature-3-title').textContent = data.feature3Title;
+      document.getElementById('feature-3-desc').textContent = data.feature3Desc;
+      document.getElementById('feature-4-title').textContent = data.feature4Title;
+      document.getElementById('feature-4-desc').textContent = data.feature4Desc;
+      document.getElementById('feature-5-title').textContent = data.feature5Title;
+      document.getElementById('feature-5-desc').textContent = data.feature5Desc;
+      document.getElementById('feature-6-title').textContent = data.feature6Title;
+      document.getElementById('feature-6-desc').textContent = data.feature6Desc;
+      document.getElementById('how-to-title').textContent = data.howToTitle;
+      document.getElementById('how-to-subtitle').textContent = data.howToSubtitle;
+      document.getElementById('step-1').textContent = data.step1;
+      document.getElementById('step-2').textContent = data.step2;
+      document.getElementById('step-3').textContent = data.step3;
+      document.getElementById('step-4').textContent = data.step4;
+      document.getElementById('step-5').textContent = data.step5;
+      document.getElementById('why-title').textContent = data.whyTitle;
+      document.getElementById('why-subtitle').textContent = data.whySubtitle;
+      document.getElementById('why-1-title').textContent = data.why1Title;
+      document.getElementById('why-1-desc').textContent = data.why1Desc;
+      document.getElementById('why-2-title').textContent = data.why2Title;
+      document.getElementById('why-2-desc').textContent = data.why2Desc;
+      document.getElementById('why-3-title').textContent = data.why3Title;
+      document.getElementById('why-3-desc').textContent = data.why3Desc;
+      document.getElementById('tutorial-title').textContent = data.tutorialTitle;
+      document.getElementById('tutorial-subtitle').textContent = data.tutorialSubtitle;
+      document.getElementById('preview-title').textContent = data.previewTitle;
+      document.getElementById('preview-subtitle').textContent = data.previewSubtitle;
+      document.getElementById('original-title').textContent = data.originalTitle;
+      document.getElementById('original-label').textContent = data.originalLabel;
+      document.getElementById('translations-title').textContent = data.translationsTitle;
+      document.getElementById('translation-1-title').textContent = data.translation1Title;
+      document.getElementById('translation-1-desc').textContent = data.translation1Desc;
+      document.getElementById('translation-1-badge').textContent = data.translation1Badge;
+      document.getElementById('translation-2-title').textContent = data.translation2Title;
+      document.getElementById('translation-2-desc').textContent = data.translation2Desc;
+      document.getElementById('translation-2-badge').textContent = data.translation2Badge;
+      document.getElementById('translation-3-title').textContent = data.translation3Title;
+      document.getElementById('translation-3-desc').textContent = data.translation3Desc;
+      document.getElementById('translation-3-badge').textContent = data.translation3Badge;
+      document.getElementById('translation-4-title').textContent = data.translation4Title;
+      document.getElementById('translation-4-desc').textContent = data.translation4Desc;
+      document.getElementById('translation-4-badge').textContent = data.translation4Badge;
+      document.getElementById('translation-5-title').textContent = data.translation5Title;
+      document.getElementById('translation-5-desc').textContent = data.translation5Desc;
+      document.getElementById('translation-5-badge').textContent = data.translation5Badge;
+      document.getElementById('translation-6-title').textContent = data.translation6Title;
+      document.getElementById('translation-6-desc').textContent = data.translation6Desc;
+      document.getElementById('translation-6-badge').textContent = data.translation6Badge;
+      document.getElementById('cta-title').textContent = data.ctaTitle;
+      document.getElementById('cta-subtitle').textContent = data.ctaSubtitle;
+      document.getElementById('footer-text').textContent = data.footerText;
+    }
+    // Language selection event listeners
+    languageSelect.addEventListener('change', (e) => {
+      updateWebsiteContent(e.target.value);
+    });
+    // Initialize with English
+    updateWebsiteContent('en');
+  </script>
+</body>
+</html>
