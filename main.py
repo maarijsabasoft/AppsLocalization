@@ -562,6 +562,11 @@ def index():
                               success="Translation complete!")
     return render_template("index.html")
 
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
 @app.route("/api/resize-image", methods=["POST"])
 def resize_image():
     start_time = time.time()
