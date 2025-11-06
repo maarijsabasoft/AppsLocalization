@@ -24,6 +24,8 @@ from PIL import Image
 from yake import KeywordExtractor
 from nltk.corpus import wordnet
 import nltk
+from dotenv import load_dotenv
+load_dotenv()                     # reads .env into os.environ
 nltk.download('wordnet', quiet=True)
 nltk.download('omw-1.4', quiet=True)  # For multilingual support if needed
 # Set up logging
@@ -50,15 +52,17 @@ login_manager.init_app(app)
 oauth = OAuth(app)
 google = oauth.register(
     name='google',
-    client_id='836571438073-g4foa0u929gskfrqhbi7q7omrl7pif2t.apps.googleusercontent.com',
-    client_secret='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',
-    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+    client_id=os.getenv("GOOGLE_CLIENT_ID"),
+    client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
+    server_metadata_url=os.getenv("GOOGLE_DISCOVERY_URL"),
     client_kwargs={'scope': 'openid email profile'}
 )
+
+# OAuth registration (GitHub)
 github = oauth.register(
     name='github',
-    client_id='Ov23liJ6E1lObYC6fPOB',
-    client_secret='e259922033f1d826b9866ba05a2ef0a14dd566f8',
+    client_id=os.getenv("GITHUB_CLIENT_ID"),
+    client_secret=os.getenv("GITHUB_CLIENT_SECRET"),
     authorize_url='https://github.com/login/oauth/authorize',
     access_token_url='https://github.com/login/oauth/access_token',
     client_kwargs={'scope': 'user:email'},
