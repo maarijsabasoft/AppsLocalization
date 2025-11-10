@@ -1,36 +1,52 @@
-import os, io, base64
+import os
+import io
+import base64
 import numpy as np
 import cv2
-from flask import Flask, send_from_directory ,render_template, request, send_file, redirect, url_for, flash, session, jsonify
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_sqlalchemy import SQLAlchemy
-from deep_translator import GoogleTranslator
-from PIL import Image, ImageDraw, ImageFont
-import easyocr
 import json
 import uuid
 import logging
 import re
 import time
 import secrets
-from authlib.integrations.flask_client import OAuth
-from flask_session import Session
-from authlib.common.errors import AuthlibBaseError
+import random
 from datetime import datetime, timedelta
+
+from flask import Flask, send_from_directory, render_template, request, send_file, redirect, url_for, flash, session, jsonify
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_sqlalchemy import SQLAlchemy
+from flask_session import Session
+from flask_mail import Mail, Message
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from deep_translator import GoogleTranslator
+from PIL import Image, ImageDraw, ImageFont
+import easyocr
 import yake
-import pytesseract
-from PIL import Image
 from yake import KeywordExtractor
-from nltk.corpus import wordnet
+from authlib.integrations.flask_client import OAuth
+from authlib.common.errors import AuthlibBaseError
+from dotenv import load_dotenv
+
 import nltk
+from nltk.corpus import wordnet
+
+# Download NLTK data
 nltk.download('wordnet', quiet=True)
 nltk.download('omw-1.4', quiet=True)  # For multilingual support if needed
+
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+# Load environment variables
+load_dotenv()
+
+
 app = Flask(__name__)
+
+# csrf = CSRFProtect(app)
+
 app.secret_key = "supersecret"
 app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "private_uploads")
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
@@ -45,32 +61,59 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')  # your email
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')  # app password
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')
+
+mail = Mail(app)
 
 # OAuth setup
 oauth = OAuth(app)
 google = oauth.register(
     name='google',
-    client_id='836571438073-g4foa0u929gskfrqhbi7q7omrl7pif2t.apps.googleusercontent.com',
-    client_secret='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',
+    client_id=os.getenv("GOOGLE_CLIENT_ID"),
+    client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
     client_kwargs={'scope': 'openid email profile'}
 )
 github = oauth.register(
     name='github',
-    client_id='Ov23liJ6E1lObYC6fPOB',
-    client_secret='e259922033f1d826b9866ba05a2ef0a14dd566f8',
+    client_id='GITHUB_CLIENT_ID',
+    client_secret='GITHUB_CLIENT_SECRET',
     authorize_url='https://github.com/login/oauth/authorize',
     access_token_url='https://github.com/login/oauth/access_token',
     client_kwargs={'scope': 'user:email'},
     api_base_url='https://api.github.com/'
 )
 
-class User(UserMixin, db.Model):
+
+class User(UserMixin, db.Model):  # <-- Order matters: UserMixin first
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(256), nullable=True)
-    auth_provider = db.Column(db.String(50), nullable=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    auth_provider = db.Column(db.String(20), default="local")
+    is_verified = db.Column(db.Boolean, default=False)  # Your custom field
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Optional: Override is_active to use your is_verified field
+    def is_active(self):
+        """Override to block unverified users from logging in"""
+        return self.is_verified
+
+# Your OTPVerification model remains unchanged
+
+class OTPVerification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    otp = db.Column(db.String(6), nullable=False)
+    expires_at = db.Column(db.DateTime, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref='otp_records')
 
 class TranslationUsage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -118,16 +161,43 @@ RESOLUTIONS = {
 }
 
 def preprocess_image_for_ocr(img_path):
-    """Preprocess image to enhance text detection for both small and large words."""
+    """Preprocess image to enhance text detection without destroying image quality."""
     img = cv2.imread(img_path)
     if img is None:
         return None
-    img = cv2.convertScaleAbs(img, alpha=1.5, beta=0)
-    img = cv2.GaussianBlur(img, (3, 3), 0)
-    scale_factor = 2.0
-    img = cv2.resize(img, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_LINEAR)
+    
+    # Convert to grayscale for better OCR accuracy
+    if len(img.shape) == 3:
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    else:
+        gray = img.copy()
+    
+    # Get image dimensions
+    height, width = gray.shape
+    max_dimension = max(height, width)
+    
+    # Adaptive scaling - only upscale if image is small
+    if max_dimension < 1000:
+        scale_factor = 2.0
+        gray = cv2.resize(gray, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_CUBIC)
+    elif max_dimension < 2000:
+        scale_factor = 1.5
+        gray = cv2.resize(gray, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_CUBIC)
+    else:
+        scale_factor = 1.0
+    
+    # Light noise reduction (less aggressive)
+    gray = cv2.bilateralFilter(gray, 3, 50, 50)
+    
+    # Enhance contrast gently using CLAHE (better than convertScaleAbs)
+    clahe = cv2.createCLAHE(clipLimit=1.5, tileGridSize=(8, 8))
+    gray = clahe.apply(gray)
+    
+    # Convert back to BGR for EasyOCR
+    processed_bgr = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+    
     temp_path = os.path.join(app.config["UPLOAD_FOLDER"], f"temp_{uuid.uuid4().hex[:8]}.png")
-    cv2.imwrite(temp_path, img)
+    cv2.imwrite(temp_path, processed_bgr)
     return temp_path, scale_factor
 
 def clean_text(text):
@@ -139,40 +209,56 @@ def clean_text(text):
 
 def perform_ocr(path, languages=['en', 'fr', 'de', 'es', 'it', 'pt', 'nl']):
     start_time = time.time()
+    preprocessed_path = None
     try:
         preprocessed_path, scale_factor = preprocess_image_for_ocr(path)
         if not preprocessed_path:
             logger.error(f"Failed to preprocess image at {path}")
             return []
         reader = easyocr.Reader(languages, model_storage_directory="model", gpu=False)
+        
+        # Use better OCR parameters for accuracy
         result = reader.readtext(
             preprocessed_path,
-            width_ths=1.0,
+            width_ths=0.7,
             height_ths=0.7,
-            mag_ratio=2.0,
+            mag_ratio=1.0,  # Reduced from 2.0 to avoid over-processing
             decoder="greedy",
             min_size=5,
-            text_threshold=0.3,
-            low_text=0.3,
-            batch_size=16
+            text_threshold=0.5,  # Increased for better accuracy
+            low_text=0.4,  # Increased for better accuracy
+            batch_size=16,
+            paragraph=False,
+            detail=1
         )
         try:
-            os.remove(preprocessed_path)
+            if preprocessed_path and os.path.exists(preprocessed_path):
+                os.remove(preprocessed_path)
         except:
             logger.warning(f"Failed to delete preprocessed file {preprocessed_path}")
+        
         adjusted_results = []
         for box, text, confidence in result:
-            if confidence < 0.15:
+            # Increased confidence threshold for better accuracy
+            if confidence < 0.2:
                 continue
             cleaned_text = clean_text(text)
             if not cleaned_text:
                 continue
+            # Scale bounding boxes back to original image size
             scaled_box = [[x / scale_factor, y / scale_factor] for x, y in box]
             adjusted_results.append((scaled_box, cleaned_text))
-        logger.debug(f"OCR completed in {time.time() - start_time:.2f} seconds")
+        
+        logger.debug(f"OCR completed in {time.time() - start_time:.2f} seconds, found {len(adjusted_results)} text regions")
         return adjusted_results
     except Exception as e:
         logger.error(f"OCR failed: {str(e)}")
+        # Clean up on error
+        try:
+            if preprocessed_path and os.path.exists(preprocessed_path):
+                os.remove(preprocessed_path)
+        except:
+            pass
         return []
 
 def choose_contrasting_color(region):
@@ -196,10 +282,31 @@ def translate_and_replace(path, target_lang):
         return None, None
     translator = GoogleTranslator(source="auto", target=target_lang)
     boxes = perform_ocr(path)
+    
+    if not boxes:
+        logger.warning("No text detected in image")
+        return None, None
+    
+    # Create a precise mask - only cover text regions with minimal padding
     mask = np.zeros(cv_img.shape[:2], np.uint8)
     for box, _ in boxes:
-        cv2.fillPoly(mask, [np.array(box, np.int32)], 255)
-    clean = cv2.inpaint(cv_img, mask, 3, cv2.INPAINT_TELEA)
+        # Use exact bounding box with minimal padding (1 pixel) to minimize blur
+        box_array = np.array(box, np.int32)
+        x_coords = box_array[:, 0]
+        y_coords = box_array[:, 1]
+        # Minimal padding - just 1 pixel to ensure text is fully covered
+        padding = 1
+        expanded_box = np.array([
+            [max(0, x_coords.min() - padding), max(0, y_coords.min() - padding)],
+            [min(cv_img.shape[1], x_coords.max() + padding), max(0, y_coords.min() - padding)],
+            [min(cv_img.shape[1], x_coords.max() + padding), min(cv_img.shape[0], y_coords.max() + padding)],
+            [max(0, x_coords.min() - padding), min(cv_img.shape[0], y_coords.max() + padding)]
+        ], np.int32)
+        cv2.fillPoly(mask, [expanded_box], 255)
+    
+    # Use Navier-Stokes inpainting method which preserves edges better and causes less blur
+    # Use minimal radius (1 pixel) to reduce background blur
+    clean = cv2.inpaint(cv_img, mask, 1, cv2.INPAINT_NS)
     image = Image.fromarray(cv2.cvtColor(clean, cv2.COLOR_BGR2RGB)).convert("RGBA")
     draw = ImageDraw.Draw(image)
     font_path = "static/font/arial.ttf"
@@ -208,10 +315,21 @@ def translate_and_replace(path, target_lang):
         if not text:
             continue
         try:
+            # Log original text for debugging
+            logger.debug(f"Translating: '{text}' to {target_lang}")
+            
+            # Translate the text
             trans = translator.translate(text)
+            
             if not trans or len(trans.strip()) < 1:
                 logger.warning(f"Translation returned empty for '{text}'")
                 trans = text
+            else:
+                # Verify translation is different from original (to catch errors)
+                if trans.strip().lower() == text.strip().lower():
+                    logger.warning(f"Translation same as original for '{text}', might be an error")
+                
+                logger.debug(f"Translated '{text}' -> '{trans}'")
         except Exception as e:
             logger.warning(f"Translation failed for '{text}': {str(e)}")
             trans = text
@@ -302,42 +420,173 @@ def pad_keep_aspect(img, target_w, target_h, pad_color):
     bg.paste(resized, offset)
     return bg, offset, new_w / img.width
 
+def generate_otp():
+    return str(random.randint(100000, 999999))
+
+def send_otp_email(user_email, otp):
+    msg = Message(
+        subject="Verify Your Email – Apps Localization",
+        recipients=[user_email],
+        body=f"""
+Hello,
+
+Your verification code is: {otp}
+
+This code expires in 10 minutes.
+
+If you didn't request this, please ignore this email.
+
+Best regards,
+Apps Localization Team
+        """,
+        html=f"""
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+            <h2 style="color: #4facfe;">Email Verification</h2>
+            <p>Hello,</p>
+            <p>Your verification code is:</p>
+            <h1 style="letter-spacing: 5px; font-size: 2rem; color: #203a43;">{otp}</h1>
+            <p><strong>This code expires in 10 minutes.</strong></p>
+            <p>If you didn't request this, you can safely ignore this email.</p>
+            <hr>
+            <small>Apps Localization © {datetime.now().year}</small>
+        </div>
+        """
+    )
+    mail.send(msg)
+
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
         username = request.form["username"]
         email = request.form["email"]
         password = request.form["password"]
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            flash("Email already registered. Please login instead.", "error")
-            return redirect(url_for("login"))
+
+        if User.query.filter_by(email=email).first():
+            flash("Email already registered.", "error")
+            return redirect(url_for("signup"))
+
+        if User.query.filter_by(username=username).first():
+            flash("Username already taken.", "error")
+            return redirect(url_for("signup"))
+
+        # Create unverified user
         hashed_pw = generate_password_hash(password, method="pbkdf2:sha256")
         new_user = User(
             username=username,
             email=email,
             password=hashed_pw,
-            auth_provider="local"
+            auth_provider="local",
+            is_verified=False
         )
         db.session.add(new_user)
+        db.session.flush()  # Get user.id
+
+        # Generate OTP
+        otp_code = generate_otp()
+        expiry = datetime.utcnow() + timedelta(minutes=10)
+
+        otp_record = OTPVerification(
+            user_id=new_user.id,
+            otp=otp_code,
+            expires_at=expiry
+        )
+        db.session.add(otp_record)
         db.session.commit()
-        flash("Signup successful! Please log in.", "success")
-        return redirect(url_for("login"))
+
+        # Send OTP
+        try:
+            send_otp_email(email, otp_code)
+        except Exception as e:
+            db.session.rollback()
+            flash("Failed to send verification email. Please try again.", "error")
+            return redirect(url_for("signup"))
+
+        # Store user ID in session for verification step
+        session['pending_user_id'] = new_user.id
+        flash("Check your email for the verification code.", "info")
+        return redirect(url_for("verify_otp"))
+
     return render_template("signup.html")
+
+
+@app.route("/verify-otp", methods=["GET", "POST"])
+def verify_otp():
+    if 'pending_user_id' not in session:
+        flash("No pending verification. Please sign up again.", "error")
+        return redirect(url_for("signup"))
+
+    user_id = session['pending_user_id']
+    user = User.query.get(user_id)
+
+    if not user:
+        session.pop('pending_user_id', None)
+        return redirect(url_for("signup"))
+
+    if request.method == "POST":
+        entered_otp = request.form["otp"].strip()
+
+        otp_record = OTPVerification.query.filter_by(
+            user_id=user_id,
+            otp=entered_otp
+        ).first()
+
+        if otp_record and otp_record.expires_at > datetime.utcnow():
+            user.is_verified = True
+            db.session.delete(otp_record)  # One-time use
+            db.session.commit()
+
+            session.pop('pending_user_id', None)
+            login_user(user)
+            flash("Email verified! Welcome!", "success")
+            return redirect(url_for("index"))
+
+        else:
+            flash("Invalid or expired OTP. Please try again.", "error")
+
+    # Resend OTP
+    if request.args.get("resend") == "1":
+        otp_code = generate_otp()
+        expiry = datetime.utcnow() + timedelta(minutes=10)
+
+        new_otp = OTPVerification(user_id=user_id, otp=otp_code, expires_at=expiry)
+        db.session.add(new_otp)
+        db.session.commit()
+
+        try:
+            send_otp_email(user.email, otp_code)
+            flash("New OTP sent to your email.", "info")
+        except:
+            flash("Failed to resend OTP.", "error")
+
+        return redirect(url_for("verify_otp"))
+
+    return render_template("verify_otp.html", email=user.email)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    # If user is already logged in, redirect to logout
+    if current_user.is_authenticated:
+        return redirect(url_for("logout"))
+    
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
         user = User.query.filter_by(email=email).first()
-        if user and (user.auth_provider in [None, "local"]) and check_password_hash(user.password, password):
+
+        if user and user.is_verified and check_password_hash(user.password, password):
             login_user(user)
             flash("Login successful!", "success")
             return redirect(url_for("index"))
-        flash("Invalid credentials", "error")
-    return render_template("login.html")
 
+        if user and not user.is_verified:
+            flash("Please verify your email first.", "warning")
+            session['pending_user_id'] = user.id
+            return redirect(url_for("verify_otp"))
+
+        flash("Invalid credentials.", "error")
+
+    return render_template("login.html")
 @app.route("/google-login")
 def google_login():
     callback_url = url_for('google_auth_callback', _external=True)
@@ -442,15 +691,18 @@ def serve_template_files(filename):
     return send_from_directory(base_dir, filename)
 
 @app.route("/logout")
-@login_required
 def logout():
-    user_id = current_user.id
-    for f in os.listdir(app.config["UPLOAD_FOLDER"]):
-        if f.startswith(f"user_{user_id}_"):
-            try:
-                os.remove(os.path.join(app.config["UPLOAD_FOLDER"], f))
-            except:
-                logger.warning(f"Failed to delete file {f}")
+    # Clean up user files if user is authenticated
+    if current_user.is_authenticated:
+        user_id = current_user.id
+        for f in os.listdir(app.config["UPLOAD_FOLDER"]):
+            if f.startswith(f"user_{user_id}_"):
+                try:
+                    os.remove(os.path.join(app.config["UPLOAD_FOLDER"], f))
+                except:
+                    logger.warning(f"Failed to delete file {f}")
+    
+    # Clear all session data
     session.pop('last_image_filename', None)
     session.pop('last_edited_filename', None)
     session.pop('last_texts_json', None)
@@ -458,8 +710,14 @@ def logout():
     session.pop('last_image_height', None)
     session.pop('last_fonts', None)
     session.pop('google_nonce', None)
+    session.pop('guest_image_generated', None)
+    session.pop('pending_user_id', None)
+    
+    # Logout the user
     logout_user()
-    return redirect(url_for("login"))
+    
+    # Return JSON response for AJAX call
+    return jsonify({"success": True, "message": "You are successfully logged out."})
 
 @app.route("/tutorial")
 def landing():
