@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Verify Email – Apps Localization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reuse your existing styles */
+    body { font-family: "Inter", sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+    body.light { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+    body.dark { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); color: #e6e6e6; }
+    .card { width: 100%; max-width: 400px; background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2rem; box-shadow: 0 12px 28px rgba(0,0,0,0.12); }
+    body.dark .card { background: rgba(30,32,44,0.95); }
+    h1 { text-align: center; margin-bottom: 0.5rem; }
+    p { text-align: center; font-size: 0.95rem; color: #666; }
+    input { width: 90%; padding: 0.9rem; text-align: center; font-size: 1.5rem; letter-spacing: 8px; }
+    button { margin-top: 1.5rem; width: 100%; padding: 0.8rem; background: #203a43; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; }
+    .resend { text-align: center; margin-top: 1rem; }
+    .resend a { color: #4facfe; font-weight: 600; }
+  </style>
+</head>
+<body class="light">
+  <div class="card">
+    <h1>Verify Your Email</h1>
+    <p>We sent a 6-digit code to<br><strong>{{ email }}</strong></p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <p style="color: {{ 'red' if category == 'error' else '#4facfe' }}; text-align: center;">{{ msg }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <input type="text" name="otp" maxlength="6" placeholder="000000" required autofocus />
+      <button type="submit">Verify</button>
+    </form>
+
+    <p class="resend">
+      Didn't receive it? <a href="{{ url_for('verify_otp', resend=1) }}">Resend Code</a>
+    </p>
+    <p style="text-align: center; margin-top: 1rem;">
+      <a href="{{ url_for('signup') }}" style="color: #999; font-size: 0.9rem;">← Back to Signup</a>
+    </p>
+  </div>
+</body>
+</html>
