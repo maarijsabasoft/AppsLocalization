@@ -64,9 +64,9 @@ login_manager.init_app(app)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')  # your email
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')  # app password
-app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_USERNAME'] = 'maarij.sabasoft@gmail.com'  # your email
+app.config['MAIL_PASSWORD'] = 'rslu urok iafr srtz' # app password
+app.config['MAIL_DEFAULT_SENDER'] = 'maarij.sabasoft@gmail.com'
 
 mail = Mail(app)
 
@@ -81,8 +81,8 @@ google = oauth.register(
 )
 github = oauth.register(
     name='github',
-    client_id='GITHUB_CLIENT_ID',
-    client_secret='GITHUB_CLIENT_SECRET',
+    client_id='Ov23liJ6E1lObYC6fPOB',
+    client_secret='e259922033f1d826b9866ba05a2ef0a14dd566f8',
     authorize_url='https://github.com/login/oauth/authorize',
     access_token_url='https://github.com/login/oauth/access_token',
     client_kwargs={'scope': 'user:email'},
@@ -94,7 +94,7 @@ class User(UserMixin, db.Model):  # <-- Order matters: UserMixin first
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = Column(String(255), nullable=True) 
+    password = db.Column(db.String(255), nullable=False)
     auth_provider = db.Column(db.String(20), default="local")
     is_verified = db.Column(db.Boolean, default=False)  # Your custom field
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
