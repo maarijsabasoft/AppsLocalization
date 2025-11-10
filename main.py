@@ -94,7 +94,7 @@ class User(UserMixin, db.Model):  # <-- Order matters: UserMixin first
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    password = Column(String(255), nullable=True) 
     auth_provider = db.Column(db.String(20), default="local")
     is_verified = db.Column(db.Boolean, default=False)  # Your custom field
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
