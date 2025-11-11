@@ -81,8 +81,8 @@ google = oauth.register(
 )
 github = oauth.register(
     name='github',
-    client_id=os.getenv("GITHUB_CLIENT_ID"),
-    client_secret=os.getenv("GITHUB_CLIENT_SECRET"),
+    client_id='GITHUB_CLIENT_ID',
+    client_secret='GITHUB_CLIENT_SECRET',
     authorize_url='https://github.com/login/oauth/authorize',
     access_token_url='https://github.com/login/oauth/access_token',
     client_kwargs={'scope': 'user:email'},
@@ -731,30 +731,40 @@ def logout():
 @app.route("/tutorial")
 def landing():
     return render_template("landing.html")
-
 @app.route("/", methods=["GET", "POST"])
 def index():
     start_time = time.time()
+
+    # ✅ Require login before image processing
     if request.method == "POST":
-        if not current_user.is_authenticated and session.get('guest_image_generated', False):
-            flash("Please log in to generate another image.", "error")
+        if not current_user.is_authenticated:
+            flash("Please log in to use this feature.", "error")
             return redirect(url_for("login"))
+
         lang = request.form.get("language")
         res_key = request.form.get("resolution")
         file = request.files.get("image")
+
+        # Validate file
         if not file or not file.filename:
             flash("Please upload a valid image.", "error")
             return render_template("index.html", error="Upload an image.")
         if not file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
             flash("Unsupported file format. Use PNG, JPG, or BMP.", "error")
             return render_template("index.html", error="Unsupported file format.")
-        user_id = current_user.id if current_user.is_authenticated else "guest"
+
+        # Use logged-in user ID
+        user_id = current_user.id
+
+        # Remove previous uploads by this user
         for f in os.listdir(app.config["UPLOAD_FOLDER"]):
             if f.startswith(f"user_{user_id}_"):
                 try:
                     os.remove(os.path.join(app.config["UPLOAD_FOLDER"], f))
                 except:
                     logger.warning(f"Failed to delete old file {f}")
+
+        # Save new uploaded file
         user_filename = f"user_{user_id}_{uuid.uuid4().hex[:8]}.png"
         in_path = os.path.join(app.config["UPLOAD_FOLDER"], user_filename)
         try:
@@ -763,23 +773,22 @@ def index():
             logger.error(f"Failed to save uploaded file: {str(e)}")
             flash("Failed to save uploaded file.", "error")
             return render_template("index.html", error="Failed to save file.")
+
+        # Process image
         clean_img, texts_list = translate_and_replace(in_path, lang)
         if clean_img is None or texts_list is None:
             flash("Failed to process image. Please try another file.", "error")
-            try:
-                os.remove(in_path)
-            except:
-                pass
+            os.remove(in_path)
             return render_template("index.html", error="Image processing failed.")
-        if not current_user.is_authenticated:
-            session['guest_image_generated'] = True
+
+        # Resize and pad if needed
         orig_w, orig_h = clean_img.size
-        scale = 1.0
-        offset = (0, 0)
+        scale, offset = 1.0, (0, 0)
         if res_key in RESOLUTIONS and res_key != "original":
             target_w, target_h = RESOLUTIONS[res_key]
             pad_color = edge_avg_color(clean_img)
             clean_img, offset, scale = pad_keep_aspect(clean_img, target_w, target_h, pad_color)
+
         for t in texts_list:
             t['left'] = t['left'] * scale + offset[0]
             t['top'] = t['top'] * scale + offset[1]
@@ -787,6 +796,8 @@ def index():
             t['strokeWidth'] = (t.get('strokeWidth', 0)) * scale
             if 'width' in t:
                 t['width'] *= scale
+
+        # Save processed image
         processed_filename = f"user_{user_id}_{uuid.uuid4().hex[:8]}_processed.png"
         processed_path = os.path.join(app.config["UPLOAD_FOLDER"], processed_filename)
         try:
@@ -794,40 +805,38 @@ def index():
         except Exception as e:
             logger.error(f"Failed to save processed image: {str(e)}")
             flash("Failed to save processed image.", "error")
-            try:
-                os.remove(in_path)
-            except:
-                pass
+            os.remove(in_path)
             return render_template("index.html", error="Failed to save processed image.")
+
+        # Store session data
         session['last_image_filename'] = processed_filename
         session['last_texts_json'] = json.dumps(texts_list)
         session['last_image_width'] = clean_img.width
         session['last_image_height'] = clean_img.height
+
         fonts_dir = os.path.join(app.static_folder, 'font') if app.static_folder else 'static/font'
         os.makedirs(fonts_dir, exist_ok=True)
         fonts_files = [f for f in os.listdir(fonts_dir) if f.lower().endswith('.ttf')]
         fonts = [os.path.splitext(f)[0] for f in fonts_files]
         session['last_fonts'] = fonts
-        try:
-            os.remove(in_path)
-        except:
-            logger.warning(f"Failed to delete input file {in_path}")
-        try:
-            with open(processed_path, "rb") as f:
-                encoded = base64.b64encode(f.read()).decode("utf-8")
-        except Exception as e:
-            logger.error(f"Failed to read processed image for encoding: {str(e)}")
-            flash("Failed to load processed image.", "error")
-            return render_template("index.html", error="Failed to load processed image.")
+
+        os.remove(in_path)
+        with open(processed_path, "rb") as f:
+            encoded = base64.b64encode(f.read()).decode("utf-8")
+
         logger.debug(f"Index POST completed in {time.time() - start_time:.2f} seconds")
+
         return render_template("index.html",
-                              clean_image=encoded,
-                              texts_json=session['last_texts_json'],
-                              fonts=fonts,
-                              image_width=session['last_image_width'],
-                              image_height=session['last_image_height'],
-                              success="Translation complete!")
+                               clean_image=encoded,
+                               texts_json=session['last_texts_json'],
+                               fonts=fonts,
+                               image_width=session['last_image_width'],
+                               image_height=session['last_image_height'],
+                               success="Translation complete!")
+
+    # GET route
     return render_template("index.html")
+
 
 @app.route('/favicon.ico')
 def favicon():
