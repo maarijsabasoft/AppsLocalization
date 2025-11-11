@@ -30,20 +30,22 @@ from dotenv import load_dotenv
 
 import nltk
 from nltk.corpus import wordnet
-from flask_cors import CORS
 
+# Download NLTK data
 nltk.download('wordnet', quiet=True)
-nltk.download('omw-1.4', quiet=True)  
+nltk.download('omw-1.4', quiet=True)  # For multilingual support if needed
 
+# Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+# Load environment variables
 load_dotenv()
 
 
 app = Flask(__name__)
 
-CORS(app) 
+# csrf = CSRFProtect(app)
 
 app.secret_key = "supersecret"
 app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "private_uploads")
@@ -62,12 +64,13 @@ login_manager.init_app(app)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME') 
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD') 
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')  # your email
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')  # app password
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')
 
 mail = Mail(app)
 
+# OAuth setup
 oauth = OAuth(app)
 google = oauth.register(
     name='google',
@@ -87,19 +90,21 @@ github = oauth.register(
 )
 
 
-class User(UserMixin, db.Model):
+class User(UserMixin, db.Model):  # <-- Order matters: UserMixin first
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     auth_provider = db.Column(db.String(20), default="local")
-    is_verified = db.Column(db.Boolean, default=False)  
+    is_verified = db.Column(db.Boolean, default=False)  # Your custom field
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Optional: Override is_active to use your is_verified field
     def is_active(self):
         """Override to block unverified users from logging in"""
         return self.is_verified
+
+# Your OTPVerification model remains unchanged
 
 class OTPVerification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -161,14 +166,17 @@ def preprocess_image_for_ocr(img_path):
     if img is None:
         return None
     
+    # Convert to grayscale for better OCR accuracy
     if len(img.shape) == 3:
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     else:
         gray = img.copy()
     
+    # Get image dimensions
     height, width = gray.shape
     max_dimension = max(height, width)
     
+    # Adaptive scaling - only upscale if image is small
     if max_dimension < 1000:
         scale_factor = 2.0
         gray = cv2.resize(gray, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_CUBIC)
@@ -178,11 +186,14 @@ def preprocess_image_for_ocr(img_path):
     else:
         scale_factor = 1.0
     
+    # Light noise reduction (less aggressive)
     gray = cv2.bilateralFilter(gray, 3, 50, 50)
     
+    # Enhance contrast gently using CLAHE (better than convertScaleAbs)
     clahe = cv2.createCLAHE(clipLimit=1.5, tileGridSize=(8, 8))
     gray = clahe.apply(gray)
     
+    # Convert back to BGR for EasyOCR
     processed_bgr = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
     
     temp_path = os.path.join(app.config["UPLOAD_FOLDER"], f"temp_{uuid.uuid4().hex[:8]}.png")
@@ -206,15 +217,16 @@ def perform_ocr(path, languages=['en', 'fr', 'de', 'es', 'it', 'pt', 'nl']):
             return []
         reader = easyocr.Reader(languages, model_storage_directory="model", gpu=False)
         
+        # Use better OCR parameters for accuracy
         result = reader.readtext(
             preprocessed_path,
             width_ths=0.7,
             height_ths=0.7,
-            mag_ratio=1.0,  
+            mag_ratio=1.0,  # Reduced from 2.0 to avoid over-processing
             decoder="greedy",
             min_size=5,
-            text_threshold=0.5,  
-            low_text=0.4,
+            text_threshold=0.5,  # Increased for better accuracy
+            low_text=0.4,  # Increased for better accuracy
             batch_size=16,
             paragraph=False,
             detail=1
@@ -227,11 +239,13 @@ def perform_ocr(path, languages=['en', 'fr', 'de', 'es', 'it', 'pt', 'nl']):
         
         adjusted_results = []
         for box, text, confidence in result:
+            # Increased confidence threshold for better accuracy
             if confidence < 0.2:
                 continue
             cleaned_text = clean_text(text)
             if not cleaned_text:
                 continue
+            # Scale bounding boxes back to original image size
             scaled_box = [[x / scale_factor, y / scale_factor] for x, y in box]
             adjusted_results.append((scaled_box, cleaned_text))
         
@@ -239,6 +253,7 @@ def perform_ocr(path, languages=['en', 'fr', 'de', 'es', 'it', 'pt', 'nl']):
         return adjusted_results
     except Exception as e:
         logger.error(f"OCR failed: {str(e)}")
+        # Clean up on error
         try:
             if preprocessed_path and os.path.exists(preprocessed_path):
                 os.remove(preprocessed_path)
@@ -272,11 +287,14 @@ def translate_and_replace(path, target_lang):
         logger.warning("No text detected in image")
         return None, None
     
+    # Create a precise mask - only cover text regions with minimal padding
     mask = np.zeros(cv_img.shape[:2], np.uint8)
     for box, _ in boxes:
+        # Use exact bounding box with minimal padding (1 pixel) to minimize blur
         box_array = np.array(box, np.int32)
         x_coords = box_array[:, 0]
         y_coords = box_array[:, 1]
+        # Minimal padding - just 1 pixel to ensure text is fully covered
         padding = 1
         expanded_box = np.array([
             [max(0, x_coords.min() - padding), max(0, y_coords.min() - padding)],
@@ -286,6 +304,8 @@ def translate_and_replace(path, target_lang):
         ], np.int32)
         cv2.fillPoly(mask, [expanded_box], 255)
     
+    # Use Navier-Stokes inpainting method which preserves edges better and causes less blur
+    # Use minimal radius (1 pixel) to reduce background blur
     clean = cv2.inpaint(cv_img, mask, 1, cv2.INPAINT_NS)
     image = Image.fromarray(cv2.cvtColor(clean, cv2.COLOR_BGR2RGB)).convert("RGBA")
     draw = ImageDraw.Draw(image)
@@ -295,14 +315,17 @@ def translate_and_replace(path, target_lang):
         if not text:
             continue
         try:
+            # Log original text for debugging
             logger.debug(f"Translating: '{text}' to {target_lang}")
             
+            # Translate the text
             trans = translator.translate(text)
             
             if not trans or len(trans.strip()) < 1:
                 logger.warning(f"Translation returned empty for '{text}'")
                 trans = text
             else:
+                # Verify translation is different from original (to catch errors)
                 if trans.strip().lower() == text.strip().lower():
                     logger.warning(f"Translation same as original for '{text}', might be an error")
                 
@@ -345,11 +368,20 @@ def translate_and_replace(path, target_lang):
             except Exception as e:
                 logger.error(f"Failed to load font at size {size}: {str(e)}")
                 break
+        # Calculate font metrics for proper positioning
+        font = ImageFont.truetype(font_path, best_size)
         line_height = measure_text(draw, "A", font)[1] * 1.2
-        pos_y = y0
+        total_text_height = line_height * len(lines)
+        
+        # Vertically center the text within the bounding box
+        vertical_offset = (bh - total_text_height) / 2
+        pos_y = y0 + vertical_offset
+        
         for line in lines:
             tw, th = measure_text(draw, line, font)
-            pos_x = x0 + (bw - tw) / 2
+            # Center the textbox horizontally within the bounding box
+            # Position the left edge of the textbox so that when text is center-aligned, it appears centered
+            pos_x = x0 + (bw - max_width) / 2
             texts_list.append({
                 'text': line,
                 'left': pos_x,
@@ -364,7 +396,7 @@ def translate_and_replace(path, target_lang):
                 'lineHeight': 1.2,
                 'textDecoration': '',
                 'textBackgroundColor': '',
-                'textAlign': 'left',
+                'textAlign': 'center',  # Center-align text within the textbox for professional appearance
                 'shadow': '',
                 'opacity': 1.0,
                 'width': max_width
