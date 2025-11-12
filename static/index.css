@@ -638,7 +638,7 @@ body.dark .language-btn {
 .language-dropdown {
   position: absolute;
   top: 100%;
-  right: 270px;
+  right: 270px !important;
   margin-top: 8px;
   background: white;
   border-radius: 12px;
@@ -1369,6 +1369,7 @@ margin-left: 0 !important;  /* Remove that 200px margin on mobile */
 .language-toggle{
   margin-top: 5px;
 }
+
 
 
 
