@@ -79,7 +79,10 @@
       <div class="dropdown-content" id="dropdownMenu">
         <div class="user-info">
           <!-- <strong>{{ current_user.username }}</strong><br> -->
-          <small>{{ current_user.email }}</small>
+          <small style="display: inline-block; margin-top: 10px !important; color: black !important; font-weight: bold !important;">
+  {{ current_user.email }}
+</small>
+
         </div>
         <!-- <hr> -->
         <button class="logout-btn" onclick="handleLogout(event)">Logout</button>
@@ -2506,6 +2509,7 @@ initCanvas();
 </script>
 </body>
 </html>
+
 
 
 
