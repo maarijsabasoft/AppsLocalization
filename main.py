@@ -16,7 +16,7 @@ from flask import Flask, send_from_directory, render_template, request, send_fil
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
-from flask_mail import Mail, Message
+import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from deep_translator import GoogleTranslator
@@ -61,14 +61,9 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')  # your email
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')  # app password
-app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')
-
-mail = Mail(app)
+# Resend API configuration
+RESEND_API_KEY = "re_cxVB8LkY_Fo9nWFAEwdxe6LoAp7q7vipt"
+RESEND_API_URL = "https://api.resend.com/emails"
 
 # OAuth setup
 oauth = OAuth(app)
@@ -81,8 +76,8 @@ google = oauth.register(
 )
 github = oauth.register(
     name='github',
-    client_id=os.getenv("GITHUB_CLIENT_ID"),
-    client_secret=os.getenv("GITHUB_CLIENT_SECRET"),
+    client_id='GITHUB_CLIENT_ID',
+    client_secret='GITHUB_CLIENT_SECRET',
     authorize_url='https://github.com/login/oauth/authorize',
     access_token_url='https://github.com/login/oauth/access_token',
     client_kwargs={'scope': 'user:email'},
@@ -433,22 +428,16 @@ def generate_otp():
     return str(random.randint(100000, 999999))
 
 def send_otp_email(user_email, otp):
-    msg = Message(
-        subject="Verify Your Email – Apps Localization",
-        recipients=[user_email],
-        body=f"""
-Hello,
-
-Your verification code is: {otp}
-
-This code expires in 10 minutes.
-
-If you didn't request this, please ignore this email.
-
-Best regards,
-Apps Localization Team
-        """,
-        html=f"""
+    headers = {
+        "Authorization": f"Bearer {RESEND_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    data = {
+        "from": "send@support.tokenmap.io",
+        "to": [user_email],
+        "subject": "Verify Your Email – Apps Localization",
+        "html": f"""
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
             <h2 style="color: #4facfe;">Email Verification</h2>
             <p>Hello,</p>
@@ -459,9 +448,29 @@ Apps Localization Team
             <hr>
             <small>Apps Localization © {datetime.now().year}</small>
         </div>
+        """,
+        "text": f"""
+Hello,
+
+Your verification code is: {otp}
+
+This code expires in 10 minutes.
+
+If you didn't request this, please ignore this email.
+
+Best regards,
+Apps Localization Team
         """
-    )
-    mail.send(msg)
+    }
+    
+    response = requests.post(RESEND_API_URL, json=data, headers=headers)
+    
+    if response.status_code in [200, 201]:
+        logger.debug(f"OTP email sent successfully to {user_email}")
+        return True
+    else:
+        logger.error(f"Failed to send OTP email. Status code: {response.status_code}, Response: {response.text}")
+        raise Exception(f"Failed to send email: {response.status_code}")
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
