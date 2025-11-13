@@ -62,7 +62,7 @@ login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
 # Resend API configuration
-RESEND_API_KEY = "re_cxVB8LkY_Fo9nWFAEwdxe6LoAp7q7vipt"
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 RESEND_API_URL = "https://api.resend.com/emails"
 
 # OAuth setup
