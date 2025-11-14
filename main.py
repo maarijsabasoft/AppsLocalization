@@ -472,13 +472,13 @@ Apps Localization Team
         logger.error(f"Failed to send OTP email. Status code: {response.status_code}, Response: {response.text}")
         raise Exception(f"Failed to send email: {response.status_code}")
 
-@app.route("/sitemap.xml")
+@app.route('/sitemap.xml')
 def sitemap():
-    return send_from_directory('static', 'sitemap.xml')
+    return send_from_directory(os.getcwd(), 'sitemap.xml', mimetype='application/xml')
 
-@app.route("/robots.txt")
+@app.route('/robots.txt')
 def robots():
-    return send_from_directory('static', 'robots.txt')
+    return send_from_directory(os.getcwd(), 'robots.txt', mimetype='text/plain')
 
 
 @app.route("/signup", methods=["GET", "POST"])
